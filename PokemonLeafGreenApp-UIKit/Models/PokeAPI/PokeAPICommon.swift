@@ -50,3 +50,22 @@ class PokeAPIPokemonDescriptionDetails: Decodable {
         self.version = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .version)
     }
 }
+
+class PokeAPIPokemonMoveDescriptionDetails: Decodable {
+    let description: String
+    let language: PokeAPIPokemonNameURLStructure
+    let version: PokeAPIPokemonNameURLStructure
+    
+    private enum PokeAPIPokemonDescriptionDetailsKeys: String, CodingKey {
+        case description = "flavor_text"
+        case version = "version_group"
+        case language
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PokeAPIPokemonDescriptionDetailsKeys.self)
+        self.description = try container.decode(String.self, forKey: .description)
+        self.language = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .language)
+        self.version = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .version)
+    }
+}

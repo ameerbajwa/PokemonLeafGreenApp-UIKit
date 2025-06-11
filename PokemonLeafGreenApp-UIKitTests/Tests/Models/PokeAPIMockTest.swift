@@ -43,6 +43,19 @@ final class PokeAPIMockTest: XCTestCase {
         XCTAssertEqual(pokeAPIPokemonMockResponse.types[0].typeDetails.name, "fairy")
     }
     
+    func testPokeAPIPokemonMockWhenMockDataIsCorrupt() {
+        let pokeAPIPokemonCorruptedMock = Data(PokeAPIMocks.PokeAPIPokemonMockCorrupted.utf8)
+        
+        do {
+            let pokeAPIPokemonMockResponse = try decoder.decode(PokeAPIPokemonDetails.self, from: pokeAPIPokemonCorruptedMock)
+        } catch {
+            XCTAssert(true)
+            return
+        }
+        
+        XCTFail("Mock should not be decodable")
+    }
+    
     func testPokeAPIPokemonSpeciesMockWithCorrectData() {
         let pokeAPIPokemonSpeciesMockData = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMock.utf8)
         var pokeAPIPokemonSpeciesMockResponse: PokeAPIPokemonSpeciesDetails!
@@ -60,6 +73,19 @@ final class PokeAPIMockTest: XCTestCase {
         XCTAssertEqual(pokeAPIPokemonSpeciesMockResponse.descriptionDetails[0].description, "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.")
         XCTAssertEqual(pokeAPIPokemonSpeciesMockResponse.descriptionDetails[0].language.name, "en")
         XCTAssertEqual(pokeAPIPokemonSpeciesMockResponse.descriptionDetails[0].version.name, "red")
+    }
+    
+    func testPokeAPIPokemonSpeciesMockWhenMockDataIsCorrupt() {
+        let pokeAPIPokemonSpeciesCorruptMockData = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMockCorrupted.utf8)
+        
+        do {
+            let pokeAPIPokemonSpeciesMockResponse = try decoder.decode(PokeAPIPokemonSpeciesDetails.self, from: pokeAPIPokemonSpeciesCorruptMockData)
+        } catch {
+            XCTAssert(true)
+            return
+        }
+        
+        XCTFail("Mock should not be decodable")
     }
     
     func testPokeAPIMoveMockWithCorrectData() {
@@ -81,5 +107,18 @@ final class PokeAPIMockTest: XCTestCase {
         XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].description, "Pounds with fore­legs or tail.")
         XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].language.name, "en")
         XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].version.name, "gold-silver")
+    }
+    
+    func testPokeAPIMoveMockWhenMockDataIsCorrupt() {
+        let pokeAPIMoveCorruptMockData = Data(PokeAPIMocks.PokeAPIMoveCorrupted.utf8)
+        
+        do {
+            let pokeAPIMoveMockResponse = try decoder.decode(PokeAPIMove.self, from: pokeAPIMoveCorruptMockData)
+        } catch {
+            XCTAssert(true)
+            return
+        }
+        
+        XCTFail("Mock should not be decodable")
     }
 }

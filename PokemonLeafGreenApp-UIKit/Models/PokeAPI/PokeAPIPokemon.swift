@@ -183,7 +183,7 @@ class PokeAPIMove: Decodable {
     let power: Int
     let pp: Int
     let moveType: PokeAPIPokemonNameURLStructure
-    let moveDescription: [PokeAPIPokemonDescriptionDetails]
+    let moveDescription: [PokeAPIPokemonMoveDescriptionDetails]
     
     private enum PokeAPIMoveKeys: String, CodingKey {
         case id, name, accuracy, power, pp
@@ -191,7 +191,7 @@ class PokeAPIMove: Decodable {
         case moveDescription = "flavor_text_entries"
     }
     
-    required init(fromd decoder: Decoder) throws {
+    required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIMoveKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
@@ -199,6 +199,6 @@ class PokeAPIMove: Decodable {
         self.power = try container.decode(Int.self, forKey: .power)
         self.pp = try container.decode(Int.self, forKey: .pp)
         self.moveType = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveType)
-        self.moveDescription = try container.decode([PokeAPIPokemonDescriptionDetails].self, forKey: .moveDescription)
+        self.moveDescription = try container.decode([PokeAPIPokemonMoveDescriptionDetails].self, forKey: .moveDescription)
     }
 }
