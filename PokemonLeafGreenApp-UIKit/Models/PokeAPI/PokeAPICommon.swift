@@ -5,6 +5,23 @@
 //  Created by Ameer Bajwa on 6/10/25.
 //
 
+import Foundation
+
+public class PokeAPIBaseStructure: Decodable {
+    let id: Int
+    let name: String
+    
+    private enum PokeAPIBaseStructureKeys: String, CodingKey {
+        case id, name
+    }
+    
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PokeAPIBaseStructureKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+    }
+}
+
 class PokeAPIPokemonNameURLStructure: Decodable {
     let name: String
     let url: String
@@ -33,18 +50,18 @@ class PokeAPIPokemonURLStructure: Decodable {
     }
 }
 
-class PokeAPIPokemonDescriptionDetails: Decodable {
+class PokeAPIPokemonSpeciesDescriptionDetails: Decodable {
     let description: String
     let language: PokeAPIPokemonNameURLStructure
     let version: PokeAPIPokemonNameURLStructure
     
-    private enum PokeAPIPokemonDescriptionDetailsKeys: String, CodingKey {
+    private enum PokeAPIPokemonSpeciesDescriptionDetailsKeys: String, CodingKey {
         case description = "flavor_text"
         case language, version
     }
     
     required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: PokeAPIPokemonDescriptionDetailsKeys.self)
+        let container = try decoder.container(keyedBy: PokeAPIPokemonSpeciesDescriptionDetailsKeys.self)
         self.description = try container.decode(String.self, forKey: .description)
         self.language = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .language)
         self.version = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .version)

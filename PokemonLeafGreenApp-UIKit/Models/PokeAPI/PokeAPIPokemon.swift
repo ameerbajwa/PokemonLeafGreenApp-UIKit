@@ -7,9 +7,7 @@
 
 import Foundation
 
-class PokeAPIPokemonDetails: Decodable {
-    let id: Int
-    let name: String
+class PokeAPIPokemonDetails: PokeAPIBaseStructure {
     let baseExperience: Int
     let moves: [PokeAPIPokemonMoveDetails]
     let sprites: PokeAPIPokemonSpritesDetails
@@ -17,19 +15,18 @@ class PokeAPIPokemonDetails: Decodable {
     let types: [PokeAPIPokemonTypeDetails]
     
     private enum PokeAPIPokemonDetailsKeys: String, CodingKey {
-        case id, name, moves, sprites, stats, types
+        case moves, sprites, stats, types
         case baseExperience = "base_experience"
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIPokemonDetailsKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
         self.baseExperience = try container.decode(Int.self, forKey: .baseExperience)
         self.moves = try container.decode([PokeAPIPokemonMoveDetails].self, forKey: .moves)
         self.sprites = try container.decode(PokeAPIPokemonSpritesDetails.self, forKey: .sprites)
         self.stats = try container.decode([PokeAPIPokemonStatDetails].self, forKey: .stats)
         self.types = try container.decode([PokeAPIPokemonTypeDetails].self, forKey: .types)
+        try super.init(from: decoder)
     }
 }
 
@@ -152,15 +149,12 @@ class PokeAPIPokemonTypeDetails: Decodable {
     }
 }
 
-class PokeAPIPokemonSpeciesDetails: Decodable {
-    let id: Int
-    let name: String
+class PokeAPIPokemonSpeciesDetails: PokeAPIBaseStructure {
     let growthRate: PokeAPIPokemonNameURLStructure
     let evolutionChain: PokeAPIPokemonURLStructure
-    let descriptionDetails: [PokeAPIPokemonDescriptionDetails]
+    let descriptionDetails: [PokeAPIPokemonSpeciesDescriptionDetails]
     
     private enum PokeAPIPokemonSpeciesDetailsKeys: String, CodingKey {
-        case id, name
         case growthRate = "growth_rate"
         case evolutionChain = "evolution_chain"
         case descriptionDetails = "flavor_text_entries"
@@ -168,17 +162,14 @@ class PokeAPIPokemonSpeciesDetails: Decodable {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIPokemonSpeciesDetailsKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
         self.growthRate = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .growthRate)
         self.evolutionChain = try container.decode(PokeAPIPokemonURLStructure.self, forKey: .evolutionChain)
-        self.descriptionDetails = try container.decode([PokeAPIPokemonDescriptionDetails].self, forKey: .descriptionDetails)
+        self.descriptionDetails = try container.decode([PokeAPIPokemonSpeciesDescriptionDetails].self, forKey: .descriptionDetails)
+        try super.init(from: decoder)
     }
 }
 
-class PokeAPIMove: Decodable {
-    let id: Int
-    let name: String
+class PokeAPIMove: PokeAPIBaseStructure {
     let accuracy: Int
     let power: Int
     let pp: Int
@@ -186,19 +177,18 @@ class PokeAPIMove: Decodable {
     let moveDescription: [PokeAPIPokemonMoveDescriptionDetails]
     
     private enum PokeAPIMoveKeys: String, CodingKey {
-        case id, name, accuracy, power, pp
+        case accuracy, power, pp
         case moveType = "type"
         case moveDescription = "flavor_text_entries"
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIMoveKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decode(String.self, forKey: .name)
         self.accuracy = try container.decode(Int.self, forKey: .accuracy)
         self.power = try container.decode(Int.self, forKey: .power)
         self.pp = try container.decode(Int.self, forKey: .pp)
         self.moveType = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveType)
         self.moveDescription = try container.decode([PokeAPIPokemonMoveDescriptionDetails].self, forKey: .moveDescription)
+        try super.init(from: decoder)
     }
 }
