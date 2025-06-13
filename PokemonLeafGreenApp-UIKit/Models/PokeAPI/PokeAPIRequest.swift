@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol PokeAPIBaseRequest {
+protocol PokeAPIBaseRequest {
     var baseUrl: PokeAPIBaseURL { get set }
     var endpoint: PokeAPIEndpoints { get set }
     var id: Int? { get set }
@@ -17,7 +17,7 @@ public protocol PokeAPIBaseRequest {
     func createURLRequest() throws -> URLRequest
 }
 
-struct PokeAPIRequest<PokeAPIResponse: PokeAPIBaseStructure>: PokeAPIBaseRequest {
+public struct PokeAPIRequest<PokeAPIResponse: PokeAPIBaseStructure>: PokeAPIBaseRequest {
     var baseUrl: PokeAPIBaseURL
     var endpoint: PokeAPIEndpoints
     var id: Int?
@@ -36,6 +36,9 @@ struct PokeAPIRequest<PokeAPIResponse: PokeAPIBaseStructure>: PokeAPIBaseRequest
             pokeAPIUrlString = baseUrl.stringValue + endpoint.stringValue + "/\(safeId)"
         } else {
             pokeAPIUrlString = baseUrl.stringValue + endpoint.stringValue
+        }
+        if baseUrl == .imageBaseUrl {
+            pokeAPIUrlString += ".png"
         }
         
         guard let pokeAPIUrl = URL(string: pokeAPIUrlString) else {
