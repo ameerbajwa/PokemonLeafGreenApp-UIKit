@@ -96,7 +96,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForBackImageEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .imageBaseUrl, endpoint: .frontImage, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .imageBaseUrl, endpoint: .backImage, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()

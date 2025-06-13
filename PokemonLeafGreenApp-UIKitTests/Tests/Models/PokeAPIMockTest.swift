@@ -47,7 +47,7 @@ final class PokeAPIMockTest: XCTestCase {
         let pokeAPIPokemonCorruptedMock = Data(PokeAPIMocks.PokeAPIPokemonMockCorrupted.utf8)
         
         do {
-            let pokeAPIPokemonMockResponse = try decoder.decode(PokeAPIPokemonDetails.self, from: pokeAPIPokemonCorruptedMock)
+            _ = try decoder.decode(PokeAPIPokemonDetails.self, from: pokeAPIPokemonCorruptedMock)
         } catch {
             XCTAssert(true)
             return
@@ -79,7 +79,7 @@ final class PokeAPIMockTest: XCTestCase {
         let pokeAPIPokemonSpeciesCorruptMockData = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMockCorrupted.utf8)
         
         do {
-            let pokeAPIPokemonSpeciesMockResponse = try decoder.decode(PokeAPIPokemonSpeciesDetails.self, from: pokeAPIPokemonSpeciesCorruptMockData)
+            _ = try decoder.decode(PokeAPIPokemonSpeciesDetails.self, from: pokeAPIPokemonSpeciesCorruptMockData)
         } catch {
             XCTAssert(true)
             return
@@ -90,10 +90,10 @@ final class PokeAPIMockTest: XCTestCase {
     
     func testPokeAPIMoveMockWithCorrectData() {
         let pokeAPIMoveMockData = Data(PokeAPIMocks.PokeAPIMove.utf8)
-        var pokeAPIMoveMockResponse: PokeAPIMove!
+        var pokeAPIMoveMockResponse: PokeAPIMoveDetails!
         
         do {
-            pokeAPIMoveMockResponse = try decoder.decode(PokeAPIMove.self, from: pokeAPIMoveMockData)
+            pokeAPIMoveMockResponse = try decoder.decode(PokeAPIMoveDetails.self, from: pokeAPIMoveMockData)
         } catch {
             XCTFail("Could not decode mock data")
         }
@@ -113,7 +113,7 @@ final class PokeAPIMockTest: XCTestCase {
         let pokeAPIMoveCorruptMockData = Data(PokeAPIMocks.PokeAPIMoveCorrupted.utf8)
         
         do {
-            let pokeAPIMoveMockResponse = try decoder.decode(PokeAPIMove.self, from: pokeAPIMoveCorruptMockData)
+            _ = try decoder.decode(PokeAPIMoveDetails.self, from: pokeAPIMoveCorruptMockData)
         } catch {
             XCTAssert(true)
             return

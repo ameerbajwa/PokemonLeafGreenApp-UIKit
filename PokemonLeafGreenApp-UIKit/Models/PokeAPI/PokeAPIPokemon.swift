@@ -169,21 +169,21 @@ class PokeAPIPokemonSpeciesDetails: PokeAPIBaseStructure {
     }
 }
 
-class PokeAPIMove: PokeAPIBaseStructure {
+class PokeAPIMoveDetails: PokeAPIBaseStructure {
     let accuracy: Int
     let power: Int
     let pp: Int
     let moveType: PokeAPIPokemonNameURLStructure
     let moveDescription: [PokeAPIPokemonMoveDescriptionDetails]
     
-    private enum PokeAPIMoveKeys: String, CodingKey {
+    private enum PokeAPIMoveDetailsKeys: String, CodingKey {
         case accuracy, power, pp
         case moveType = "type"
         case moveDescription = "flavor_text_entries"
     }
     
     required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: PokeAPIMoveKeys.self)
+        let container = try decoder.container(keyedBy: PokeAPIMoveDetailsKeys.self)
         self.accuracy = try container.decode(Int.self, forKey: .accuracy)
         self.power = try container.decode(Int.self, forKey: .power)
         self.pp = try container.decode(Int.self, forKey: .pp)
