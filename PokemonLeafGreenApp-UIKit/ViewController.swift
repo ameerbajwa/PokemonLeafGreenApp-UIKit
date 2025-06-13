@@ -5,6 +5,7 @@
 //  Created by Ameer Bajwa on 6/6/25.
 //
 
+import Foundation
 import UIKit
 
 class ViewController: UIViewController {
@@ -22,6 +23,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        callPokeAPINetworkServiceForBulbasaur()
 
         titleLabel = UILabel()
         titleLabel.text = "POKEMON LEAFGREEN APP"
@@ -39,6 +42,24 @@ class ViewController: UIViewController {
         ])
     }
 
-
+    func callPokeAPINetworkServiceForBulbasaur() {
+        let decoder = JSONDecoder()
+        let session = URLSession.shared
+        let networkService = PokeAPINetworkService(session: session, decoder: decoder)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 1)
+        
+        Task {
+            do {
+                let response = try await networkService.callPokeAPIServer(with: request)
+                print(response.id)
+                print(response.name)
+                for stat in response.stats {
+                    print("\(stat.stat.name): \(stat.baseStat)")
+                }
+            } catch let error as PokemonLeafGreenError {
+                print(error.debugDescription)
+            }
+        }
+    }
 }
 
