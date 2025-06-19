@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E248" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Pokemon" representedClassName="Pokemon" syncable="YES" codeGenerationType="class">
-        <attribute name="attribute" optional="YES"/>
-        <attribute name="baseExperience" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="currentExperience" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="level" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+    <entity name="CoreDataMove" representedClassName="CoreDataMove" syncable="YES">
+        <attribute name="accuracy" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="moveDescription" attributeType="String"/>
+        <attribute name="moveType" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="power" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pp" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="statChanges" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataMoveStatChange" inverseName="move" inverseEntity="CoreDataMoveStatChange"/>
+    </entity>
+    <entity name="CoreDataMoveStatChange" representedClassName="CoreDataMoveStatChange" syncable="YES">
+        <attribute name="change" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="statName" attributeType="String"/>
+        <relationship name="move" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataMove" inverseName="statChanges" inverseEntity="CoreDataMove"/>
+    </entity>
+    <entity name="CoreDataPokemon" representedClassName="CoreDataPokemon" syncable="YES">
+        <attribute name="backImageUrlString" attributeType="String"/>
+        <attribute name="baseExperience" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="frontImageUrlString" attributeType="String"/>
+        <attribute name="growthRate" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="pokemonDescription" attributeType="String"/>
+        <attribute name="type" attributeType="String"/>
         <attribute name="type2" optional="YES" attributeType="String"/>
+        <relationship name="moves" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataPokemonMoveList" inverseName="pokemon" inverseEntity="CoreDataPokemonMoveList"/>
+        <relationship name="stats" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataPokemonStat" inverseName="pokemon" inverseEntity="CoreDataPokemonStat"/>
+    </entity>
+    <entity name="CoreDataPokemonMoveList" representedClassName="CoreDataPokemonMoveList" syncable="YES">
+        <attribute name="levelLearnedAt" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="pokemon" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataPokemon" inverseName="moves" inverseEntity="CoreDataPokemon"/>
+    </entity>
+    <entity name="CoreDataPokemonStat" representedClassName="CoreDataPokemonStat" syncable="YES">
+        <attribute name="baseValue" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="effortValue" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="individualValue" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="pokemon" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataPokemon" inverseName="stats" inverseEntity="CoreDataPokemon"/>
     </entity>
 </model>
