@@ -31,8 +31,13 @@ class PokeAPIPokemonDetails: PokeAPIBaseStructure {
 }
 
 class PokeAPIPokemonMoveDetails: Decodable {
-    let move: PokeAPIPokemonNameURLStructure
-    let versionGroupDetails: [PokeAPIPokemonVersionGroupDetails]
+    var move: PokeAPIPokemonNameURLStructure
+    var versionGroupDetails: [PokeAPIPokemonVersionGroupDetails]
+    
+    init(move: PokeAPIPokemonNameURLStructure, versionGroupDetails: [PokeAPIPokemonVersionGroupDetails]) {
+        self.move = move
+        self.versionGroupDetails = versionGroupDetails
+    }
     
     private enum PokeAPIPokemonMoveDetailsKeys: String, CodingKey {
         case move
@@ -48,16 +53,19 @@ class PokeAPIPokemonMoveDetails: Decodable {
 
 class PokeAPIPokemonVersionGroupDetails: Decodable {
     let levelLearnedAt: Int
+    let moveLearnMethod: PokeAPIPokemonNameURLStructure
     let versionGroup: PokeAPIPokemonNameURLStructure
     
     private enum PokeAPIPokemonVersionGroupDetailsKeys: String, CodingKey {
         case levelLearnedAt = "level_learned_at"
+        case moveLearnMethod = "move_learn_method"
         case versionGroup = "version_group"
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIPokemonVersionGroupDetailsKeys.self)
         self.levelLearnedAt = try container.decode(Int.self, forKey: .levelLearnedAt)
+        self.moveLearnMethod = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveLearnMethod)
         self.versionGroup = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .versionGroup)
     }
 }
@@ -171,15 +179,17 @@ class PokeAPIPokemonSpeciesDetails: PokeAPIBaseStructure {
 
 class PokeAPIMoveDetails: PokeAPIBaseStructure {
     let accuracy: Int
-    let power: Int
+    let power: Int?
     let pp: Int
     let moveType: PokeAPIPokemonNameURLStructure
     let moveDescription: [PokeAPIPokemonMoveDescriptionDetails]
+    let statChanges: [PokeAPIMoveStatChangeDetails]?
     
     private enum PokeAPIMoveDetailsKeys: String, CodingKey {
         case accuracy, power, pp
         case moveType = "type"
         case moveDescription = "flavor_text_entries"
+        case statChanges = "stat_changes"
     }
     
     required init(from decoder: Decoder) throws {
@@ -189,6 +199,22 @@ class PokeAPIMoveDetails: PokeAPIBaseStructure {
         self.pp = try container.decode(Int.self, forKey: .pp)
         self.moveType = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveType)
         self.moveDescription = try container.decode([PokeAPIPokemonMoveDescriptionDetails].self, forKey: .moveDescription)
+        self.statChanges = try container.decodeIfPresent([PokeAPIMoveStatChangeDetails].self, forKey: .statChanges)
         try super.init(from: decoder)
+    }
+}
+
+class PokeAPIMoveStatChangeDetails: Decodable {
+    let change: Int
+    let stat: PokeAPIPokemonNameURLStructure
+    
+    private enum PokeAPIMoveStatChangeDetailsKeys: String, CodingKey {
+        case change, stat
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PokeAPIMoveStatChangeDetailsKeys.self)
+        self.change = try container.decode(Int.self, forKey: .change)
+        self.stat = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .stat)
     }
 }
