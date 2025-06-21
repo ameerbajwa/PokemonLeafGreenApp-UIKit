@@ -9,27 +9,23 @@
 import Foundation
 import CoreData
 
-
 extension CoreDataMove {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataMove> {
         return NSFetchRequest<CoreDataMove>(entityName: "CoreDataMove")
     }
 
     @NSManaged public var id: Int16
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var accuracy: Int16
     @NSManaged public var pp: Int16
     @NSManaged public var power: Int16
-    @NSManaged public var moveType: String?
-    @NSManaged public var moveDescription: String?
+    @NSManaged public var moveType: String
+    @NSManaged public var moveDescription: String
     @NSManaged public var statChanges: NSSet?
-
 }
 
 // MARK: Generated accessors for statChanges
 extension CoreDataMove {
-
     @objc(addStatChangesObject:)
     @NSManaged public func addToStatChanges(_ value: CoreDataMoveStatChange)
 
@@ -41,9 +37,4 @@ extension CoreDataMove {
 
     @objc(removeStatChanges:)
     @NSManaged public func removeFromStatChanges(_ values: NSSet)
-
-}
-
-extension CoreDataMove : Identifiable {
-
 }

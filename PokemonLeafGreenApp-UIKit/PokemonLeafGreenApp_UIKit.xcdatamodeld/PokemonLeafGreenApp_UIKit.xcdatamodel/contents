@@ -29,6 +29,7 @@
         <relationship name="stats" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataPokemonStat" inverseName="pokemon" inverseEntity="CoreDataPokemonStat"/>
     </entity>
     <entity name="CoreDataPokemonMoveList" representedClassName="CoreDataPokemonMoveList" syncable="YES">
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="levelLearnedAt" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="pokemon" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataPokemon" inverseName="moves" inverseEntity="CoreDataPokemon"/>

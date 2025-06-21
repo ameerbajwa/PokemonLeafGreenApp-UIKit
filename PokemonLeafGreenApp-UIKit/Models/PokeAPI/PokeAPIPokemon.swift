@@ -32,9 +32,9 @@ class PokeAPIPokemonDetails: PokeAPIBaseStructure {
 
 class PokeAPIPokemonMoveDetails: Decodable {
     var move: PokeAPIPokemonNameURLStructure
-    var versionGroupDetails: [PokeAPIPokemonVersionGroupDetails]
+    var versionGroupDetails: [PokeAPIPokemonMoveVersionGroupDetails]
     
-    init(move: PokeAPIPokemonNameURLStructure, versionGroupDetails: [PokeAPIPokemonVersionGroupDetails]) {
+    init(move: PokeAPIPokemonNameURLStructure, versionGroupDetails: [PokeAPIPokemonMoveVersionGroupDetails]) {
         self.move = move
         self.versionGroupDetails = versionGroupDetails
     }
@@ -47,23 +47,23 @@ class PokeAPIPokemonMoveDetails: Decodable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIPokemonMoveDetailsKeys.self)
         self.move = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .move)
-        self.versionGroupDetails = try container.decode([PokeAPIPokemonVersionGroupDetails].self, forKey: .versionGroupDetails)
+        self.versionGroupDetails = try container.decode([PokeAPIPokemonMoveVersionGroupDetails].self, forKey: .versionGroupDetails)
     }
 }
 
-class PokeAPIPokemonVersionGroupDetails: Decodable {
+class PokeAPIPokemonMoveVersionGroupDetails: Decodable {
     let levelLearnedAt: Int
     let moveLearnMethod: PokeAPIPokemonNameURLStructure
     let versionGroup: PokeAPIPokemonNameURLStructure
     
-    private enum PokeAPIPokemonVersionGroupDetailsKeys: String, CodingKey {
+    private enum PokeAPIPokemonMoveVersionGroupDetailsKeys: String, CodingKey {
         case levelLearnedAt = "level_learned_at"
         case moveLearnMethod = "move_learn_method"
         case versionGroup = "version_group"
     }
     
     required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: PokeAPIPokemonVersionGroupDetailsKeys.self)
+        let container = try decoder.container(keyedBy: PokeAPIPokemonMoveVersionGroupDetailsKeys.self)
         self.levelLearnedAt = try container.decode(Int.self, forKey: .levelLearnedAt)
         self.moveLearnMethod = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveLearnMethod)
         self.versionGroup = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .versionGroup)

@@ -11,5 +11,19 @@ import CoreData
 
 @objc(CoreDataPokemon)
 public class CoreDataPokemon: NSManagedObject {
-
+    func adaptPokeAPIPokemonToCoreDataPokemon(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
+        self.id = Int16(pokeAPIPokemon.id)
+        self.name = pokeAPIPokemon.name
+        self.baseExperience = Int16(pokeAPIPokemon.baseExperience)
+        self.growthRate = pokeAPIPokemonSpecies.growthRate.name
+        self.type = pokeAPIPokemon.types[0].typeDetails.name
+        self.type2 = (pokeAPIPokemon.types.count > 1 ? pokeAPIPokemon.types[1].typeDetails.name : nil)
+        self.frontImageUrlString = pokeAPIPokemon.sprites.versions.generationIII.leafGreen.frontImageUrl
+        self.backImageUrlString = pokeAPIPokemon.sprites.versions.generationIII.leafGreen.backImageUrl
+        
+        let pokemonDescription = pokeAPIPokemonSpecies.descriptionDetails.filter { speciesDescriptionDetails in
+            speciesDescriptionDetails.language.name == "en" && speciesDescriptionDetails.version.name == "firered-leafgreen"
+        }
+        self.pokemonDescription = pokemonDescription[0].description
+    }
 }
