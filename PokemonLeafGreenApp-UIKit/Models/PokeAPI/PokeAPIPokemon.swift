@@ -183,7 +183,7 @@ class PokeAPIMoveDetails: PokeAPIBaseStructure {
     let pp: Int
     let moveType: PokeAPIPokemonNameURLStructure
     let moveDescription: [PokeAPIPokemonMoveDescriptionDetails]
-    let statChanges: [PokeAPIMoveStatChangeDetails]?
+    let statChanges: [PokeAPIMoveStatChangeDetails]
     
     private enum PokeAPIMoveDetailsKeys: String, CodingKey {
         case accuracy, power, pp
@@ -199,7 +199,7 @@ class PokeAPIMoveDetails: PokeAPIBaseStructure {
         self.pp = try container.decode(Int.self, forKey: .pp)
         self.moveType = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveType)
         self.moveDescription = try container.decode([PokeAPIPokemonMoveDescriptionDetails].self, forKey: .moveDescription)
-        self.statChanges = try container.decodeIfPresent([PokeAPIMoveStatChangeDetails].self, forKey: .statChanges)
+        self.statChanges = try container.decode([PokeAPIMoveStatChangeDetails].self, forKey: .statChanges)
         try super.init(from: decoder)
     }
 }
