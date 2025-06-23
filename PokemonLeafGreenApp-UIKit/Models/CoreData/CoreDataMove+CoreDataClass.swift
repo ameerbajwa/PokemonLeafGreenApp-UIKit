@@ -11,7 +11,7 @@ import CoreData
 
 @objc(CoreDataMove)
 public class CoreDataMove: NSManagedObject {
-    func adaptPokeAPIMoveModelToCoreDataMoveModel(pokeAPIMoveModel: PokeAPIMoveDetails) {
+    func adapt(pokeAPIMoveModel: PokeAPIMoveDetails) {
         self.id = Int16(pokeAPIMoveModel.id)
         self.name = pokeAPIMoveModel.name
         self.accuracy = Int16(pokeAPIMoveModel.accuracy)

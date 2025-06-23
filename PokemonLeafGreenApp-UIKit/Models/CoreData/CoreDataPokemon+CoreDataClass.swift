@@ -11,7 +11,7 @@ import CoreData
 
 @objc(CoreDataPokemon)
 public class CoreDataPokemon: NSManagedObject {
-    func adaptPokeAPIPokemonToCoreDataPokemon(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
+    func adapt(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
         self.id = Int16(pokeAPIPokemon.id)
         self.name = pokeAPIPokemon.name
         self.baseExperience = Int16(pokeAPIPokemon.baseExperience)

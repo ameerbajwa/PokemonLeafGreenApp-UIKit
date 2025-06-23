@@ -616,14 +616,14 @@ struct PokeAPIMocks {
       ],
       "flavor_text_entries": [
         {
-          "flavor_text": "Pounds with fore­legs or tail.",
+          "flavor_text": "A physical attack delivered with a long tail or a foreleg, etc.",
           "language": {
             "url": "https://pokeapi.co/api/v2/language/9/",
             "name": "en"
           },
           "version_group": {
-            "url": "https://pokeapi.co/api/v2/version-group/3/",
-            "name": "gold-silver"
+            "url": "https://pokeapi.co/api/v2/version-group/7/",
+            "name": "firered-leafgreen"
           }
         }
       ]

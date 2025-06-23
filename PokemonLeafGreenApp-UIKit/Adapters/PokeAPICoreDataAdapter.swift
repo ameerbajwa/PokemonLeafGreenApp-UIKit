@@ -11,32 +11,30 @@ import CoreData
 struct PokeAPICoreDataAdapter {
     let coreDataContext: NSManagedObjectContext
     
-    init() {
-        self.coreDataContext = AppDelegate().persistentContainer.viewContext
+    init(coreDataContext: NSManagedObjectContext) {
+        self.coreDataContext = coreDataContext
     }
     
-    func adaptMoveToCoreData(pokeAPIMove: PokeAPIMoveDetails) -> CoreDataMove {
+    func adaptMoveToCoreData(pokeAPIMove: PokeAPIMoveDetails) {
         let coreDataMove = CoreDataMove(context: coreDataContext)
-        coreDataMove.adaptPokeAPIMoveModelToCoreDataMoveModel(pokeAPIMoveModel: pokeAPIMove)
+        coreDataMove.adapt(pokeAPIMoveModel: pokeAPIMove)
         
         if pokeAPIMove.statChanges.count > 0 {
             for statChange in pokeAPIMove.statChanges {
                 coreDataMove.addToStatChanges(adaptStatChangeToCoreData(pokeAPIStatChange: statChange))
             }
         }
-        
-        return coreDataMove
     }
     
     func adaptStatChangeToCoreData(pokeAPIStatChange: PokeAPIMoveStatChangeDetails) -> CoreDataMoveStatChange {
         let coreDataMoveStatChange = CoreDataMoveStatChange(context: coreDataContext)
-        coreDataMoveStatChange.adaptPokeAPIMoveStatChangeToCoreDataMoveStatChange(pokeAPIMoveStatChange: pokeAPIStatChange)
+        coreDataMoveStatChange.adapt(pokeAPIMoveStatChange: pokeAPIStatChange)
         return coreDataMoveStatChange
     }
     
-    func adaptPokemonToCoreData(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) -> CoreDataPokemon {
+    func adaptPokemonToCoreData(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
         let coreDataPokemon = CoreDataPokemon(context: coreDataContext)
-        coreDataPokemon.adaptPokeAPIPokemonToCoreDataPokemon(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
+        coreDataPokemon.adapt(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
         var adjustedMoveList = [PokeAPIPokemonMoveDetails]()
         for move in pokeAPIPokemon.moves {
@@ -53,20 +51,18 @@ struct PokeAPICoreDataAdapter {
         
         for stat in pokeAPIPokemon.stats {
             coreDataPokemon.addToStats(adaptPokemonStatToCoreData(pokeAPIPokemonStat: stat))
-        }
-        
-        return coreDataPokemon
+        }        
     }
     
     func adaptPokemonMoveListToCoreData(pokeAPIPokemonMove: PokeAPIPokemonMoveDetails) -> CoreDataPokemonMoveList {
         let coreDataPokemonMoveList = CoreDataPokemonMoveList(context: coreDataContext)
-        coreDataPokemonMoveList.adaptPokeAPIMoveListToCoreDataPokemonMoveList(pokeAPIPokemonMoveDetails: pokeAPIPokemonMove)
+        coreDataPokemonMoveList.adapt(pokeAPIPokemonMoveDetails: pokeAPIPokemonMove)
         return coreDataPokemonMoveList
     }
     
     func adaptPokemonStatToCoreData(pokeAPIPokemonStat: PokeAPIPokemonStatDetails) -> CoreDataPokemonStat {
         let coreDataPokemonStat = CoreDataPokemonStat(context: coreDataContext)
-        coreDataPokemonStat.adaptPokeAPIStatToCoreDataPokemonStat(pokeAPIStat: pokeAPIPokemonStat)
+        coreDataPokemonStat.adapt(pokeAPIStat: pokeAPIPokemonStat)
         return coreDataPokemonStat
     }
 }

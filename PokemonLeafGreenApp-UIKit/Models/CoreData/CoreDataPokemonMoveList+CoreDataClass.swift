@@ -11,7 +11,7 @@ import CoreData
 
 @objc(CoreDataPokemonMoveList)
 public class CoreDataPokemonMoveList: NSManagedObject {
-    func adaptPokeAPIMoveListToCoreDataPokemonMoveList(pokeAPIPokemonMoveDetails: PokeAPIPokemonMoveDetails) {
+    func adapt(pokeAPIPokemonMoveDetails: PokeAPIPokemonMoveDetails) {
         let moveId = pokeAPIPokemonMoveDetails.move.url.split(separator: "/").last ?? ""
         let moveIdString = String(moveId)
         let moveIdInt = Int(moveIdString) ?? 0

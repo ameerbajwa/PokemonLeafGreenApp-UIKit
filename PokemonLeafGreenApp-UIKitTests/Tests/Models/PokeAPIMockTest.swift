@@ -104,9 +104,9 @@ final class PokeAPIMockTest: XCTestCase {
         XCTAssertEqual(pokeAPIMoveMockResponse.pp, 35)
         XCTAssertEqual(pokeAPIMoveMockResponse.power, 40)
         XCTAssertEqual(pokeAPIMoveMockResponse.moveType.name, "normal")
-        XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].description, "Pounds with fore­legs or tail.")
+        XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].description, "A physical attack delivered with a long tail or a foreleg, etc.")
         XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].language.name, "en")
-        XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].version.name, "gold-silver")
+        XCTAssertEqual(pokeAPIMoveMockResponse.moveDescription[0].version.name, "firered-leafgreen")
     }
     
     func testPokeAPIMoveMockWhenMockDataIsCorrupt() {
