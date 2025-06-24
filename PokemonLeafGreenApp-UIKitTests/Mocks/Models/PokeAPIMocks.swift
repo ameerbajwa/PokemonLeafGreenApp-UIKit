@@ -458,7 +458,7 @@ struct PokeAPIMocks {
             "url": "https://pokeapi.co/api/v2/language/9/"
           },
           "version": {
-            "name": "blue",
+            "name": "firered-leafgreen",
             "url": "https://pokeapi.co/api/v2/version/2/"
           }
         }
@@ -627,6 +627,16 @@ struct PokeAPIMocks {
           }
         }
       ]
+    }
+    """
+    
+    static let PokeAPIMoveStatChange = """
+    {
+      "change": -1,
+      "stat": {
+        "name": "attack",
+        "url": "https://pokeapi.co/api/v2/stat/2/"    
+      }
     }
     """
     
