@@ -46,36 +46,37 @@ class ViewController: UIViewController {
         let decoder = JSONDecoder()
         let session = URLSession.shared
         let networkService = PokeAPINetworkService(session: session, decoder: decoder)
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 1)
+        let request = PokeAPIRequest<PokeAPIMoveDetails>(baseUrl: .pokemonBaseUrl, endpoint: .move, id: 1)
         
         Task {
             do {
                 let response = try await networkService.callPokeAPIServer(with: request)
-                print(response.id)
-                print(response.name)
-                for stat in response.stats {
-                    print("\(stat.stat.name): \(stat.baseStat)")
-                }
-                var moves = response.moves.filter { moveDetails in
-                    moveDetails.versionGroupDetails.contains { versionGroupDetails in
-                        versionGroupDetails.versionGroup.name == "firered-leafgreen" && versionGroupDetails.moveLearnMethod.name == "level-up"
-                    }
-                }
-                var adjustedMoves: [PokeAPIPokemonMoveDetails] = []
-                for move in moves {
-                    let adjustedMoveDetails = move.versionGroupDetails.filter { versionGroupDetails in
-                        versionGroupDetails.versionGroup.name == "firered-leafgreen" && versionGroupDetails.moveLearnMethod.name == "level-up"
-                    }
-                    
-                    adjustedMoves.append(PokeAPIPokemonMoveDetails(move: move.move, versionGroupDetails: adjustedMoveDetails))
-                }
-                
-                adjustedMoves.sort {
-                    $0.versionGroupDetails[0].levelLearnedAt < $1.versionGroupDetails[0].levelLearnedAt
-                }
-                for move in adjustedMoves {
-                    print("\(move.move.name) - \(move.versionGroupDetails[0].levelLearnedAt)")
-                }
+                print(response.statChanges)
+//                print(response.id)
+//                print(response.name)
+//                for stat in response.stats {
+//                    print("\(stat.stat.name): \(stat.baseStat)")
+//                }
+//                var moves = response.moves.filter { moveDetails in
+//                    moveDetails.versionGroupDetails.contains { versionGroupDetails in
+//                        versionGroupDetails.versionGroup.name == "firered-leafgreen" && versionGroupDetails.moveLearnMethod.name == "level-up"
+//                    }
+//                }
+//                var adjustedMoves: [PokeAPIPokemonMoveDetails] = []
+//                for move in moves {
+//                    let adjustedMoveDetails = move.versionGroupDetails.filter { versionGroupDetails in
+//                        versionGroupDetails.versionGroup.name == "firered-leafgreen" && versionGroupDetails.moveLearnMethod.name == "level-up"
+//                    }
+//                    
+//                    adjustedMoves.append(PokeAPIPokemonMoveDetails(move: move.move, versionGroupDetails: adjustedMoveDetails))
+//                }
+//                
+//                adjustedMoves.sort {
+//                    $0.versionGroupDetails[0].levelLearnedAt < $1.versionGroupDetails[0].levelLearnedAt
+//                }
+//                for move in adjustedMoves {
+//                    print("\(move.move.name) - \(move.versionGroupDetails[0].levelLearnedAt)")
+//                }
             } catch let error as PokemonLeafGreenError {
                 print(error.debugDescription)
             }

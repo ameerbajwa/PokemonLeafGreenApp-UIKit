@@ -11,17 +11,11 @@ import CoreData
 
 
 extension CoreDataMoveStatChange {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataMoveStatChange> {
         return NSFetchRequest<CoreDataMoveStatChange>(entityName: "CoreDataMoveStatChange")
     }
 
     @NSManaged public var change: Int16
-    @NSManaged public var statName: String?
-    @NSManaged public var move: CoreDataMove?
-
-}
-
-extension CoreDataMoveStatChange : Identifiable {
-
+    @NSManaged public var statName: String
+    @NSManaged public var move: CoreDataMove
 }

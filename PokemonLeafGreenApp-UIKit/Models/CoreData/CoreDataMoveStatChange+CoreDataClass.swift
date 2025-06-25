@@ -11,5 +11,8 @@ import CoreData
 
 @objc(CoreDataMoveStatChange)
 public class CoreDataMoveStatChange: NSManagedObject {
-
+    func adapt(pokeAPIMoveStatChange: PokeAPIMoveStatChangeDetails) {
+        self.change = Int16(pokeAPIMoveStatChange.change)
+        self.statName = pokeAPIMoveStatChange.stat.name
+    }
 }

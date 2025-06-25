@@ -51,7 +51,7 @@ struct PokeAPIMocks {
             {
               "level_learned_at": 1,
               "version_group": {
-                "name": "red-blue",
+                "name": "firered-leafgreen",
                 "url": "https://pokeapi.co/api/v2/version-group/1/"
               },
               "move_learn_method": {
@@ -458,7 +458,7 @@ struct PokeAPIMocks {
             "url": "https://pokeapi.co/api/v2/language/9/"
           },
           "version": {
-            "name": "blue",
+            "name": "firered-leafgreen",
             "url": "https://pokeapi.co/api/v2/version/2/"
           }
         }
@@ -596,7 +596,15 @@ struct PokeAPIMocks {
         }
       ],
       "past_values": [],
-      "stat_changes": [],
+      "stat_changes": [
+        {
+          "change": -1,
+          "stat": {
+            "name": "defense",
+            "url": "https://pokeapi.co/api/v2/stat/3/"
+          }
+        }
+      ],
       "super_contest_effect": {
         "url": "https://pokeapi.co/api/v2/super-contest-effect/5/"
       },
@@ -616,17 +624,27 @@ struct PokeAPIMocks {
       ],
       "flavor_text_entries": [
         {
-          "flavor_text": "Pounds with fore­legs or tail.",
+          "flavor_text": "A physical attack delivered with a long tail or a foreleg, etc.",
           "language": {
             "url": "https://pokeapi.co/api/v2/language/9/",
             "name": "en"
           },
           "version_group": {
-            "url": "https://pokeapi.co/api/v2/version-group/3/",
-            "name": "gold-silver"
+            "url": "https://pokeapi.co/api/v2/version-group/7/",
+            "name": "firered-leafgreen"
           }
         }
       ]
+    }
+    """
+    
+    static let PokeAPIMoveStatChange = """
+    {
+      "change": -1,
+      "stat": {
+        "name": "attack",
+        "url": "https://pokeapi.co/api/v2/stat/2/"    
+      }
     }
     """
     

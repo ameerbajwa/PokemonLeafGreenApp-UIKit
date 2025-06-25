@@ -11,19 +11,13 @@ import CoreData
 
 
 extension CoreDataPokemonStat {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataPokemonStat> {
         return NSFetchRequest<CoreDataPokemonStat>(entityName: "CoreDataPokemonStat")
     }
 
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var baseValue: Int16
     @NSManaged public var individualValue: Int16
     @NSManaged public var effortValue: Int16
     @NSManaged public var pokemon: CoreDataPokemon?
-
-}
-
-extension CoreDataPokemonStat : Identifiable {
-
 }
