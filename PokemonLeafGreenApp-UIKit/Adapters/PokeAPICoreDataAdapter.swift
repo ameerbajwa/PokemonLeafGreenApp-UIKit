@@ -15,7 +15,7 @@ struct PokeAPICoreDataAdapter {
         self.coreDataContext = coreDataContext
     }
     
-    func adaptMoveToCoreData(pokeAPIMove: PokeAPIMoveDetails) {
+    func adaptMoveToCoreData(pokeAPIMove: PokeAPIMoveDetails) -> CoreDataMove {
         let coreDataMove = CoreDataMove(context: coreDataContext)
         coreDataMove.adapt(pokeAPIMoveModel: pokeAPIMove)
         
@@ -24,6 +24,8 @@ struct PokeAPICoreDataAdapter {
                 coreDataMove.addToStatChanges(adaptStatChangeToCoreData(pokeAPIStatChange: statChange))
             }
         }
+        
+        return coreDataMove
     }
     
     func adaptStatChangeToCoreData(pokeAPIStatChange: PokeAPIMoveStatChangeDetails) -> CoreDataMoveStatChange {
@@ -32,14 +34,14 @@ struct PokeAPICoreDataAdapter {
         return coreDataMoveStatChange
     }
     
-    func adaptPokemonToCoreData(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
+    func adaptPokemonToCoreData(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) -> CoreDataPokemon {
         let coreDataPokemon = CoreDataPokemon(context: coreDataContext)
         coreDataPokemon.adapt(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
         var adjustedMoveList = [PokeAPIPokemonMoveDetails]()
         for move in pokeAPIPokemon.moves {
             let adjustedMoveDetails = move.versionGroupDetails.filter { versionGroupDetails in
-                versionGroupDetails.versionGroup.name == "firered-leafgreen" && versionGroupDetails.moveLearnMethod.name == "level-up"
+                versionGroupDetails.versionGroup.name == CommonAppMessages.pokemonGameVersion && versionGroupDetails.moveLearnMethod.name == CommonAppMessages.levelUpMethod
             }
 
             adjustedMoveList.append(PokeAPIPokemonMoveDetails(move: move.move, versionGroupDetails: adjustedMoveDetails))
@@ -51,7 +53,9 @@ struct PokeAPICoreDataAdapter {
         
         for stat in pokeAPIPokemon.stats {
             coreDataPokemon.addToStats(adaptPokemonStatToCoreData(pokeAPIPokemonStat: stat))
-        }        
+        }
+        
+        return coreDataPokemon
     }
     
     func adaptPokemonMoveListToCoreData(pokeAPIPokemonMove: PokeAPIPokemonMoveDetails) -> CoreDataPokemonMoveList {

@@ -20,8 +20,8 @@ public class CoreDataMove: NSManagedObject {
         self.moveType = pokeAPIMoveModel.moveType.name
         
         let moveDescription = pokeAPIMoveModel.moveDescription.filter { moveDescriptionDetails in
-            moveDescriptionDetails.version.name == "firered-leafgreen" &&
-            moveDescriptionDetails.language.name == "en"
+            moveDescriptionDetails.version.name == CommonAppMessages.pokemonGameVersion &&
+            moveDescriptionDetails.language.name == CommonAppMessages.englishLanguage
         }
         self.moveDescription = moveDescription[0].description
     }

@@ -51,7 +51,7 @@ struct PokeAPIMocks {
             {
               "level_learned_at": 1,
               "version_group": {
-                "name": "red-blue",
+                "name": "firered-leafgreen",
                 "url": "https://pokeapi.co/api/v2/version-group/1/"
               },
               "move_learn_method": {
@@ -596,7 +596,15 @@ struct PokeAPIMocks {
         }
       ],
       "past_values": [],
-      "stat_changes": [],
+      "stat_changes": [
+        {
+          "change": -1,
+          "stat": {
+            "name": "defense",
+            "url": "https://pokeapi.co/api/v2/stat/3/"
+          }
+        }
+      ],
       "super_contest_effect": {
         "url": "https://pokeapi.co/api/v2/super-contest-effect/5/"
       },

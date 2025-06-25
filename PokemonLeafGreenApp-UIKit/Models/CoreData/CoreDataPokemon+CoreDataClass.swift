@@ -22,7 +22,7 @@ public class CoreDataPokemon: NSManagedObject {
         self.backImageUrlString = pokeAPIPokemon.sprites.versions.generationIII.leafGreen.backImageUrl
         
         let pokemonDescription = pokeAPIPokemonSpecies.descriptionDetails.filter { speciesDescriptionDetails in
-            speciesDescriptionDetails.language.name == "en" && speciesDescriptionDetails.version.name == "firered-leafgreen"
+            speciesDescriptionDetails.language.name == CommonAppMessages.englishLanguage && speciesDescriptionDetails.version.name == CommonAppMessages.pokemonGameVersion
         }
         self.pokemonDescription = pokemonDescription[0].description
     }

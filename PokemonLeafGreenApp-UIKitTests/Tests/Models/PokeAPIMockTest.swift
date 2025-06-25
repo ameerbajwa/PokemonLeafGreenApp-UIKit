@@ -34,7 +34,7 @@ final class PokeAPIMockTest: XCTestCase {
         XCTAssertEqual(pokeAPIPokemonMockResponse.baseExperience, 113)
         XCTAssertEqual(pokeAPIPokemonMockResponse.moves[0].move.name, "pound")
         XCTAssertEqual(pokeAPIPokemonMockResponse.moves[0].versionGroupDetails[0].levelLearnedAt, 1)
-        XCTAssertEqual(pokeAPIPokemonMockResponse.moves[0].versionGroupDetails[0].versionGroup.name, "red-blue")
+        XCTAssertEqual(pokeAPIPokemonMockResponse.moves[0].versionGroupDetails[0].versionGroup.name, "firered-leafgreen")
         XCTAssertEqual(pokeAPIPokemonMockResponse.sprites.versions.generationIII.leafGreen.frontImageUrl, "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/35.png")
         XCTAssertEqual(pokeAPIPokemonMockResponse.sprites.versions.generationIII.leafGreen.backImageUrl, "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/back/35.png")
         XCTAssertEqual(pokeAPIPokemonMockResponse.stats[0].baseStat, 35)
