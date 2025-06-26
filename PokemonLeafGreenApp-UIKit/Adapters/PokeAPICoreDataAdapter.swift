@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-struct PokeAPICoreDataAdapter {
-    let coreDataContext: NSManagedObjectContext
+public struct PokeAPICoreDataAdapter {
+    var coreDataContext: NSManagedObjectContext
     
     init(coreDataContext: NSManagedObjectContext) {
         self.coreDataContext = coreDataContext
@@ -44,7 +44,9 @@ struct PokeAPICoreDataAdapter {
                 versionGroupDetails.versionGroup.name == CommonAppMessages.pokemonGameVersion && versionGroupDetails.moveLearnMethod.name == CommonAppMessages.levelUpMethod
             }
 
-            adjustedMoveList.append(PokeAPIPokemonMoveDetails(move: move.move, versionGroupDetails: adjustedMoveDetails))
+            if !adjustedMoveDetails.isEmpty {
+                adjustedMoveList.append(PokeAPIPokemonMoveDetails(move: move.move, versionGroupDetails: adjustedMoveDetails))
+            }
         }
         
         for move in adjustedMoveList {

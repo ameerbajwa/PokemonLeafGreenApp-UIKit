@@ -12,6 +12,8 @@ public enum PokemonLeafGreenError: Error {
     case urlReponseToHTTPUrlResponseError
     case decodingError(responseType: String)
     case pokeAPIServerError(statusCode: Int, errorDescription: String?)
+    case coreDataSaveError
+    case coreDataFetchError
     
     var debugDescription: String {
         switch self {
@@ -27,12 +29,16 @@ public enum PokemonLeafGreenError: Error {
             } else {
                 return "PokeAPI server error - \(statusCode)"
             }
+        case .coreDataSaveError:
+            return "Could not save core data model"
+        case .coreDataFetchError:
+            return "Could not fetch core data model"
         }
     }
     
     var errorLogDescription: String {
         switch self {
-        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _):
+        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError, .coreDataFetchError:
             return "Server is down. Please refresh the app or download again."
         }
     }

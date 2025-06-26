@@ -9,6 +9,8 @@ import Foundation
 
 struct CommonAppMessages {
     static let pokemonGameVersion = "firered-leafgreen"
+    static let pokemonFireRedVersion = "firered"
+    static let pokemonLeafGreenVersion = "leafgreen"
     static let levelUpMethod = "level-up"
     static let englishLanguage = "en"
 }
