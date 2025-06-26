@@ -19,7 +19,7 @@ public struct CoreDataNetworkService {
 // MARK: - Adapting PokeAPI models to CoreData Models and saving them
 
 extension CoreDataNetworkService {
-    func saveCoreDataMoveModel(pokeAPIMove: PokeAPIMoveDetails) throws {
+    func saveCoreDataMoveModel(pokeAPIMove: PokeAPIMoveDetails) async throws {
         let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
         _ = adapter.adaptMoveToCoreData(pokeAPIMove: pokeAPIMove)
         
@@ -30,7 +30,7 @@ extension CoreDataNetworkService {
         }
     }
     
-    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) throws {
+    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws {
         let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
         _ = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
@@ -45,25 +45,19 @@ extension CoreDataNetworkService {
 // MARK: - Fetching CoreData Models
 
 extension CoreDataNetworkService {
-    func fetchCoreDataPokemonDetails(pokemonName: String) throws -> CoreDataPokemon? {
-        let coreDataPokemonDetailsRequest: NSFetchRequest<CoreDataPokemon> = CoreDataPokemon.fetchRequest()
-        let pokemonPredicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPokemon.name), pokemonName)
-        coreDataPokemonDetailsRequest.predicate = pokemonPredicate
-        
-        do {
-            return try context.fetch(coreDataPokemonDetailsRequest).first
-        } catch {
+    func fetchCoreDataModel<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> CoreDataRequest.Model {
+        guard let fetchRequest = CoreDataRequest.Model.fetchRequest() as? NSFetchRequest<CoreDataRequest.Model> else {
+            print("Failed to cast fetchRequest for model: \(CoreDataRequest.Model.self)")
             throw PokemonLeafGreenError.coreDataFetchError
         }
-    }
-    
-    func fetchCoreDataMoveDetails(moveName: String) throws -> CoreDataMove? {
-        let coreDataMoveDetailsRequest: NSFetchRequest<CoreDataMove> = CoreDataMove.fetchRequest()
-        let movePredicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataMove.name), moveName)
-        coreDataMoveDetailsRequest.predicate = movePredicate
+        let fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifier)
+        fetchRequest.predicate = fetchRequestPredicate
         
         do {
-            return try context.fetch(coreDataMoveDetailsRequest).first
+            guard let coreDataModel = try context.fetch(fetchRequest).first else {
+                throw PokemonLeafGreenError.coreDataFetchError
+            }
+            return coreDataModel
         } catch {
             throw PokemonLeafGreenError.coreDataFetchError
         }

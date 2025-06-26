@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(CoreDataPokemon)
-public class CoreDataPokemon: NSManagedObject {
+public class CoreDataPokemon: NSManagedObject, CoreDataPokemonManageable {
     func adapt(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) {
         self.id = Int16(pokeAPIPokemon.id)
         self.name = pokeAPIPokemon.name

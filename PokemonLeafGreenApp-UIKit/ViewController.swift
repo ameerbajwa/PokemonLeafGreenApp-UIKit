@@ -9,14 +9,15 @@ import Foundation
 import UIKit
 
 class ViewController: UIViewController {
-    
     var titleLabel: UILabel!
     var printButton: UIButton!
     
+    var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     
-    init() {
-        coreDataNetworkService = CoreDataNetworkService(container: AppDelegate().persistentContainer)
+    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
+        self.pokeAPINetworkService = pokeAPINetworkService
+        self.coreDataNetworkService = coreDataNetworkService
         
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = .white
@@ -39,10 +40,12 @@ class ViewController: UIViewController {
         
         printButton = UIButton()
         printButton.setTitle("Print from CoreData", for: .normal)
+        printButton.setTitleColor(.black, for: .normal)
         printButton.titleLabel?.font = .boldSystemFont(ofSize: 16.0)
         printButton.layer.borderWidth = 5.0
         printButton.layer.borderColor = UIColor.black.cgColor
         printButton.addTarget(self, action: #selector(printCoreDataObject), for: .touchUpInside)
+        printButton.isHidden = true
         
         self.view.addSubview(titleLabel)
         self.view.addSubview(printButton)
@@ -56,21 +59,24 @@ class ViewController: UIViewController {
             
             printButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             printButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30.0),
+            printButton.widthAnchor.constraint(equalToConstant: 100.0),
+            printButton.heightAnchor.constraint(equalToConstant: 50.0)
         ])
     }
 
     func callPokeAPINetworkServiceForBulbasaur() {
-        let decoder = JSONDecoder()
-        let session = URLSession.shared
-        let pokeAPINetworkService = PokeAPINetworkService(session: session, decoder: decoder)
-        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 1)
-        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 1)
+        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 4)
+        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 4)
         
         Task {
             do {
                 let pokemonResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonRequest)
                 let pokemonSpeciesResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonSpeciesRequest)
-                try coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
+                try await coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
+                DispatchQueue.main.async {
+                    print(pokemonResponse.name)
+                    self.printButton.isHidden = false
+                }
             } catch let error as PokemonLeafGreenError {
                 print(error.debugDescription)
                 print(error.errorLogDescription)
@@ -81,21 +87,18 @@ class ViewController: UIViewController {
     @objc
     func printCoreDataObject(sender: UIButton) {
         do {
-            let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataPokemonDetails(pokemonName: "bulbasaur")
-            guard let safeCoreDataPokemonModel = coreDataPokemonModel else {
-                print("could not unwrap optional coredata model")
-                return
-            }
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "charmander")
+            let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
             
-            print("Id: \(safeCoreDataPokemonModel.id)")
-            print("Pokemon: \(safeCoreDataPokemonModel.name)")
-            print("Base Experience: \(safeCoreDataPokemonModel.baseExperience)")
-            print("Growth Rate: \(safeCoreDataPokemonModel.growthRate)")
-            print("Type: \(safeCoreDataPokemonModel.type)")
-            print("Description: \(safeCoreDataPokemonModel.pokemonDescription)")
+            print("Id: \(coreDataPokemonModel.id)")
+            print("Pokemon: \(coreDataPokemonModel.name)")
+            print("Base Experience: \(coreDataPokemonModel.baseExperience)")
+            print("Growth Rate: \(coreDataPokemonModel.growthRate)")
+            print("Type: \(coreDataPokemonModel.type)")
+            print("Description: \(coreDataPokemonModel.pokemonDescription)")
             print("\n")
             print("Stats")
-            for stat in safeCoreDataPokemonModel.stats {
+            for stat in coreDataPokemonModel.stats {
                 guard let pokemonStat = stat as? CoreDataPokemonStat else {
                     print("could not convert NSSet to CoreDataPokemonStat")
                     return
@@ -107,7 +110,7 @@ class ViewController: UIViewController {
             }
 
             print("\nMoves")
-            for move in safeCoreDataPokemonModel.moves {
+            for move in coreDataPokemonModel.moves {
                 guard let pokemonMove = move as? CoreDataPokemonMoveList else {
                     print("could not convert NSSet to CoreDataPokemonMoveList")
                     return
