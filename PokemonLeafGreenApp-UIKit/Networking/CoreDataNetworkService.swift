@@ -26,7 +26,7 @@ extension CoreDataNetworkService {
         do {
             try context.save()
         } catch {
-            throw PokemonLeafGreenError.coreDataSaveError
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataMove.self)")
         }
     }
     
@@ -37,7 +37,7 @@ extension CoreDataNetworkService {
         do {
             try context.save()
         } catch {
-            throw PokemonLeafGreenError.coreDataSaveError
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataPokemon.self)")
         }
     }
 }
@@ -47,19 +47,14 @@ extension CoreDataNetworkService {
 extension CoreDataNetworkService {
     func fetchCoreDataModel<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> CoreDataRequest.Model {
         guard let fetchRequest = CoreDataRequest.Model.fetchRequest() as? NSFetchRequest<CoreDataRequest.Model> else {
-            print("Failed to cast fetchRequest for model: \(CoreDataRequest.Model.self)")
-            throw PokemonLeafGreenError.coreDataFetchError
+            throw PokemonLeafGreenError.coreDataFetchRequestError(model: "\(CoreDataRequest.Model.self)")
         }
         let fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifier)
         fetchRequest.predicate = fetchRequestPredicate
         
-        do {
-            guard let coreDataModel = try context.fetch(fetchRequest).first else {
-                throw PokemonLeafGreenError.coreDataFetchError
-            }
-            return coreDataModel
-        } catch {
-            throw PokemonLeafGreenError.coreDataFetchError
+        guard let coreDataModel = try context.fetch(fetchRequest).first else {
+            throw PokemonLeafGreenError.coreDataFetchError(model: "\(CoreDataRequest.Model.self)")
         }
+        return coreDataModel
     }
 }

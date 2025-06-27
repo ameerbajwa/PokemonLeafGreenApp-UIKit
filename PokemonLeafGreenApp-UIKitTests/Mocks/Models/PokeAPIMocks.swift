@@ -458,7 +458,7 @@ struct PokeAPIMocks {
             "url": "https://pokeapi.co/api/v2/language/9/"
           },
           "version": {
-            "name": "firered-leafgreen",
+            "name": "leafgreen",
             "url": "https://pokeapi.co/api/v2/version/2/"
           }
         }

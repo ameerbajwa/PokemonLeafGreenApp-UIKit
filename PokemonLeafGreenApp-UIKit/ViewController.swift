@@ -59,8 +59,8 @@ class ViewController: UIViewController {
             
             printButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             printButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30.0),
-            printButton.widthAnchor.constraint(equalToConstant: 100.0),
-            printButton.heightAnchor.constraint(equalToConstant: 50.0)
+            printButton.widthAnchor.constraint(equalToConstant: 150.0),
+            printButton.heightAnchor.constraint(equalToConstant: 75.0)
         ])
     }
 
