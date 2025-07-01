@@ -18,7 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = ViewController()
+        
+        let pokeAPINetworkService = PokeAPINetworkService(session: URLSession.shared, decoder: JSONDecoder())
+        let coreDataNetworkService = CoreDataNetworkService(container: AppDelegate().persistentContainer)
+        
+        let startingViewController = ViewController(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        
+        window?.rootViewController = startingViewController
         window?.makeKeyAndVisible()
     }
 

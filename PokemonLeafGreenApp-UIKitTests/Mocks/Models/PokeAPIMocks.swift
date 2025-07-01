@@ -5,6 +5,9 @@
 //  Created by Ameer Bajwa on 6/10/25.
 //
 
+import Foundation
+@testable import PokemonLeafGreenApp_UIKit
+
 struct PokeAPIMocks {
     static let PokeAPIPokemonMock = """
     {
@@ -458,7 +461,7 @@ struct PokeAPIMocks {
             "url": "https://pokeapi.co/api/v2/language/9/"
           },
           "version": {
-            "name": "firered-leafgreen",
+            "name": "leafgreen",
             "url": "https://pokeapi.co/api/v2/version/2/"
           }
         }
@@ -769,4 +772,31 @@ struct PokeAPIMocks {
       ]
     }
     """
+    
+    func returnPokeAPIPokemonMockResponses(mockDecoder: JSONDecoder) -> (PokeAPIPokemonDetails, PokeAPIPokemonSpeciesDetails)? {
+        let pokeAPIPokemonMockData = Data(PokeAPIMocks.PokeAPIPokemonMock.utf8)
+        let pokeAPIPokemonSpeciesMockData = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMock.utf8)
+        var pokeAPIPokemonMockResponse: PokeAPIPokemonDetails!
+        var pokeAPIPokemonSpeciesMockResponse: PokeAPIPokemonSpeciesDetails!
+        
+        do {
+            pokeAPIPokemonMockResponse = try mockDecoder.decode(PokeAPIPokemonDetails.self, from: pokeAPIPokemonMockData)
+            pokeAPIPokemonSpeciesMockResponse = try mockDecoder.decode(PokeAPIPokemonSpeciesDetails.self, from: pokeAPIPokemonSpeciesMockData)
+            return (pokeAPIPokemonMockResponse, pokeAPIPokemonSpeciesMockResponse)
+        } catch {
+            return nil
+        }
+    }
+    
+    func returnPokeAPIMoveMockResponse(mockDecoder: JSONDecoder) -> PokeAPIMoveDetails? {
+        let pokeAPIMoveMockData = Data(PokeAPIMocks.PokeAPIMove.utf8)
+        var pokeAPIMoveMockResponse: PokeAPIMoveDetails!
+        
+        do {
+            pokeAPIMoveMockResponse = try mockDecoder.decode(PokeAPIMoveDetails.self, from: pokeAPIMoveMockData)
+            return pokeAPIMoveMockResponse
+        } catch {
+            return nil
+        }
+    }
 }
