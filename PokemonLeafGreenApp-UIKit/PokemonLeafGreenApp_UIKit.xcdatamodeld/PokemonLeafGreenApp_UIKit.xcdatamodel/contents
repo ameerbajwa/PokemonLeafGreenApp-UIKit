@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E248" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CoreDataGameLocation" representedClassName="CoreDataGameLocation" syncable="YES">
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="wildPokemon" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGameWildPokemon" inverseName="location" inverseEntity="CoreDataGameWildPokemon"/>
+    </entity>
+    <entity name="CoreDataGamePlayer" representedClassName="CoreDataGamePlayer" syncable="YES">
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastLocation" attributeType="String"/>
+        <attribute name="money" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="pokemon" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGamePlayerPokemon" inverseName="player" inverseEntity="CoreDataGamePlayerPokemon"/>
+    </entity>
+    <entity name="CoreDataGamePlayerPokemon" representedClassName="CoreDataGamePlayerPokemon" syncable="YES">
+        <attribute name="currentExperience" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataGamePlayer" inverseName="pokemon" inverseEntity="CoreDataGamePlayer"/>
+    </entity>
+    <entity name="CoreDataGameTrainer" representedClassName="CoreDataGameTrainer" syncable="YES">
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CoreDataGameTrainerPokemon" representedClassName="CoreDataGameTrainerPokemon" syncable="YES">
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="CoreDataGameWildPokemon" representedClassName="CoreDataGameWildPokemon" syncable="YES">
+        <attribute name="highestLevel" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lowestLevel" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="rate" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataGameLocation" inverseName="wildPokemon" inverseEntity="CoreDataGameLocation"/>
+    </entity>
     <entity name="CoreDataMove" representedClassName="CoreDataMove" syncable="YES">
         <attribute name="accuracy" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
