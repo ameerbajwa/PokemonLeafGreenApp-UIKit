@@ -13,8 +13,9 @@ public enum PokemonLeafGreenError: Error {
     case decodingError(responseType: String)
     case pokeAPIServerError(statusCode: Int, errorDescription: String?)
     case coreDataSaveError(model: String)
-    case coreDataFetchError(model: String)
+    case coreDataFetchError(model: String, underlayingCoreDataError: String)
     case coreDataFetchRequestError(model: String)
+    case noRecordInCoreData(model: String, identifier: String, identifierKey: String)
     
     var debugDescription: String {
         switch self {
@@ -32,17 +33,21 @@ public enum PokemonLeafGreenError: Error {
             }
         case .coreDataSaveError(let model):
             return "Could not save \(model) to Core Data"
-        case .coreDataFetchError(let model):
-            return "Could not fetch \(model) from Core Data"
+        case .coreDataFetchError(let model, let errorMessage):
+            return "Could not fetch \(model) from Core Data.\nCore Data Error - \(errorMessage)"
         case .coreDataFetchRequestError(let model):
             return "Failed to create an NSFetchRequest object from model \(model). Check CoreData model entity."
+        case .noRecordInCoreData(let model, let identifier, let key):
+            return "No record found in Core Data model \(model) for key-value pair - \(key) - \(identifier)"
         }
     }
     
     var errorLogDescription: String {
         switch self {
-        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_), .coreDataFetchRequestError(_):
+        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_, _), .coreDataFetchRequestError(_):
             return "Server is down. Please refresh the app or download again."
+        case .noRecordInCoreData(_, _, _):
+            return ""
         }
     }
 }

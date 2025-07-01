@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        callPokeAPINetworkServiceForBulbasaur()
+//        callPokeAPINetworkServiceForBulbasaur()
 
         titleLabel = UILabel()
         titleLabel.text = "POKEMON LEAFGREEN APP"
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         printButton.layer.borderWidth = 5.0
         printButton.layer.borderColor = UIColor.black.cgColor
         printButton.addTarget(self, action: #selector(printCoreDataObject), for: .touchUpInside)
-        printButton.isHidden = true
+        printButton.isHidden = false
         
         self.view.addSubview(titleLabel)
         self.view.addSubview(printButton)
@@ -65,8 +65,8 @@ class ViewController: UIViewController {
     }
 
     func callPokeAPINetworkServiceForBulbasaur() {
-        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 4)
-        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 4)
+        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 7)
+        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 7)
         
         Task {
             do {
@@ -87,7 +87,7 @@ class ViewController: UIViewController {
     @objc
     func printCoreDataObject(sender: UIButton) {
         do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "charmander")
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "squirtle")
             let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
             
             print("Id: \(coreDataPokemonModel.id)")

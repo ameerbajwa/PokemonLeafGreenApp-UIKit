@@ -13,26 +13,31 @@ import CoreData
 class CoreDataNetworkServiceTests: XCTestCase {
     var mockPersistentContainer: NSPersistentContainer!
     var coreDataNetworkService: CoreDataNetworkService!
+    var pokeAPIMocks: PokeAPIMocks!
+    var coreDataMocks: CoreDataMocks!
     var mockDecoder: JSONDecoder!
     
+    
     override func setUp() {
+        mockPersistentContainer = MockPersistentContainer.makeInMemoryPersistentContainer()
+        coreDataNetworkService = CoreDataNetworkService(container: mockPersistentContainer)
         mockDecoder = JSONDecoder()
+        pokeAPIMocks = PokeAPIMocks()
+        coreDataMocks = CoreDataMocks()
+    }
+    
+    override func tearDown() {
+        coreDataNetworkService = nil
+        mockPersistentContainer = nil
+        pokeAPIMocks = nil
+        coreDataMocks = nil
+        mockDecoder = nil
     }
     
     func testSavingThenFetchingCoreDataPokemonModel() async {
-        mockPersistentContainer = MockPersistentContainer.makeInMemoryPersistentContainer()
-        coreDataNetworkService = CoreDataNetworkService(container: mockPersistentContainer)
-        
-        let pokeAPIPokemonMockData = Data(PokeAPIMocks.PokeAPIPokemonMock.utf8)
-        let pokeAPIPokemonSpeciesMockData = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMock.utf8)
-        var pokeAPIPokemonMockResponse: PokeAPIPokemonDetails!
-        var pokeAPIPokemonSpeciesMockResponse: PokeAPIPokemonSpeciesDetails!
-        
-        do {
-            pokeAPIPokemonMockResponse = try mockDecoder.decode(PokeAPIPokemonDetails.self, from: pokeAPIPokemonMockData)
-            pokeAPIPokemonSpeciesMockResponse = try mockDecoder.decode(PokeAPIPokemonSpeciesDetails.self, from: pokeAPIPokemonSpeciesMockData)
-        } catch {
-            XCTFail("Could not decode mock data")
+        guard let (pokeAPIPokemonMockResponse, pokeAPIPokemonSpeciesMockResponse) = pokeAPIMocks.returnPokeAPIPokemonMockResponses(mockDecoder: mockDecoder) else {
+            XCTFail("Could not decode mock pokeAPI response PokeAPIPokemonDetails/PokeAPIPokemonSpeciesDetails")
+            return
         }
         
         do {
@@ -44,9 +49,7 @@ class CoreDataNetworkServiceTests: XCTestCase {
         do {
             let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "clefairy")
             let mockCoreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
-            
-            XCTAssertEqual(mockCoreDataPokemonModel.id, 35)
-            
+                        
             XCTAssertEqual(mockCoreDataPokemonModel.id, 35)
             XCTAssertEqual(mockCoreDataPokemonModel.name, "clefairy")
             XCTAssertEqual(mockCoreDataPokemonModel.baseExperience, 113)
@@ -74,6 +77,52 @@ class CoreDataNetworkServiceTests: XCTestCase {
             }
         } catch {
             XCTFail("Could not fetch correct CoreDataPokemon model after adapting PokeAPI mock data to mock CoreData")
+        }
+    }
+    
+    func testSavingThenFetchingCoreDataMoveModel() async {
+        guard let pokeAPIMoveMockResponse = pokeAPIMocks.returnPokeAPIMoveMockResponse(mockDecoder: mockDecoder) else {
+            XCTFail("Could not decode pokeAPI response PokeAPIMoveDetails")
+            return
+        }
+        
+        do {
+            try await coreDataNetworkService.saveCoreDataMoveModel(pokeAPIMove: pokeAPIMoveMockResponse)
+        } catch {
+            XCTFail("Failed to save mock CoreDataMove object to mock CoreData")
+        }
+        
+        do {
+            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifier: "pound")
+            let mockCoreDataMoveModel = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
+            
+            XCTAssertEqual(mockCoreDataMoveModel.id, 1)
+            XCTAssertEqual(mockCoreDataMoveModel.name, "pound")
+            XCTAssertEqual(mockCoreDataMoveModel.accuracy, 100)
+            XCTAssertEqual(mockCoreDataMoveModel.moveType, "normal")
+            XCTAssertEqual(mockCoreDataMoveModel.power, 40)
+            XCTAssertEqual(mockCoreDataMoveModel.pp, 35)
+            XCTAssertEqual(mockCoreDataMoveModel.moveDescription, "A physical attack delivered with a long tail or a foreleg, etc.")
+            
+            if let mockCoreDataMoveStatChanges = mockCoreDataMoveModel.statChanges as? Set<CoreDataMoveStatChange> {
+                if let mockCoreDataMoveStatChange = mockCoreDataMoveStatChanges.first {
+                    XCTAssertEqual(mockCoreDataMoveStatChange.change, -1)
+                    XCTAssertEqual(mockCoreDataMoveStatChange.statName, "defense")
+                }
+            }
+        } catch {
+            XCTFail("Could not fetch correct CoreDataMove model after adapting PokeAPI mock data to mock CoreData")
+        }
+    }
+    
+    func testFetchingCoreDataModelNotSaved() {
+        do {
+            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "charmander")
+             _ = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
+        } catch let error as PokemonLeafGreenError {
+            XCTAssertEqual(error.debugDescription, "No record found in Core Data model CoreDataPokemon for key-value pair - name - charmander")
+        } catch {
+            XCTFail("Wrong error has been thrown")
         }
     }
 }

@@ -51,10 +51,18 @@ extension CoreDataNetworkService {
         }
         let fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifier)
         fetchRequest.predicate = fetchRequestPredicate
-        
-        guard let coreDataModel = try context.fetch(fetchRequest).first else {
-            throw PokemonLeafGreenError.coreDataFetchError(model: "\(CoreDataRequest.Model.self)")
+        fetchRequest.fetchLimit = 1
+                
+        do {
+            let coreDataModels = try context.fetch(fetchRequest)
+            guard let coreDataModel = coreDataModels.first else {
+                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifier: request.identifier, identifierKey: request.identifierKey)
+            }
+            return coreDataModel
+        } catch let error as PokemonLeafGreenError {
+            throw error
+        } catch {
+            throw PokemonLeafGreenError.coreDataFetchError(model: "\(CoreDataRequest.Model.self)", underlayingCoreDataError: error.localizedDescription)
         }
-        return coreDataModel
     }
 }
