@@ -11,7 +11,6 @@ import CoreData
 
 
 extension CoreDataGamePlayerPokemon {
-
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataGamePlayerPokemon> {
         return NSFetchRequest<CoreDataGamePlayerPokemon>(entityName: "CoreDataGamePlayerPokemon")
     }
@@ -19,12 +18,7 @@ extension CoreDataGamePlayerPokemon {
     @NSManaged public var currentExperience: Int16
     @NSManaged public var id: Int16
     @NSManaged public var level: Int16
-    @NSManaged public var name: String?
+    @NSManaged public var name: String
     @NSManaged public var order: Int16
     @NSManaged public var player: CoreDataGamePlayer?
-
-}
-
-extension CoreDataGamePlayerPokemon : Identifiable {
-
 }

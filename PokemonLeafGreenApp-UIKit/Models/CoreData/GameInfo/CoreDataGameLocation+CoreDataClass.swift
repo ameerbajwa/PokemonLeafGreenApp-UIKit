@@ -10,6 +10,6 @@ import Foundation
 import CoreData
 
 @objc(CoreDataGameLocation)
-public class CoreDataGameLocation: NSManagedObject {
+public class CoreDataGameLocation: NSManagedObject, CoreDataPokemonManageable {
 
 }

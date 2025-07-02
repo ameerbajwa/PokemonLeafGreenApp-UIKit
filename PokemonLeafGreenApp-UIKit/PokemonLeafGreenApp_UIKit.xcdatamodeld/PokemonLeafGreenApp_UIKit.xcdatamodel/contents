@@ -3,6 +3,7 @@
     <entity name="CoreDataGameLocation" representedClassName="CoreDataGameLocation" syncable="YES">
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="trainers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGameTrainer" inverseName="location" inverseEntity="CoreDataGameTrainer"/>
         <relationship name="wildPokemon" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGameWildPokemon" inverseName="location" inverseEntity="CoreDataGameWildPokemon"/>
     </entity>
     <entity name="CoreDataGamePlayer" representedClassName="CoreDataGamePlayer" syncable="YES">
@@ -24,12 +25,15 @@
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataGameLocation" inverseName="trainers" inverseEntity="CoreDataGameLocation"/>
+        <relationship name="pokemon" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGameTrainerPokemon" inverseName="trainer" inverseEntity="CoreDataGameTrainerPokemon"/>
     </entity>
     <entity name="CoreDataGameTrainerPokemon" representedClassName="CoreDataGameTrainerPokemon" syncable="YES">
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="level" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="trainer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataGameTrainer" inverseName="pokemon" inverseEntity="CoreDataGameTrainer"/>
     </entity>
     <entity name="CoreDataGameWildPokemon" representedClassName="CoreDataGameWildPokemon" syncable="YES">
         <attribute name="highestLevel" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
