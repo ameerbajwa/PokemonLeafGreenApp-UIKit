@@ -22,9 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let pokeAPINetworkService = PokeAPINetworkService(session: URLSession.shared, decoder: JSONDecoder())
         let coreDataNetworkService = CoreDataNetworkService(container: AppDelegate().persistentContainer)
         
-        let startingViewController = ViewController(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        let mainNavigationController = UINavigationController.init()
+        let rootCoordinator = RootCoordinator(navigationController: mainNavigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        rootCoordinator.start()
         
-        window?.rootViewController = startingViewController
+        window?.rootViewController = mainNavigationController
         window?.makeKeyAndVisible()
     }
 
