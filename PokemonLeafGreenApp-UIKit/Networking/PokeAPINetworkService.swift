@@ -35,4 +35,19 @@ public class PokeAPINetworkService {
             throw PokemonLeafGreenError.decodingError(responseType: "\(PokeAPIRequest.ResponseType.self)")
         }
     }
+    
+    func retrievePokeAPIImageData(with request: PokeAPIImageBaseRequest) async throws -> Data {
+        let pokeAPIURL = try request.createURL()
+        
+        let (pokeAPIData, pokeAPIResponse) = try await session.data(from: pokeAPIURL)
+        guard let pokeAPIHTTPResponse = pokeAPIResponse as? HTTPURLResponse else {
+            throw PokemonLeafGreenError.urlReponseToHTTPUrlResponseError
+        }
+        
+        guard (200...299).contains(pokeAPIHTTPResponse.statusCode) else {
+            throw PokemonLeafGreenError.pokeAPIServerError(statusCode: pokeAPIHTTPResponse.statusCode, errorDescription: String(data: pokeAPIData, encoding: .utf8))
+        }
+        
+        return pokeAPIData
+    }
 }

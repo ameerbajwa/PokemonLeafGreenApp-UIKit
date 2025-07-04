@@ -37,20 +37,14 @@ public struct PokeAPIRequest<PokeAPIResponse: PokeAPIBaseStructure>: PokeAPIBase
         } else {
             pokeAPIUrlString = baseUrl.stringValue + endpoint.stringValue
         }
-        if baseUrl == .imageBaseUrl {
-            pokeAPIUrlString += ".png"
-        }
         
         guard let pokeAPIUrl = URL(string: pokeAPIUrlString) else {
             throw PokemonLeafGreenError.stringToUrlConversionError(urlString: pokeAPIUrlString)
         }
         
         var urlRequest = URLRequest(url: pokeAPIUrl)
-        if baseUrl == .pokemonBaseUrl {
-            urlRequest.httpMethod = HTTPMethod.GET.rawValue
-        }
+        urlRequest.httpMethod = HTTPMethod.GET.rawValue
         
         return urlRequest
     }
 }
-
