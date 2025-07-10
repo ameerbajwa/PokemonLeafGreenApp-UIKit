@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PokeAPIBaseRequest {
-    var baseUrl: PokeAPIBaseURL { get set }
+    var baseUrl: PokeAPIBaseURL { get }
     var endpoint: PokeAPIEndpoints { get set }
     var id: Int? { get set }
     
@@ -24,8 +24,8 @@ public struct PokeAPIRequest<PokeAPIResponse: PokeAPIBaseStructure>: PokeAPIBase
     
     typealias ResponseType = PokeAPIResponse
         
-    init(baseUrl: PokeAPIBaseURL, endpoint: PokeAPIEndpoints, id: Int? = nil) {
-        self.baseUrl = baseUrl
+    init(endpoint: PokeAPIEndpoints, id: Int? = nil) {
+        self.baseUrl = .pokemonBaseUrl
         self.endpoint = endpoint
         self.id = id
     }

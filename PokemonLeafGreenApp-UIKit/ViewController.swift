@@ -91,8 +91,8 @@ class ViewController: UIViewController {
     }
 
     func callPokeAPINetworkServiceForBulbasaur() {
-        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 7)
-        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 7)
+        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 7)
+        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: 7)
         
         Task {
             do {
@@ -104,8 +104,8 @@ class ViewController: UIViewController {
                     self.printButton.isHidden = false
                 }
             } catch let error as PokemonLeafGreenError {
-                print(error.debugDescription)
                 print(error.errorLogDescription)
+                print(error.clientDescription)
             }
         }
     }
@@ -146,7 +146,7 @@ class ViewController: UIViewController {
                 print(" - Level Learned At: \(pokemonMove.levelLearnedAt)")
             }
         } catch let error as PokemonLeafGreenError {
-            print(error.debugDescription)
+            print(error.clientDescription)
             print(error.errorLogDescription)
         } catch {
             print(error.localizedDescription)

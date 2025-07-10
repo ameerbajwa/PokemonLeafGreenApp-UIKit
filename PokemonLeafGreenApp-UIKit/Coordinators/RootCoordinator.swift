@@ -15,18 +15,23 @@ class RootCoordinator: ParentCoordinator {
     let pokeAPINetworkService: PokeAPINetworkService
     let coreDataNetworkService: CoreDataNetworkService
     var startViewController: StartViewController
+    var startView: StartView
+    var startViewModel: StartViewModel
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
         
-        startViewController = StartViewController(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        self.startView = StartView()
+        self.startViewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, startView: startView)
+        
+        self.startViewController = StartViewController(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, startViewModel: startViewModel)
     }
     
     func start() {
-        startViewController.coordinator = self
-        navigationController.pushViewController(startViewController, animated: false)
+        self.startViewController.coordinator = self
+        self.navigationController.pushViewController(self.startViewController, animated: false)
     }
     
     func finish() {

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PokeAPIImageBaseRequest {
-    var baseUrl: PokeAPIBaseURL { get set }
+    var baseUrl: PokeAPIBaseURL { get }
     var endpoint: PokeAPIEndpoints { get set }
     var id: Int { get set }
             
@@ -20,8 +20,8 @@ public struct PokeAPIImageRequest: PokeAPIImageBaseRequest {
     var endpoint: PokeAPIEndpoints
     var id: Int
             
-    init(baseUrl: PokeAPIBaseURL, endpoint: PokeAPIEndpoints, id: Int) {
-        self.baseUrl = baseUrl
+    init(endpoint: PokeAPIEndpoints, id: Int) {
+        self.baseUrl = .imageBaseUrl
         self.endpoint = endpoint
         self.id = id
     }

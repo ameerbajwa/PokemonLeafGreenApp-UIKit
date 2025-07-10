@@ -21,10 +21,12 @@ public class PokeAPINetworkService {
         
         let (pokeAPIData, pokeAPIResponse) = try await session.data(for: pokeAPIURLRequest)
         guard let pokeAPIHTTPResponse = pokeAPIResponse as? HTTPURLResponse else {
+            print(PokemonLeafGreenError.urlReponseToHTTPUrlResponseError.errorLogDescription)
             throw PokemonLeafGreenError.urlReponseToHTTPUrlResponseError
         }
         
         guard (200...299).contains(pokeAPIHTTPResponse.statusCode) else {
+            print(PokemonLeafGreenError.pokeAPIServerError(statusCode: pokeAPIHTTPResponse.statusCode, errorDescription: String(data: pokeAPIData, encoding: .utf8)).errorLogDescription)
             throw PokemonLeafGreenError.pokeAPIServerError(statusCode: pokeAPIHTTPResponse.statusCode, errorDescription: String(data: pokeAPIData, encoding: .utf8))
         }
         
@@ -32,6 +34,7 @@ public class PokeAPINetworkService {
             let pokeAPIResponse = try decoder.decode(PokeAPIRequest.ResponseType.self, from: pokeAPIData)
             return pokeAPIResponse
         } catch {
+            print(PokemonLeafGreenError.decodingError(responseType: "\(PokeAPIRequest.ResponseType.self)").errorLogDescription)
             throw PokemonLeafGreenError.decodingError(responseType: "\(PokeAPIRequest.ResponseType.self)")
         }
     }
@@ -41,10 +44,12 @@ public class PokeAPINetworkService {
         
         let (pokeAPIData, pokeAPIResponse) = try await session.data(from: pokeAPIURL)
         guard let pokeAPIHTTPResponse = pokeAPIResponse as? HTTPURLResponse else {
+            print(PokemonLeafGreenError.urlReponseToHTTPUrlResponseError.errorLogDescription)
             throw PokemonLeafGreenError.urlReponseToHTTPUrlResponseError
         }
         
         guard (200...299).contains(pokeAPIHTTPResponse.statusCode) else {
+            print(PokemonLeafGreenError.pokeAPIServerError(statusCode: pokeAPIHTTPResponse.statusCode, errorDescription: String(data: pokeAPIData, encoding: .utf8)).errorLogDescription)
             throw PokemonLeafGreenError.pokeAPIServerError(statusCode: pokeAPIHTTPResponse.statusCode, errorDescription: String(data: pokeAPIData, encoding: .utf8))
         }
         
