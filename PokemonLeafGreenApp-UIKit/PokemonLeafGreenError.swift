@@ -17,7 +17,7 @@ public enum PokemonLeafGreenError: Error {
     case coreDataFetchRequestError(model: String)
     case noRecordInCoreData(model: String, identifier: String, identifierKey: String)
     
-    var debugDescription: String {
+    var errorLogDescription: String {
         switch self {
         case .stringToUrlConversionError(let urlString):
             return "Could not convert \(urlString) to URL object"
@@ -42,7 +42,7 @@ public enum PokemonLeafGreenError: Error {
         }
     }
     
-    var errorLogDescription: String {
+    var clientDescription: String {
         switch self {
         case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_, _), .coreDataFetchRequestError(_):
             return "Server is down. Please refresh the app or download again."
