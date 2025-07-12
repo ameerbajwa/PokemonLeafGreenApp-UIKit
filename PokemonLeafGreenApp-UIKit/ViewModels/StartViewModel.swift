@@ -9,14 +9,14 @@ import Foundation
 import UIKit
 
 protocol StartViewModeling: AnyObject {
-    func animateTitle(titleLabel: UILabel)
+    var controllerView: UIView? { get set }
     func generatePokemonImages() async -> (UIImage?, UIImage?)
 }
 
 public class StartViewModel: StartViewModeling {
     var pokeAPINetworkService: PokeAPINetworkService
     var startView: StartView
-    var animationTimer: Timer?
+    weak var controllerView: UIView?
     
     init(pokeAPINetworkService: PokeAPINetworkService, startView: StartView) {
         self.pokeAPINetworkService = pokeAPINetworkService
@@ -45,23 +45,18 @@ public class StartViewModel: StartViewModeling {
         }
     }
     
-    func animateTitle(titleLabel: UILabel) {
-        var currentIndex = 0
-        let titleMessage = "Pokemon LeafGreen Game App"
-        titleLabel.text = ""
+    func animateScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.startView.animateTitle()
+        }
         
-        let interval = TimeInterval(3.0) / Double(titleMessage.count)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.50) {
+            self.startView.animateAttackerImage()
+            self.startView.animateDefenderImage()
+        }
         
-        animationTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] timer in
-            guard let self = self else { return }
-            guard currentIndex < titleMessage.count else {
-                timer.invalidate()
-                return
-            }
-            
-            let index = titleMessage.index(titleMessage.startIndex, offsetBy: currentIndex)
-            titleLabel.text?.append(titleMessage[index])
-            currentIndex += 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
+            self.startView.buttonStackView.isHidden = false
         }
     }
 }

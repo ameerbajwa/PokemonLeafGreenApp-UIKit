@@ -31,9 +31,8 @@ class StartViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
-        
-        viewModel.startView.setupViews()
-        
+
+        viewModel.controllerView = self.view
         self.view.addSubview(viewModel.startView)
         viewModel.startView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -44,8 +43,10 @@ class StartViewController: UIViewController {
             viewModel.startView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
-        viewModel.startView.animateTitle()
+        viewModel.startView.setupViews()
         viewModel.startView.setUpImages()
+        
+        viewModel.animateScreen()
     }
     
     
