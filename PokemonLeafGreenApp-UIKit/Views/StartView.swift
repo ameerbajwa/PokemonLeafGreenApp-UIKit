@@ -20,7 +20,7 @@ class StartView: UIView {
     weak var viewModel: StartViewModeling?
     
     func setupViews() {
-        guard let controllerViewFrame = viewModel?.controllerView?.frame else {
+        guard let controllerViewFrame = viewModel?.startController?.view.frame else {
             print("Could not obtain controller view frame")
             return
         }
@@ -42,6 +42,7 @@ class StartView: UIView {
         newGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         newGameButton.layer.borderWidth = 5.0
         newGameButton.layer.borderColor = UIColor.black.cgColor
+        newGameButton.addTarget(self, action: #selector(newGameButtonPressed), for: .touchUpInside)
         
         loadGameButton = UIButton()
         loadGameButton.setTitle("Load Game", for: .normal)
@@ -49,6 +50,7 @@ class StartView: UIView {
         loadGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         loadGameButton.layer.borderWidth = 5.0
         loadGameButton.layer.borderColor = UIColor.black.cgColor
+        loadGameButton.addTarget(self, action: #selector(loadGameButtonPressed), for: .touchUpInside)
         
         buttonStackView = UIStackView(arrangedSubviews: [newGameButton, loadGameButton])
         buttonStackView.axis = .vertical
@@ -80,6 +82,8 @@ class StartView: UIView {
     }
 }
 
+// MARK: - Animation methods
+
 extension StartView {
     func animateTitle() {
         let titleAnimation = CABasicAnimation(keyPath: "position.y")
@@ -106,7 +110,7 @@ extension StartView {
     }
     
     func animateDefenderImage() {
-        guard let controllerViewFrame = viewModel?.controllerView?.frame else {
+        guard let controllerViewFrame = viewModel?.startController?.view.frame else {
             print("Could not obtain controller view frame when trying to animate the defender image")
             return
         }
@@ -119,5 +123,17 @@ extension StartView {
         pokemonDefenderImageView.layer.position.x = controllerViewFrame.width - 190 + pokemonDefenderImageView.frame.size.width / 2
         
         pokemonDefenderImageView.layer.add(imageAnimation, forKey: "slideIn")
+    }
+}
+
+extension StartView {
+    @objc
+    func newGameButtonPressed() {
+        viewModel?.startNewGame()
+    }
+    
+    @objc
+    func loadGameButtonPressed() {
+        viewModel?.loadGame()
     }
 }

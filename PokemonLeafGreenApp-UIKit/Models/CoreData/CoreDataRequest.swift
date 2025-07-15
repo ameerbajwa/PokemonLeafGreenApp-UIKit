@@ -10,19 +10,35 @@ import CoreData
 
 protocol CoreDataRequesting {
     var identifierKey: String { get set }
-    var identifier: String { get set }
+    var identifierValue: String { get set }
+    var identifier: CoreDataModelIdentifier { get set }
     
-    associatedtype Model: CoreDataPokemonManageable, NSManagedObject
+    associatedtype Model: CoreDataManageable, NSManagedObject
 }
 
-public struct CoreDataRequest<CoreDataModel: CoreDataPokemonManageable & NSManagedObject>: CoreDataRequesting {
+public enum CoreDataModelIdentifier {
+    case idParameter
+    case nameParameter
+}
+
+public struct CoreDataRequest<CoreDataModel: CoreDataManageable & NSManagedObject>: CoreDataRequesting {
     var identifierKey: String
-    var identifier: String
+    var identifierValue: String
+    var identifier: CoreDataModelIdentifier
     
     typealias Model = CoreDataModel
     
-    init(identifierKey: String, identifier: String) {
+    init(identifierKey: String, identifierValue: String) {
         self.identifierKey = identifierKey
-        self.identifier = identifier
+        self.identifierValue = identifierValue
+        
+        self.identifier = (identifierKey == "id") ? .idParameter : .nameParameter
+    }
+    
+    var identifierIdValue: Int16 {
+        if identifierKey == "id" {
+            return Int16(identifierValue) ?? 0
+        }
+        return 0
     }
 }

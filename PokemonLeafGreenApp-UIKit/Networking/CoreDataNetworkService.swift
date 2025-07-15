@@ -40,6 +40,17 @@ extension CoreDataNetworkService {
             throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataPokemon.self)")
         }
     }
+    
+    func saveGamePlayerModel() throws {
+        let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
+        coreDataGamePlayerModel.adaptNewGame()
+        
+        do {
+            try context.save()
+        } catch {
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataGamePlayer.self)")
+        }
+    }
 }
 
 // MARK: - Fetching CoreData Models
@@ -49,14 +60,20 @@ extension CoreDataNetworkService {
         guard let fetchRequest = CoreDataRequest.Model.fetchRequest() as? NSFetchRequest<CoreDataRequest.Model> else {
             throw PokemonLeafGreenError.coreDataFetchRequestError(model: "\(CoreDataRequest.Model.self)")
         }
-        let fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifier)
+        var fetchRequestPredicate: NSPredicate
+        switch request.identifier {
+        case .idParameter:
+            fetchRequestPredicate = NSPredicate(format: "%K == %d", request.identifierKey, request.identifierValue)
+        case .nameParameter:
+            fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifierValue)
+        }
         fetchRequest.predicate = fetchRequestPredicate
         fetchRequest.fetchLimit = 1
                 
         do {
             let coreDataModels = try context.fetch(fetchRequest)
             guard let coreDataModel = coreDataModels.first else {
-                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifier: request.identifier, identifierKey: request.identifierKey)
+                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifier: request.identifierValue, identifierKey: request.identifierKey)
             }
             return coreDataModel
         } catch let error as PokemonLeafGreenError {

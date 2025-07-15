@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(CoreDataMove)
-public class CoreDataMove: NSManagedObject, CoreDataPokemonManageable {
+public class CoreDataMove: NSManagedObject, CoreDataManageable {
     func adapt(pokeAPIMoveModel: PokeAPIMoveDetails) {
         self.id = Int16(pokeAPIMoveModel.id)
         self.name = pokeAPIMoveModel.name

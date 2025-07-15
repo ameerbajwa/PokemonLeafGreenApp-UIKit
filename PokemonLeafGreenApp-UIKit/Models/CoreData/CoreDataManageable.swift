@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-public protocol CoreDataPokemonManageable {
+public protocol CoreDataManageable {
     var id: Int16 { get set }
     var name: String { get set }
 }

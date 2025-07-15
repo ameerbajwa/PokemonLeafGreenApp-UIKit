@@ -12,24 +12,23 @@ protocol BaseCoordinator: AnyObject {
     var navigationController: UINavigationController { get set }
     
     func start()
-    func finish()
 }
 
 protocol ParentCoordinator: BaseCoordinator, AnyObject {
     var childCoordinators: [ChildCoordinator] { get set }
     
-    func addChild(child: ChildCoordinator)
-    func removeChild(child: ChildCoordinator)
+    func addChildCoordinator(childCoordinator: ChildCoordinator)
+    func removeChildCoordinator(childCoordinator: ChildCoordinator)
 }
 
 extension ParentCoordinator {
-    func addChild(child: ChildCoordinator) {
-        childCoordinators.append(child)
+    func addChildCoordinator(childCoordinator: ChildCoordinator) {
+        childCoordinators.append(childCoordinator)
     }
     
-    func removeChild(child: ChildCoordinator) {
-        for (index, childCoordinator) in self.childCoordinators.enumerated() {
-            if childCoordinator === child {
+    func removeChildCoordinator(childCoordinator: ChildCoordinator) {
+        for (index, coordinator) in self.childCoordinators.enumerated() {
+            if coordinator === childCoordinator {
                 childCoordinators.remove(at: index)
                 break
             }
@@ -37,8 +36,6 @@ extension ParentCoordinator {
     }
 }
 
-protocol ChildCoordinator: BaseCoordinator, AnyObject {
-    var viewController: UIViewController { get set }
-    
-    func childFinished()
+protocol ChildCoordinator: BaseCoordinator, AnyObject {    
+    func finish()
 }

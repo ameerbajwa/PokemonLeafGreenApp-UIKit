@@ -9,16 +9,13 @@ import Foundation
 import UIKit
 
 class StartViewController: UIViewController {
-    weak var coordinator: BaseCoordinator?
-    var pokeAPINetworkService: PokeAPINetworkService
-    var coreDataNetworkService: CoreDataNetworkService
+    weak var coordinator: ChildCoordinator?
+    
     var viewModel: StartViewModel
     
     private var safeArea: UILayoutGuide!
     
-    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, startViewModel: StartViewModel) {
-        self.pokeAPINetworkService = pokeAPINetworkService
-        self.coreDataNetworkService = coreDataNetworkService
+    init(startViewModel: StartViewModel) {
         self.viewModel = startViewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -32,7 +29,7 @@ class StartViewController: UIViewController {
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
 
-        viewModel.controllerView = self.view
+        viewModel.startController = self
         self.view.addSubview(viewModel.startView)
         viewModel.startView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -48,6 +45,10 @@ class StartViewController: UIViewController {
         
         viewModel.animateScreen()
     }
-    
-    
+}
+
+extension StartViewController {
+    func coordinateToIntroScreen() {
+        coordinator?.finish()
+    }
 }

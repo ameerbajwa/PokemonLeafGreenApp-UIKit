@@ -113,7 +113,7 @@ class ViewController: UIViewController {
     @objc
     func printCoreDataObject(sender: UIButton) {
         do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifier: "squirtle")
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: "squirtle")
             let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
             
             print("Id: \(coreDataPokemonModel.id)")
