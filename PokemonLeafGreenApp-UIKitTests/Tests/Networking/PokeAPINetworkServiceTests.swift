@@ -47,7 +47,7 @@ class PokeAPINetworkServiceTests: XCTestCase {
     }
     
     func testCallPokeAPIServerWithPokemonEndpointWithNoURLResponseExpectErrorResponse() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 35)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 35)
         
         MockURLProtocol.mockData = Data(PokeAPIMocks.PokeAPIPokemonMock.utf8)
         MockURLProtocol.mockResponse = nil
@@ -59,8 +59,8 @@ class PokeAPINetworkServiceTests: XCTestCase {
             do {
                 _ = try await pokeAPINetworkService.callPokeAPIServer(with: request)
             } catch let error as PokemonLeafGreenError {
-                XCTAssertEqual(error.debugDescription, "Could not convert URLResponse object to HTTPURLResponse")
-                XCTAssertEqual(error.errorLogDescription, "Server is down. Please refresh the app or download again.")
+                XCTAssertEqual(error.errorLogDescription, "Could not convert URLResponse object to HTTPURLResponse")
+                XCTAssertEqual(error.clientDescription, "Server is down. Please refresh the app or download again.")
             }
         }
     }
@@ -70,7 +70,7 @@ class PokeAPINetworkServiceTests: XCTestCase {
 
 extension PokeAPINetworkServiceTests {
     func testCallPokeAPIServerWithPokemonEndpointExpectSuccessfulResponse() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 35)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 35)
         let mockResponse = Data(PokeAPIMocks.PokeAPIPokemonMock.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -105,7 +105,7 @@ extension PokeAPINetworkServiceTests {
     }
     
     func testCallPokeAPIServerWithPokemonEndpointAndCorruptedDataExpectErrorResponse() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 35)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 35)
         let mockResponse = Data(PokeAPIMocks.PokeAPIPokemonMockCorrupted.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -123,8 +123,8 @@ extension PokeAPINetworkServiceTests {
             do {
                 _ = try await pokeAPINetworkService.callPokeAPIServer(with: request)
             } catch let error as PokemonLeafGreenError {
-                XCTAssertEqual(error.debugDescription, "Could not decode PokeAPIPokemonDetails object from JSON data object from pokeapi")
-                XCTAssertEqual(error.errorLogDescription, "Server is down. Please refresh the app or download again.")
+                XCTAssertEqual(error.errorLogDescription, "Could not decode PokeAPIPokemonDetails object from JSON data object from pokeapi")
+                XCTAssertEqual(error.clientDescription, "Server is down. Please refresh the app or download again.")
             }
         }
     }
@@ -134,7 +134,7 @@ extension PokeAPINetworkServiceTests {
 
 extension PokeAPINetworkServiceTests {
     func testCallPokeAPIServerWithSpeciesEndpointExpectSuccessfulResponse() {
-        let request = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: 1)
         let mockResponse = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMock.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -166,7 +166,7 @@ extension PokeAPINetworkServiceTests {
     }
     
     func testCallPokeAPIServerWithSpeciesEndpointAndCorruptedDataExpectErrorResponse() {
-        let request = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: 1)
         let mockResponse = Data(PokeAPIMocks.PokeAPIPokemonSpeciesMockCorrupted.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -184,8 +184,8 @@ extension PokeAPINetworkServiceTests {
             do {
                 _ = try await pokeAPINetworkService.callPokeAPIServer(with: request)
             } catch let error as PokemonLeafGreenError {
-                XCTAssertEqual(error.debugDescription, "Could not decode PokeAPIPokemonSpeciesDetails object from JSON data object from pokeapi")
-                XCTAssertEqual(error.errorLogDescription, "Server is down. Please refresh the app or download again.")
+                XCTAssertEqual(error.errorLogDescription, "Could not decode PokeAPIPokemonSpeciesDetails object from JSON data object from pokeapi")
+                XCTAssertEqual(error.clientDescription, "Server is down. Please refresh the app or download again.")
             }
         }
     }
@@ -195,7 +195,7 @@ extension PokeAPINetworkServiceTests {
 
 extension PokeAPINetworkServiceTests {
     func testCallPokeAPIServerWithMoveEndpointExpectSuccessfulResponse() {
-        let request = PokeAPIRequest<PokeAPIMoveDetails>(baseUrl: .pokemonBaseUrl, endpoint: .move, id: 1)
+        let request = PokeAPIRequest<PokeAPIMoveDetails>(endpoint: .move, id: 1)
         let mockResponse = Data(PokeAPIMocks.PokeAPIMove.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -229,7 +229,7 @@ extension PokeAPINetworkServiceTests {
     }
     
     func testCallPokeAPIServerWithMoveEndpointAndCorruptedDataExpectErrorResponse() {
-        let request = PokeAPIRequest<PokeAPIMoveDetails>(baseUrl: .pokemonBaseUrl, endpoint: .move, id: 1)
+        let request = PokeAPIRequest<PokeAPIMoveDetails>(endpoint: .move, id: 1)
         let mockResponse = Data(PokeAPIMocks.PokeAPIMoveCorrupted.utf8)
         
         MockURLProtocol.mockData = mockResponse
@@ -247,8 +247,8 @@ extension PokeAPINetworkServiceTests {
             do {
                 _ = try await pokeAPINetworkService.callPokeAPIServer(with: request)
             } catch let error as PokemonLeafGreenError {
-                XCTAssertEqual(error.debugDescription, "Could not decode PokeAPIMoveDetails object from JSON data object from pokeapi")
-                XCTAssertEqual(error.errorLogDescription, "Server is down. Please refresh the app or download again.")
+                XCTAssertEqual(error.errorLogDescription, "Could not decode PokeAPIMoveDetails object from JSON data object from pokeapi")
+                XCTAssertEqual(error.clientDescription, "Server is down. Please refresh the app or download again.")
             }
         }
     }

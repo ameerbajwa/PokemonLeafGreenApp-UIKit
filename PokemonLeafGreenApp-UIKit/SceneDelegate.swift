@@ -9,6 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+    var rootCoordinator: RootCoordinator?
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -23,8 +24,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let coreDataNetworkService = CoreDataNetworkService(container: AppDelegate().persistentContainer)
         
         let mainNavigationController = UINavigationController.init()
-        let rootCoordinator = RootCoordinator(navigationController: mainNavigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
-        rootCoordinator.start()
+        mainNavigationController.navigationItem.hidesBackButton = true
+        rootCoordinator = RootCoordinator(navigationController: mainNavigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        rootCoordinator?.start()
         
         window?.rootViewController = mainNavigationController
         window?.makeKeyAndVisible()

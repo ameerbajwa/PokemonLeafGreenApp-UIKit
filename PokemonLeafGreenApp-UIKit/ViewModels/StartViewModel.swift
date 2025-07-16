@@ -9,21 +9,48 @@ import Foundation
 import UIKit
 
 protocol StartViewModeling: AnyObject {
-    var controllerView: UIView? { get set }
+    var startController: StartViewController? { get set }
     func generatePokemonImages() async -> (UIImage?, UIImage?)
+    
+    func startNewGame()
+    func loadGame()
 }
 
-public class StartViewModel: StartViewModeling {
+class StartViewModel: StartViewModeling {
     var pokeAPINetworkService: PokeAPINetworkService
+    var coreDataNetworkService: CoreDataNetworkService
     var startView: StartView
-    weak var controllerView: UIView?
+    weak var startController: StartViewController?
     
-    init(pokeAPINetworkService: PokeAPINetworkService, startView: StartView) {
+    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, startView: StartView) {
         self.pokeAPINetworkService = pokeAPINetworkService
+        self.coreDataNetworkService = coreDataNetworkService
         self.startView = startView
         self.startView.viewModel = self
     }
-    
+}
+
+// MARK: - Animation chain for StartViewController
+extension StartViewModel {
+    func animateScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.startView.animateTitle()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.50) {
+            self.startView.animateAttackerImage()
+            self.startView.animateDefenderImage()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
+            self.startView.buttonStackView.isHidden = false
+        }
+    }
+}
+
+// MARK: - PokeAPI network call
+
+extension StartViewModel {
     func generatePokemonImages() async -> (UIImage?, UIImage?) {
         var pokemonIds = [3,6] // venasaur and charizard pokemon ids on pokeapi
         let attackingPokemonIndex = Int.random(in: 0...1)
@@ -44,19 +71,34 @@ public class StartViewModel: StartViewModeling {
             return (nil, nil)
         }
     }
-    
-    func animateScreen() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.startView.animateTitle()
+}
+
+// MARK: - CoreData network call
+
+extension StartViewModel {
+    func loadGame() {
+        do {
+            let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+            let coreDataGamePlayerModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+        } catch {
+            print("Player could not be found, must start new game")
+        }
+    }
+}
+
+// MARK: - Coordinate to IntroViewController
+
+extension StartViewModel {
+    func startNewGame() {
+        do {
+            try coreDataNetworkService.saveGamePlayerModel()
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+            print(error.clientDescription)
+        } catch {
+            print("#ERROR# - Unknown reason")
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.50) {
-            self.startView.animateAttackerImage()
-            self.startView.animateDefenderImage()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
-            self.startView.buttonStackView.isHidden = false
-        }
+        startController?.coordinateToIntroScreen()
     }
 }

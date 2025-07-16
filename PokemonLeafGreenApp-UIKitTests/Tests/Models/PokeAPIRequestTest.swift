@@ -12,7 +12,7 @@ import XCTest
 class PokeAPIRequestTest: XCTestCase {
 
     func testPokeAPIRequestForPokemonEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -24,7 +24,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForPokemonEndpointExpectGetMethod() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .pokemon, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -36,7 +36,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForSpeciesEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .species, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -48,7 +48,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForSpeciesEndpointExpectGetMethod() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .species, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .species, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -60,7 +60,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForMoveEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .move, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .move, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -72,7 +72,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForMoveEndpointExpectGetMethod() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .pokemonBaseUrl, endpoint: .move, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .move, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -84,7 +84,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForFrontImageEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .imageBaseUrl, endpoint: .frontImage, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .frontImage, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
@@ -96,7 +96,7 @@ class PokeAPIRequestTest: XCTestCase {
     }
     
     func testPokeAPIRequestForBackImageEndpointExpectCorrectUrl() {
-        let request = PokeAPIRequest<PokeAPIPokemonDetails>(baseUrl: .imageBaseUrl, endpoint: .backImage, id: 1)
+        let request = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .backImage, id: 1)
         
         do {
             let urlRequest = try request.createURLRequest()
