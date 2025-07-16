@@ -9,36 +9,20 @@ import Foundation
 import CoreData
 
 protocol CoreDataRequesting {
-    var identifierKey: String { get set }
-    var identifierValue: String { get set }
-    var identifier: CoreDataModelIdentifier { get set }
+    var identifierKey: String? { get set }
+    var identifierValue: String? { get set }
     
     associatedtype Model: CoreDataManageable, NSManagedObject
 }
 
-public enum CoreDataModelIdentifier {
-    case idParameter
-    case nameParameter
-}
-
 public struct CoreDataRequest<CoreDataModel: CoreDataManageable & NSManagedObject>: CoreDataRequesting {
-    var identifierKey: String
-    var identifierValue: String
-    var identifier: CoreDataModelIdentifier
+    var identifierKey: String?
+    var identifierValue: String?
     
     typealias Model = CoreDataModel
     
-    init(identifierKey: String, identifierValue: String) {
+    init(identifierKey: String? = nil, identifierValue: String? = nil) {
         self.identifierKey = identifierKey
         self.identifierValue = identifierValue
-        
-        self.identifier = (identifierKey == "id") ? .idParameter : .nameParameter
-    }
-    
-    var identifierIdValue: Int16 {
-        if identifierKey == "id" {
-            return Int16(identifierValue) ?? 0
-        }
-        return 0
     }
 }

@@ -15,7 +15,7 @@ public enum PokemonLeafGreenError: Error {
     case coreDataSaveError(model: String)
     case coreDataFetchError(model: String, underlayingCoreDataError: String)
     case coreDataFetchRequestError(model: String)
-    case noRecordInCoreData(model: String, identifier: String, identifierKey: String)
+    case noRecordInCoreData(model: String, identifierValue: String?, identifierKey: String?)
     
     var errorLogDescription: String {
         switch self {
@@ -38,7 +38,7 @@ public enum PokemonLeafGreenError: Error {
         case .coreDataFetchRequestError(let model):
             return "Failed to create an NSFetchRequest object from model \(model). Check CoreData model entity."
         case .noRecordInCoreData(let model, let identifier, let key):
-            return "No record found in Core Data model \(model) for key-value pair - \(key) - \(identifier)"
+            return "No record found in Core Data model \(model) for key-value pair - \(key ?? "id") - \(identifier ?? "1")"
         }
     }
     

@@ -60,20 +60,18 @@ extension CoreDataNetworkService {
         guard let fetchRequest = CoreDataRequest.Model.fetchRequest() as? NSFetchRequest<CoreDataRequest.Model> else {
             throw PokemonLeafGreenError.coreDataFetchRequestError(model: "\(CoreDataRequest.Model.self)")
         }
-        var fetchRequestPredicate: NSPredicate
-        switch request.identifier {
-        case .idParameter:
-            fetchRequestPredicate = NSPredicate(format: "%K == %d", request.identifierKey, request.identifierValue)
-        case .nameParameter:
-            fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, request.identifierValue)
+        
+        if let safeIdentifierKey = request.identifierKey, let safeIdentifierValue = request.identifierValue {
+            let fetchRequestPredicate = NSPredicate(format: "%K == %@", safeIdentifierKey, safeIdentifierValue)
+            fetchRequest.predicate = fetchRequestPredicate
         }
-        fetchRequest.predicate = fetchRequestPredicate
+        
         fetchRequest.fetchLimit = 1
                 
         do {
             let coreDataModels = try context.fetch(fetchRequest)
             guard let coreDataModel = coreDataModels.first else {
-                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifier: request.identifierValue, identifierKey: request.identifierKey)
+                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifierValue: request.identifierValue, identifierKey: request.identifierKey)
             }
             return coreDataModel
         } catch let error as PokemonLeafGreenError {

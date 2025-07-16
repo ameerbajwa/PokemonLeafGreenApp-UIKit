@@ -30,7 +30,7 @@ class StartCoordinator: ChildCoordinator {
     }
     
     func finish() {
-        self.navigationController.viewControllers = []
+        self.navigationController.viewControllers.removeAll()
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
         rootCoordinator?.startIntroCoordinator()
     }
