@@ -14,22 +14,19 @@ class IntroCoordinator: ChildCoordinator {
     let pokeAPINetworkService: PokeAPINetworkService
     let coreDataNetworkService: CoreDataNetworkService
     
-    var controller: IntroViewController?
+    var controller: IntroViewController
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
+        
+        self.controller = IntroViewController()
     }
     
     func start() {
-        self.controller = IntroViewController()
-        self.controller?.coordinator = self
-        guard let safeController = controller else {
-            print("Could not present IntroViewController")
-            return
-        }
-        navigationController.pushViewController(safeController, animated: false)
+        self.controller.coordinator = self
+        navigationController.pushViewController(controller, animated: false)
     }
     
     func finish() {

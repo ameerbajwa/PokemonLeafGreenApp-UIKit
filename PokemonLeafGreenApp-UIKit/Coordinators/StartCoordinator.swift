@@ -11,44 +11,26 @@ import UIKit
 class StartCoordinator: ChildCoordinator {
     weak var rootCoordinator: RootCoordinator?
     var navigationController: UINavigationController
-    let pokeAPINetworkService: PokeAPINetworkService
-    let coreDataNetworkService: CoreDataNetworkService
     
-    var controller: StartViewController?
-    var viewModel: StartViewModel?
-    var view: StartView?
+    var controller: StartViewController
+    var viewModel: StartViewModel
+    var view: StartView
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
-        self.pokeAPINetworkService = pokeAPINetworkService
-        self.coreDataNetworkService = coreDataNetworkService
+        
+        self.view = StartView()
+        self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, startView: view)
+        self.controller = StartViewController(startViewModel: viewModel)
     }
     
     func start() {
-        self.view = StartView()
-        guard let safeView = view else {
-            print("Could not present StartViewController")
-            return
-        }
-        self.viewModel = StartViewModel(pokeAPINetworkService: self.pokeAPINetworkService, coreDataNetworkService: self.coreDataNetworkService, startView: safeView)
-        guard let safeViewModel = viewModel else {
-            print("Could not present StartViewController")
-            return
-        }
-        self.controller = StartViewController(startViewModel: safeViewModel)
-        self.controller?.coordinator = self
-        guard let startController = self.controller else {
-            print("Could not present StartViewController")
-            return
-        }
-        self.navigationController.pushViewController(startController, animated: false)
+        controller.coordinator = self
+        self.navigationController.pushViewController(controller, animated: false)
     }
     
     func finish() {
-        self.view = nil
-        self.viewModel = nil
-        self.controller = nil
-        self.navigationController.popViewController(animated: false)
+        self.navigationController.viewControllers = []
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
         rootCoordinator?.startIntroCoordinator()
     }

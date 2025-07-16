@@ -23,8 +23,8 @@ class RootCoordinator: ParentCoordinator {
     
     func start() {
         let startCoordinator = StartCoordinator(navigationController: navigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
-        startCoordinator.rootCoordinator = self
         self.addChildCoordinator(childCoordinator: startCoordinator)
+        startCoordinator.rootCoordinator = self
         startCoordinator.start()
     }
 }
@@ -34,8 +34,8 @@ class RootCoordinator: ParentCoordinator {
 extension RootCoordinator {
     func startIntroCoordinator() {
         let introCoordinator = IntroCoordinator(navigationController: navigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
-        introCoordinator.rootCoordinator = self
         self.addChildCoordinator(childCoordinator: introCoordinator)
+        introCoordinator.rootCoordinator = self
         introCoordinator.start()
     }
 }
