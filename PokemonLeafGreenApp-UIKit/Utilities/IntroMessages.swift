@@ -12,7 +12,11 @@ struct IntroMessages {
     static let introExplanationExamplesMessage2 = "Certain limitations from the original game can be lifted with this app version of the game such as player will be able to catch all pokemon from both FireRed and LeafGreen games as well as pokemon that have to evolve through trade can now be evolved when they reach a certain level."
     static let introEnjoyMessage = "I hope you enjoy the game and good luck!"
     
-    
+    static let introLines = [introWelcomeMessage,
+                             introExplanationMessage,
+                             introExplanationExamplesMessage,
+                             introExplanationExamplesMessage2,
+                             introEnjoyMessage]
 }
 
 

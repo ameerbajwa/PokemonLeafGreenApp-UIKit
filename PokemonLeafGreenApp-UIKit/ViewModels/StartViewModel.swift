@@ -79,7 +79,7 @@ extension StartViewModel {
     func loadGame() {
         do {
             let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
-            let coreDataGamePlayerModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+            let _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         } catch {
             print("Player could not be found, must start new game")
         }
