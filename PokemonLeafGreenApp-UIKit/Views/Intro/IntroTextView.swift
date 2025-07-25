@@ -16,7 +16,7 @@ class IntroTextView: UIView {
     var cancelButton: UIButton!
     
     private var animationTimer: Timer?
-    
+        
     func setupIntroLabelAndNextButton() {
         messageLabel = UILabel()
         messageLabel.font = .systemFont(ofSize: 16)
@@ -41,11 +41,11 @@ class IntroTextView: UIView {
         cancelButton.layer.cornerRadius = 5.0
         cancelButton.layer.borderWidth = 5.0
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        cancelButton.isHidden = true
+        cancelButton.isEnabled = false
         
         let buttonStackView = UIStackView()
-        buttonStackView.addArrangedSubview(nextButton)
         buttonStackView.addArrangedSubview(cancelButton)
+        buttonStackView.addArrangedSubview(nextButton)
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 40.0
         buttonStackView.distribution = .fillEqually
@@ -105,6 +105,4 @@ extension IntroTextView {
             }
         }
     }
-    
-    
 }

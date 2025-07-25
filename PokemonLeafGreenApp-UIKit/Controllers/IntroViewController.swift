@@ -41,8 +41,10 @@ class IntroViewController: UIViewController {
             introView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
+        introViewModel.controllerViewFrameSize = self.safeArea.layoutFrame.size
         introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
         introViewModel.introView.setupIntroTextView()
+        introViewModel.introView.setupPlayerNameTextField()
         
         introViewModel.displayNextMessage()
     }

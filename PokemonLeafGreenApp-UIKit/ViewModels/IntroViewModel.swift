@@ -12,6 +12,7 @@ class IntroViewModel: NSObject {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var introView: IntroView
+    var controllerViewFrameSize: CGSize?
     
     var introMessageCounter = 0
     var newJourneyMessageCounter = 0
@@ -46,38 +47,38 @@ extension IntroViewModel {
         if introMessageCounter < IntroMessages.introLines.count {
             self.introView.introTextView.animateMessage(message: IntroMessages.introLines[introMessageCounter])
             introMessageCounter += 1
-        }
-        
-        if introMessageCounter == IntroMessages.introLines.count {
-            if newJourneyMessageCounter < NewJourneyMessages.newJourneyLines.count {
-                if newJourneyMessageCounter == 2 {
-                    if playerName.isEmpty {
-                        return
-                    } else {
-                        self.introView.removePlayerNameTextFieldFromView()
-                        self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage2(playerName: playerName))
-                        newJourneyMessageCounter += 1
-                    }
-                } else if newJourneyMessageCounter == 7 {
-                    self.introView.removeStarterPokmeonButons()
-                    self.introView.introTextView.cancelButton.isHidden = true
-                    self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: starterPokemon))
-                    newJourneyMessageCounter += 1
-                } else if newJourneyMessageCounter == 10 {
-                    self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(playerName: playerName))
-                    newJourneyMessageCounter += 1
+        } else if newJourneyMessageCounter < NewJourneyMessages.newJourneyLines.count {
+            if newJourneyMessageCounter == 2 {
+                if playerName.isEmpty {
+                    print("playerName is not being recorded from the textfield")
+                    return
                 } else {
-                    if newJourneyMessageCounter == 1 {
-                        self.introView.setupPlayerNameTextField()
-                    }
-                    if newJourneyMessageCounter == 6 {
-                        self.introView.setupStarterPokemonButtons()
-                        self.introView.setUpImagesForStarterPokemonButtons()
-                        self.introView.introTextView.cancelButton.isHidden = false
-                    }
-                    self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
+                    self.introView.removePlayerNameTextFieldFromView()
+                    self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage2(playerName: playerName))
                     newJourneyMessageCounter += 1
                 }
+            } else if newJourneyMessageCounter == 7 {
+                self.introView.removeStarterPokmeonButons()
+                self.introView.introTextView.cancelButton.isEnabled = false
+                self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: starterPokemon))
+                newJourneyMessageCounter += 1
+            } else if newJourneyMessageCounter == 10 {
+                self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(playerName: playerName))
+                newJourneyMessageCounter += 1
+            } else {
+                if newJourneyMessageCounter == 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.introView.playerNameTextField.isHidden = false
+                        self.introView.playerNameTextField.becomeFirstResponder()
+                    }
+                }
+                if newJourneyMessageCounter == 6 {
+                    self.introView.setupStarterPokemonButtons()
+                    self.introView.setUpImagesForStarterPokemonButtons()
+                    self.introView.introTextView.cancelButton.isEnabled = true
+                }
+                self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
+                newJourneyMessageCounter += 1
             }
         }
     }
@@ -93,7 +94,22 @@ extension IntroViewModel {
 }
 
 extension IntroViewModel: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return true
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        textField.text = ""
+        return true
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         playerName = textField.text ?? ""
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        playerName = textField.text ?? ""
+        textField.resignFirstResponder()
+        return true
     }
 }
