@@ -22,4 +22,12 @@ public class CoreDataGamePlayer: NSManagedObject, CoreDataManageable {
             self.removeFromPokemon(pokemonSet)
         }
     }
+    
+    func adaptPlayerName(playerName: String) {
+        self.name = playerName
+    }
+    
+    func adaptPlayerStarterPokemon(pokemon: String) {
+        
+    }
 }

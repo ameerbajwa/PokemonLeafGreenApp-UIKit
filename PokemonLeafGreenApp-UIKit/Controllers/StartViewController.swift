@@ -11,12 +11,14 @@ import UIKit
 class StartViewController: UIViewController {
     weak var coordinator: ChildCoordinator?
     
+    var startView: StartView
     var viewModel: StartViewModel
     
     private var safeArea: UILayoutGuide!
     
-    init(startViewModel: StartViewModel) {
+    init(startViewModel: StartViewModel, startView: StartView) {
         self.viewModel = startViewModel
+        self.startView = startView
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,14 +32,16 @@ class StartViewController: UIViewController {
         self.safeArea = self.view.layoutMarginsGuide
 
         viewModel.startController = self
-        self.view.addSubview(viewModel.startView)
-        viewModel.startView.translatesAutoresizingMaskIntoConstraints = false
+        startView.viewModel = viewModel
+        
+        self.view.addSubview(startView)
+        startView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            viewModel.startView.topAnchor.constraint(equalTo: self.safeArea.topAnchor),
-            viewModel.startView.leadingAnchor.constraint(equalTo: self.safeArea.leadingAnchor),
-            viewModel.startView.trailingAnchor.constraint(equalTo: self.safeArea.trailingAnchor),
-            viewModel.startView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
+            startView.topAnchor.constraint(equalTo: self.safeArea.topAnchor),
+            startView.leadingAnchor.constraint(equalTo: self.safeArea.leadingAnchor),
+            startView.trailingAnchor.constraint(equalTo: self.safeArea.trailingAnchor),
+            startView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
         viewModel.startView.setupViews()

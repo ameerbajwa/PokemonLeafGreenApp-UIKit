@@ -10,10 +10,15 @@ import UIKit
 
 class IntroViewController: UIViewController {
     weak var coordinator: ChildCoordinator?
-        
+    
+    var introViewModel: IntroViewModel
+    var introView: IntroView
+    
     private var safeArea: UILayoutGuide!
     
-    init() {
+    init(introViewModel: IntroViewModel, introView: IntroView) {
+        self.introViewModel = introViewModel
+        self.introView = introView
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,5 +30,27 @@ class IntroViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
+        
+        introView.viewModel = introViewModel
+        
+        self.view.addSubview(self.introView)
+        introView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            introView.topAnchor.constraint(equalTo: self.safeArea.topAnchor),
+            introView.leadingAnchor.constraint(equalTo: self.safeArea.leadingAnchor),
+            introView.trailingAnchor.constraint(equalTo: self.safeArea.trailingAnchor),
+            introView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
+        ])
+        
+        introViewModel.controllerViewFrameSize = self.safeArea.layoutFrame.size
+        introViewModel.introView.setupIntroTextView()
+        introViewModel.introView.setupPlayerNameTextField()
+        introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
+        
+        Task {
+            await introViewModel.checkCoreDataPokemonObject()
+            introViewModel.displayNextMessage()
+        }
     }
 }

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 class StartView: UIView {
     var titleLabel: UILabel!
     var pokemonAttackerImageView: UIImageView!
@@ -84,6 +85,7 @@ class StartView: UIView {
 
 // MARK: - Animation methods
 
+@MainActor
 extension StartView {
     func animateTitle() {
         let titleAnimation = CABasicAnimation(keyPath: "position.y")
@@ -126,6 +128,7 @@ extension StartView {
     }
 }
 
+@MainActor
 extension StartView {
     @objc
     func newGameButtonPressed() {

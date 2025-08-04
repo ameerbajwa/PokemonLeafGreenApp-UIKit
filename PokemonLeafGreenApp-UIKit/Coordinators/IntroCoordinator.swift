@@ -11,17 +11,17 @@ import UIKit
 class IntroCoordinator: ChildCoordinator {
     weak var rootCoordinator: RootCoordinator?
     var navigationController: UINavigationController
-    let pokeAPINetworkService: PokeAPINetworkService
-    let coreDataNetworkService: CoreDataNetworkService
     
     var controller: IntroViewController
+    var viewModel: IntroViewModel
+    var view: IntroView
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
-        self.pokeAPINetworkService = pokeAPINetworkService
-        self.coreDataNetworkService = coreDataNetworkService
         
-        self.controller = IntroViewController()
+        self.view = IntroView()
+        self.viewModel = IntroViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
+        self.controller = IntroViewController(introViewModel: viewModel, introView: view)
     }
     
     func start() {
