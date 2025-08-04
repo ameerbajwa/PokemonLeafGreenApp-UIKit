@@ -15,14 +15,11 @@ class IntroCoordinator: ChildCoordinator {
     var controller: IntroViewController
     var viewModel: IntroViewModel
     var view: IntroView
-    var introTextView: IntroTextView
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         
-        self.introTextView = IntroTextView()
         self.view = IntroView()
-        self.view.introTextView = introTextView
         self.viewModel = IntroViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
         self.controller = IntroViewController(introViewModel: viewModel, introView: view)
     }

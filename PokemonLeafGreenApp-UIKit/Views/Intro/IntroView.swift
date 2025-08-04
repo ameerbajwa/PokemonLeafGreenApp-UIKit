@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 class IntroView: UIView {
     weak var viewModel: IntroViewModel?
     
@@ -105,20 +106,20 @@ class IntroView: UIView {
             self.squirtleImageView.translatesAutoresizingMaskIntoConstraints = false
             
             NSLayoutConstraint.activate([
-                self.bulbasaurImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 30.0),
-                self.bulbasaurImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30.0),
-                self.bulbasaurImageView.widthAnchor.constraint(equalToConstant: 120.0),
-                self.bulbasaurImageView.heightAnchor.constraint(equalToConstant: 120.0),
+                self.bulbasaurImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50.0),
+                self.bulbasaurImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 50.0),
+                self.bulbasaurImageView.widthAnchor.constraint(equalToConstant: 140.0),
+                self.bulbasaurImageView.heightAnchor.constraint(equalToConstant: 140.0),
                 
-                self.charmanderImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 30.0),
-                self.charmanderImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30.0),
-                self.charmanderImageView.widthAnchor.constraint(equalToConstant: 120.0),
-                self.charmanderImageView.heightAnchor.constraint(equalToConstant: 120.0),
+                self.charmanderImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50.0),
+                self.charmanderImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -50.0),
+                self.charmanderImageView.widthAnchor.constraint(equalToConstant: 140.0),
+                self.charmanderImageView.heightAnchor.constraint(equalToConstant: 140.0),
                 
-                self.squirtleImageView.bottomAnchor.constraint(equalTo: self.introTextView.topAnchor, constant: -30.0),
+                self.squirtleImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 240.0),
                 self.squirtleImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                self.squirtleImageView.widthAnchor.constraint(equalToConstant: 120.0),
-                self.squirtleImageView.heightAnchor.constraint(equalToConstant: 120.0),
+                self.squirtleImageView.widthAnchor.constraint(equalToConstant: 140.0),
+                self.squirtleImageView.heightAnchor.constraint(equalToConstant: 140.0),
             ])
         }
     }
@@ -136,18 +137,22 @@ class IntroView: UIView {
     
     func setUpImagesForStarterPokemonButtons() {
         Task {
-            let bulbasaurImage = await viewModel?.generatePokemonImage(id: 1)
-            bulbasaurImageView.image = bulbasaurImage
-            let charmanderImage = await viewModel?.generatePokemonImage(id: 4)
-            charmanderImageView.image = charmanderImage
-            let squirtleImage = await viewModel?.generatePokemonImage(id: 7)
-            squirtleImageView.image = squirtleImage
+            async let bulbasaurImage = viewModel?.generatePokemonImage(id: 1)
+            async let charmanderImage = viewModel?.generatePokemonImage(id: 4)
+            async let squirtleImage = viewModel?.generatePokemonImage(id: 7)
+            
+            let (bulbaImage, charImage, squirtImage) = await (bulbasaurImage, charmanderImage, squirtleImage)
+            
+            bulbasaurImageView.image = bulbaImage
+            charmanderImageView.image = charImage
+            squirtleImageView.image = squirtImage
         }
     }
 }
 
 // MARK: - Starter Pokemon Selected Delegate methods
 
+@MainActor
 extension IntroView {
     @objc
     func bulbasaurImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {

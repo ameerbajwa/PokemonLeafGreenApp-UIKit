@@ -21,7 +21,7 @@ class StartCoordinator: ChildCoordinator {
         
         self.view = StartView()
         self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, startView: view)
-        self.controller = StartViewController(startViewModel: viewModel)
+        self.controller = StartViewController(startViewModel: viewModel, startView: view)
     }
     
     func start() {

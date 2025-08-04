@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 class IntroTextView: UIView {
     weak var viewModel: IntroViewModel?
     
@@ -69,6 +70,7 @@ class IntroTextView: UIView {
     }
 }
 
+@MainActor
 extension IntroTextView {
     @objc
     func nextButtonTapped() {
@@ -81,28 +83,20 @@ extension IntroTextView {
     }
 }
 
+@MainActor
 extension IntroTextView {
-    func animateMessage(message: String) {
-        DispatchQueue.main.async {
-            self.nextButton.isEnabled = false
-            var currentIndex = 0
-            let introMessage = message
-            self.messageLabel.text = ""
-            
-            let interval = TimeInterval(3.0) / Double(introMessage.count)
-            
-            self.animationTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] timer in
-                guard let self = self else { return }
-                guard currentIndex < introMessage.count else {
-                    timer.invalidate()
-                    self.nextButton.isEnabled = true
-                    return
-                }
-                
-                let index = introMessage.index(introMessage.startIndex, offsetBy: currentIndex)
-                self.messageLabel.text?.append(introMessage[index])
-                currentIndex += 1
-            }
+    func animateMessage(message: String) async {
+        self.nextButton.isEnabled = false
+        let introMessage = message
+        self.messageLabel.text = ""
+        
+        let interval = TimeInterval(3.0) / Double(introMessage.count)
+        
+        for char in introMessage {
+            self.messageLabel.text?.append(char)
+            try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
         }
+        
+        self.nextButton.isEnabled = true
     }
 }

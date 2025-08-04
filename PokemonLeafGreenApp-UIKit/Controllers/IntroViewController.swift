@@ -31,6 +31,8 @@ class IntroViewController: UIViewController {
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
         
+        introView.viewModel = introViewModel
+        
         self.view.addSubview(self.introView)
         introView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -42,10 +44,13 @@ class IntroViewController: UIViewController {
         ])
         
         introViewModel.controllerViewFrameSize = self.safeArea.layoutFrame.size
-        introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
         introViewModel.introView.setupIntroTextView()
         introViewModel.introView.setupPlayerNameTextField()
+        introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
         
-        introViewModel.displayNextMessage()
+        Task {
+            await introViewModel.checkCoreDataPokemonObject()
+            introViewModel.displayNextMessage()
+        }
     }
 }

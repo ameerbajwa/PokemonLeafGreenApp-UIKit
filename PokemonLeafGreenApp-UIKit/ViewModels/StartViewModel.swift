@@ -26,7 +26,6 @@ class StartViewModel: StartViewModeling {
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
         self.startView = startView
-        self.startView.viewModel = self
     }
 }
 
@@ -52,7 +51,7 @@ extension StartViewModel {
 
 extension StartViewModel {
     func generatePokemonImages() async -> (UIImage?, UIImage?) {
-        var pokemonIds = [3,6] // venasaur and charizard pokemon ids on pokeapi
+        var pokemonIds = [3,6]
         let attackingPokemonIndex = Int.random(in: 0...1)
         let attackingPokemonId = pokemonIds.remove(at: attackingPokemonIndex)
         let defendingPokemonId = pokemonIds[0]
