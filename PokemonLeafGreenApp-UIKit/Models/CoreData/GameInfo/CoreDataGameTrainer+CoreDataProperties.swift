@@ -19,6 +19,7 @@ extension CoreDataGameTrainer {
     @NSManaged public var name: String
     @NSManaged public var id: Int16
     @NSManaged public var reward: Int16
+    @NSManaged public var isGymLeader: Bool
     @NSManaged public var pokemon: NSSet?
     @NSManaged public var location: CoreDataGameLocation?
 }

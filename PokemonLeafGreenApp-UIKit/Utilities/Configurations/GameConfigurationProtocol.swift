@@ -41,6 +41,7 @@ public protocol PokemonTrainerConfiguration {
     var id: Int { get set }
     var name: String { get set }
     var reward: Int { get set }
+    var isGymLeader: Bool { get set }
     var pokemon: [PokemonTrainerPokemonConfiguration] { get set }
 }
 
@@ -49,13 +50,15 @@ struct PokemonTrainer: PokemonTrainerConfiguration {
     var id: Int
     var name: String
     var reward: Int
+    var isGymLeader: Bool
     var pokemon: [PokemonTrainerPokemonConfiguration] = []
     
-    init(order: Int, id: Int, name: String, reward: Int) {
+    init(order: Int, id: Int, name: String, reward: Int, isGymLeader: Bool = false) {
         self.order = order
         self.id = id
         self.name = name
         self.reward = reward
+        self.isGymLeader = isGymLeader
     }
 }
 
