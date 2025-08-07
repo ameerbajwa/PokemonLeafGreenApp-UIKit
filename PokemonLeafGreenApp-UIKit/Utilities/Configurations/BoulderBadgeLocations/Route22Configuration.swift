@@ -15,18 +15,18 @@ struct Route22Configuration: PokemonLocationConfiguration {
         self.id = 3
         self.name = "Route 22"
         self.trainers = nil
-        self.wildPokemon = [WildPokemon(id: 21,
-                                        name: "spearow",
+        self.wildPokemon = [WildPokemon(id: PokemonIdNameConfiguration.spearow.id,
+                                        name: PokemonIdNameConfiguration.spearow.name,
                                         lowestLevel: 3,
                                         highestLevel: 5,
                                         rate: 10),
-                            WildPokemon(id: 19,
-                                        name: "rattata",
+                            WildPokemon(id: PokemonIdNameConfiguration.rattata.id,
+                                        name: PokemonIdNameConfiguration.rattata.name,
                                         lowestLevel: 2,
                                         highestLevel: 5,
                                         rate: 45),
-                            WildPokemon(id: 56,
-                                        name: "mankey",
+                            WildPokemon(id: PokemonIdNameConfiguration.mankey.id,
+                                        name: PokemonIdNameConfiguration.mankey.name,
                                         lowestLevel: 2,
                                         highestLevel: 5,
                                         rate: 45)]

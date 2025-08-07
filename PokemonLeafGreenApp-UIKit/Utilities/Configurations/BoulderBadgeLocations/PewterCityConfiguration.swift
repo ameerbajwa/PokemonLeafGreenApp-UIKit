@@ -17,12 +17,12 @@ struct PewterCityConfiguration: PokemonLocationConfiguration {
         self.wildPokemon = nil
         
         var camperLiam = PokemonTrainer(order: 1, id: 1, name: "Camper Liam", reward: 220)
-        camperLiam.pokemon.append(PokemonTrainerPokemon(order: 1, id: 74, name: "geodude", level: 10))
-        camperLiam.pokemon.append(PokemonTrainerPokemon(order: 2, id: 27, name: "sandshrew", level: 11))
+        camperLiam.pokemon.append(PokemonTrainerPokemon(order: 1, id: PokemonIdNameConfiguration.geodude.id, name: PokemonIdNameConfiguration.geodude.name, level: 10))
+        camperLiam.pokemon.append(PokemonTrainerPokemon(order: 2, id: PokemonIdNameConfiguration.sandshrew.id, name: PokemonIdNameConfiguration.sandshrew.name, level: 11))
         
         var leaderBrock = PokemonTrainer(order: 2, id: 2, name: "Leader Brock", reward: 650, isGymLeader: true)
-        leaderBrock.pokemon.append(PokemonTrainerPokemon(order: 1, id: 74, name: "geodude", level: 12))
-        leaderBrock.pokemon.append(PokemonTrainerPokemon(order: 2, id: 95, name: "onix", level: 14))
+        leaderBrock.pokemon.append(PokemonTrainerPokemon(order: 1, id: PokemonIdNameConfiguration.geodude.id, name: PokemonIdNameConfiguration.geodude.name, level: 12))
+        leaderBrock.pokemon.append(PokemonTrainerPokemon(order: 2, id: PokemonIdNameConfiguration.onix.id, name: PokemonIdNameConfiguration.onix.name, level: 14))
         
         self.trainers = [camperLiam, leaderBrock]
     }
