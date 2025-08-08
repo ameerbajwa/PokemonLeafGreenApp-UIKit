@@ -18,9 +18,9 @@ class IntroViewModel: NSObject {
     var newJourneyMessageCounter = 0
     var playerName = ""
     var playerSelectedPokemon = ""
-    var starterPokemonNameList: [String] = [PokemonNames.bulbasaur.rawValue,
-                                            PokemonNames.charmander.rawValue,
-                                            PokemonNames.squirtle.rawValue]
+    var starterPokemonNameList: [String] = [PokemonIdNameConfiguration.bulbasaur.name,
+                                            PokemonIdNameConfiguration.charmander.name,
+                                            PokemonIdNameConfiguration.squirtle.name]
     
     init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
         self.pokeAPINetworkService = pokeAPINetworkService

@@ -23,8 +23,10 @@
     </entity>
     <entity name="CoreDataGameTrainer" representedClassName="CoreDataGameTrainer" syncable="YES">
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isGymLeader" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="order" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="reward" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="location" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CoreDataGameLocation" inverseName="trainers" inverseEntity="CoreDataGameLocation"/>
         <relationship name="pokemon" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoreDataGameTrainerPokemon" inverseName="trainer" inverseEntity="CoreDataGameTrainerPokemon"/>
     </entity>
