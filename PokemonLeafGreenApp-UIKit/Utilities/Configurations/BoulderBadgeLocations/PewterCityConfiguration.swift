@@ -12,8 +12,8 @@ struct PewterCityConfiguration: PokemonLocationConfiguration {
     var wildPokemon: [any WildPokemonConfiguration]?
     
     init() {
-        self.id = 6
-        self.name = "Pewter City"
+        self.id = PokemonLocationIdNameConfiguration.pewterCity.id
+        self.name = PokemonLocationIdNameConfiguration.pewterCity.name
         self.wildPokemon = nil
         
         var camperLiam = PokemonTrainer(order: 1, id: 1, name: "Camper Liam", reward: 220)

@@ -5,17 +5,52 @@
 //  Created by Ameer Bajwa on 7/14/25.
 //
 
-public enum PokemonGameLocations: String {
-    case palletTown = "Pallet Town"
-    case route1 = "Route 1"
-    case virdianCity = "Virdian City"
-    case route22 = "Route 22"
-    case virdianForest = "Virdian Forest"
-    case pewterCity = "Pewter City"
-    case route3 = "Route 3"
-    case mtMoon = "Mt. Moon"
-    case route4 = "Route 4"
-    case ceruleanCity = "Cerulean City"
+public enum PokemonLocationIdNameConfiguration {
+    case palletTown
+    case route1
+    case virdianCity
+    case route22
+    case route2
+    case virdianForest
+    case pewterCity
+    
+    var id: Int {
+        switch self {
+        case .palletTown:
+            return 1
+        case .route1:
+            return 2
+        case .virdianCity:
+            return 3
+        case .route22:
+            return 4
+        case .route2:
+            return 5
+        case .virdianForest:
+            return 6
+        case .pewterCity:
+            return 7
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .palletTown:
+            return "Pallet Town"
+        case .route1:
+            return "Route 1"
+        case .virdianCity:
+            return "Virdian City"
+        case .route22:
+            return "Route 22"
+        case .route2:
+            return "Route 2"
+        case .virdianForest:
+            return "Virdian Forest"
+        case .pewterCity:
+            return "Pewter City"
+        }
+    }
 }
 
 public enum PokemonIdNameConfiguration {
