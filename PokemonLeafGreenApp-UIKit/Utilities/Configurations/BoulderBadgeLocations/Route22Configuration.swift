@@ -30,5 +30,7 @@ struct Route22Configuration: PokemonLocationConfiguration {
                                         lowestLevel: 2,
                                         highestLevel: 5,
                                         rate: 45)]
+        
+        // Add Rival Ash as a trainer
     }
 }

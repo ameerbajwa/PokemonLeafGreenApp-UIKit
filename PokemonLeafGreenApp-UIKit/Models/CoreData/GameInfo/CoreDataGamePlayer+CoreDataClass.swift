@@ -15,7 +15,7 @@ public class CoreDataGamePlayer: NSManagedObject, CoreDataManageable {
         self.id = 1
         self.name = ""
         self.money = 0
-        self.lastLocation = PokemonGameLocations.palletTown.rawValue
+        self.lastLocation = PokemonLocationIdNameConfiguration.palletTown.name
         
         if let playerPokemonCount = pokemon?.count,
             playerPokemonCount > 0, let pokemonSet = pokemon {
@@ -25,9 +25,5 @@ public class CoreDataGamePlayer: NSManagedObject, CoreDataManageable {
     
     func adaptPlayerName(playerName: String) {
         self.name = playerName
-    }
-    
-    func adaptPlayerStarterPokemon(pokemon: String) {
-        
     }
 }

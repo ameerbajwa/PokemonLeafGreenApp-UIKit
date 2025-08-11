@@ -41,9 +41,33 @@ extension CoreDataNetworkService {
         }
     }
     
-    func saveGamePlayerModel() throws {
+    func saveNewGamePlayerModel() async throws {
         let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
         coreDataGamePlayerModel.adaptNewGame()
+        
+        do {
+            try context.save()
+        } catch {
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataGamePlayer.self)")
+        }
+    }
+    
+    func saveGamePlayerModel(playerName: String) async throws {
+        let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
+        coreDataGamePlayerModel.adaptPlayerName(playerName: playerName)
+        
+        do {
+            try context.save()
+        } catch {
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataGamePlayer.self)")
+        }
+    }
+    
+    func saveGamePlayerModel(starterPokemon: PokemonIdNameConfiguration) async throws {
+        let coreDataGamePlayerPokemon = CoreDataGamePlayerPokemon(context: context)
+        coreDataGamePlayerPokemon.adaptStarterPokemon(pokemonConfiguration: starterPokemon)
+        let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
+        coreDataGamePlayerModel.addToPokemon(coreDataGamePlayerPokemon)
         
         do {
             try context.save()

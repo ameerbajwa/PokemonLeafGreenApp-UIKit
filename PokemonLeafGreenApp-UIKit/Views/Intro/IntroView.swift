@@ -107,19 +107,19 @@ class IntroView: UIView {
             
             NSLayoutConstraint.activate([
                 self.bulbasaurImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50.0),
-                self.bulbasaurImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 50.0),
-                self.bulbasaurImageView.widthAnchor.constraint(equalToConstant: 140.0),
-                self.bulbasaurImageView.heightAnchor.constraint(equalToConstant: 140.0),
+                self.bulbasaurImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 40.0),
+                self.bulbasaurImageView.widthAnchor.constraint(equalToConstant: 120.0),
+                self.bulbasaurImageView.heightAnchor.constraint(equalToConstant: 120.0),
                 
                 self.charmanderImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 50.0),
-                self.charmanderImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -50.0),
-                self.charmanderImageView.widthAnchor.constraint(equalToConstant: 140.0),
-                self.charmanderImageView.heightAnchor.constraint(equalToConstant: 140.0),
+                self.charmanderImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -40.0),
+                self.charmanderImageView.widthAnchor.constraint(equalToConstant: 120.0),
+                self.charmanderImageView.heightAnchor.constraint(equalToConstant: 120.0),
                 
-                self.squirtleImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 240.0),
+                self.squirtleImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 220.0),
                 self.squirtleImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                self.squirtleImageView.widthAnchor.constraint(equalToConstant: 140.0),
-                self.squirtleImageView.heightAnchor.constraint(equalToConstant: 140.0),
+                self.squirtleImageView.widthAnchor.constraint(equalToConstant: 120.0),
+                self.squirtleImageView.heightAnchor.constraint(equalToConstant: 120.0),
             ])
         }
     }
@@ -156,17 +156,17 @@ class IntroView: UIView {
 extension IntroView {
     @objc
     func bulbasaurImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseBulbasaur, selectedPokemon: "bulbasaur")
+        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseBulbasaur, selectedPokemon: PokemonIdNameConfiguration.bulbasaur)
     }
     
     @objc
     func charmanderImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseCharmander, selectedPokemon: "charmander")
+        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseCharmander, selectedPokemon: PokemonIdNameConfiguration.charmander)
     }
     
     @objc
     func squirtleImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseSquirtle, selectedPokemon: "squirtle")
+        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseSquirtle, selectedPokemon: PokemonIdNameConfiguration.squirtle)
 
     }
 }

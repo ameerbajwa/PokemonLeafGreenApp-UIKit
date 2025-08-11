@@ -17,10 +17,10 @@ class IntroViewModel: NSObject {
     var introMessageCounter = 0
     var newJourneyMessageCounter = 0
     var playerName = ""
-    var playerSelectedPokemon = ""
-    var starterPokemonNameList: [String] = [PokemonIdNameConfiguration.bulbasaur.name,
-                                            PokemonIdNameConfiguration.charmander.name,
-                                            PokemonIdNameConfiguration.squirtle.name]
+    var playerSelectedPokemon: PokemonIdNameConfiguration?
+    var starterPokemonNameList: [PokemonIdNameConfiguration] = [PokemonIdNameConfiguration.bulbasaur,
+         PokemonIdNameConfiguration.charmander,
+         PokemonIdNameConfiguration.squirtle]
     
     init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
         self.pokeAPINetworkService = pokeAPINetworkService
@@ -56,19 +56,20 @@ extension IntroViewModel {
                         return
                     } else {
                         self.introView.removePlayerNameTextFieldFromView()
+                        await savePlayerName()
                         await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage2(playerName: playerName))
                         newJourneyMessageCounter += 1
                     }
                 } else if newJourneyMessageCounter == 7 {
-                    if playerSelectedPokemon.isEmpty {
+                    guard let selectedPokemon = playerSelectedPokemon else {
                         print("Starter Pokemon not selected yet. Please select starter pokemon")
                         return
-                    } else {
-                        self.introView.removeStarterPokmeonButons()
-                        self.introView.introTextView.cancelButton.isEnabled = false
-                        await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: playerSelectedPokemon))
-                        newJourneyMessageCounter += 1
                     }
+                    self.introView.removeStarterPokmeonButons()
+                    self.introView.introTextView.cancelButton.isEnabled = false
+                    await savePlayerStarterPokemon(selectedPokemon: selectedPokemon)
+                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: selectedPokemon.name))
+                    newJourneyMessageCounter += 1
                 } else if newJourneyMessageCounter == 10 {
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(playerName: playerName))
                     newJourneyMessageCounter += 1
@@ -93,10 +94,11 @@ extension IntroViewModel {
     
     @MainActor
     func dismissPokemonSelection() {
+        self.playerSelectedPokemon = nil
         self.introView.introTextView.messageLabel.text = NewJourneyMessages.newQuestMessage6
     }
     
-    func displayPokemonSelectedMessage(message: String, selectedPokemon: String) {
+    func displayPokemonSelectedMessage(message: String, selectedPokemon: PokemonIdNameConfiguration) {
         self.playerSelectedPokemon = selectedPokemon
         Task {
             await self.introView.introTextView.animateMessage(message: message)
@@ -125,13 +127,37 @@ extension IntroViewModel: UITextFieldDelegate {
     }
 }
 
+// MARK: - Saving Player information
+
+extension IntroViewModel {
+    func savePlayerName() async {
+        do {
+            try await coreDataNetworkService.saveGamePlayerModel(playerName: playerName)
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+        } catch {
+            print("Shit went wrong - \(error.localizedDescription)")
+        }
+    }
+    
+    func savePlayerStarterPokemon(selectedPokemon: PokemonIdNameConfiguration) async {
+        do {
+            try await coreDataNetworkService.saveGamePlayerModel(starterPokemon: selectedPokemon)
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+        } catch {
+            print("Shit went wrong - \(error.localizedDescription)")
+        }
+    }
+}
+
 // MARK: - Networking calls to grab starter pokemon information
 
 extension IntroViewModel {
     func checkCoreDataPokemonObject() async {
         for (index, starterPokemon) in starterPokemonNameList.enumerated() {
             do {
-                let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: starterPokemon)
+                let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: starterPokemon.name)
                 _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
                 starterPokemonNameList.remove(at: index)
             } catch let error as PokemonLeafGreenError {
@@ -142,26 +168,66 @@ extension IntroViewModel {
             }
         }
         
-//        if starterPokemonNameList.count > 0 {
-//            storePokemonInCoreData()
-//        }
+        if starterPokemonNameList.count > 0 {
+            await storePokemonInCoreData()
+        }
     }
     
-//    func storePokemonInCoreData() {
-//        for pokemon in starterPokemonNameList {
-//            let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: 1)
-//            let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: 1)
-//            
-//            Task {
-//                do {
-//                    let pokemonResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonRequest)
-//                    let pokemonSpeciesResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonSpeciesRequest)
-//                    try await coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
-//                } catch let error as PokemonLeafGreenError {
-//                    print(error.errorLogDescription)
-//                    print(error.clientDescription)
-//                }
-//            }
-//        }
-//    }
+    func storePokemonInCoreData() async {
+        for pokemon in starterPokemonNameList {
+            let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: pokemon.id)
+            let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: pokemon.id)
+            
+            do {
+                let pokemonResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonRequest)
+                let pokemonSpeciesResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonSpeciesRequest)
+                try await coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
+                await checkPokemonMovesInCoreData(pokemon: pokemon.name)
+            } catch let error as PokemonLeafGreenError {
+                print(error.errorLogDescription)
+                print(error.clientDescription)
+            } catch {
+                print("Shit went wrong - \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func checkPokemonMovesInCoreData(pokemon: String) async {
+        do {
+            let coreDataPokemonFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemon)
+            let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataPokemonFetchRequest)
+            
+            if let moves = coreDataPokemonModel.moves as? Set<CoreDataPokemonMoveList> {
+                for move in moves {
+                    let coreDataPokemonMoveFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierValue: move.name)
+                    do {
+                        _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataPokemonMoveFetchRequest)
+                    } catch PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataMove.self)", identifierValue: coreDataPokemonMoveFetchRequest.identifierValue, identifierKey: coreDataPokemonMoveFetchRequest.identifierKey) {
+                        await storePokemonMoveInCoreData(pokemonMove: move)
+                    } catch let error as PokemonLeafGreenError {
+                        print(error.errorLogDescription)
+                    } catch {
+                        print("Shit went wrong - \(error.localizedDescription)")
+                    }
+                }
+            }
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+        } catch {
+            print("Shit went wrong - \(error.localizedDescription)")
+        }
+    }
+    
+    func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async {
+        let pokemonMoveRequest = PokeAPIRequest<PokeAPIMoveDetails>(endpoint: .move, id: Int(pokemonMove.id))
+        
+        do {
+            let pokemonMoveResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonMoveRequest)
+            try await coreDataNetworkService.saveCoreDataMoveModel(pokeAPIMove: pokemonMoveResponse)
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+        } catch {
+            print("Shit went wrong - \(error.localizedDescription)")
+        }
+    }
 }
