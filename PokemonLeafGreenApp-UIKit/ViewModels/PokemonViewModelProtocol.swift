@@ -5,7 +5,7 @@
 //  Created by Ameer Bajwa on 8/10/25.
 //
 
-protocol PokemonViewModelNetworking {
+protocol PokemonNetworkCheckingAndStoring {
     var pokeAPINetworkService: PokeAPINetworkService { get }
     var coreDataNetworkService: CoreDataNetworkService { get }
     var pokemonLocationConfiguration: PokemonLocationConfiguration { get }
@@ -16,7 +16,7 @@ protocol PokemonViewModelNetworking {
     func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async
 }
 
-extension PokemonViewModelNetworking {
+extension PokemonNetworkCheckingAndStoring {
     func checkCoreDataPokemonObject(pokemonConfigurationList: [PokemonIdNameConfiguration]) async {
         for pokemon in pokemonConfigurationList {
             do {
