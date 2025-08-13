@@ -15,12 +15,14 @@ class IntroCoordinator: ChildCoordinator {
     var controller: IntroViewController
     var viewModel: IntroViewModel
     var view: IntroView
+    var configuration: PokemonLocationConfiguration
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         
         self.view = IntroView()
-        self.viewModel = IntroViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
+        self.configuration = PalletTownConfiguration()
+        self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
         self.controller = IntroViewController(introViewModel: viewModel, introView: view)
     }
     

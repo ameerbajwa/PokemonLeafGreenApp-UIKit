@@ -8,12 +8,14 @@
 struct ViridianForestConfiguration: PokemonLocationConfiguration {
     var id: Int
     var name: String
+    var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [PokemonTrainerConfiguration]?
     var wildPokemon: [WildPokemonConfiguration]?
     
     init() {
-        self.id = PokemonLocationIdNameConfiguration.virdianForest.id
-        self.name = PokemonLocationIdNameConfiguration.virdianForest.name
+        self.id = PokemonLocationIdNamePokemonConfiguration.virdianForest.id
+        self.name = PokemonLocationIdNamePokemonConfiguration.virdianForest.name
+        self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.virdianForest.pokemonConfigurations
         self.wildPokemon = [WildPokemon(id: PokemonIdNameConfiguration.caterpie.id,
                                         name: PokemonIdNameConfiguration.caterpie.name,
                                         lowestLevel: 3,

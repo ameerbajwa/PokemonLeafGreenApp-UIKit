@@ -10,12 +10,14 @@ import Foundation
 struct PalletTownConfiguration: PokemonLocationConfiguration {
     var id: Int
     var name: String
+    var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [any PokemonTrainerConfiguration]?
     var wildPokemon: [any WildPokemonConfiguration]?
     
     init() {
-        self.id = PokemonLocationIdNameConfiguration.palletTown.id
-        self.name = PokemonLocationIdNameConfiguration.palletTown.name
+        self.id = PokemonLocationIdNamePokemonConfiguration.palletTown.id
+        self.name = PokemonLocationIdNamePokemonConfiguration.palletTown.name
+        self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.palletTown.pokemonConfigurations
         self.wildPokemon = [WildPokemon(id: PokemonIdNameConfiguration.bulbasaur.id,
                                         name: PokemonIdNameConfiguration.bulbasaur.name,
                                         lowestLevel: 5,
@@ -31,6 +33,7 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
                                         lowestLevel: 5,
                                         highestLevel: 5,
                                         rate: 33)]
+        
     }
     
     mutating func provideRivalAshPokemonConfiguration(starterPokemon: PokemonIdNameConfiguration) {

@@ -30,12 +30,13 @@ extension CoreDataNetworkService {
         }
     }
     
-    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws {
+    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws -> CoreDataPokemon {
         let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
-        _ = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
+        let coreDataPokemonModel = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
         do {
             try context.save()
+            return coreDataPokemonModel
         } catch {
             throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataPokemon.self)")
         }

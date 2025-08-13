@@ -1,11 +1,11 @@
 //
-//  PokemonGameNames.swift
+//  PokemonGameConfigurations.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 7/14/25.
 //
 
-public enum PokemonLocationIdNameConfiguration {
+public enum PokemonLocationIdNamePokemonConfiguration {
     case palletTown
     case route1
     case virdianCity
@@ -49,6 +49,34 @@ public enum PokemonLocationIdNameConfiguration {
             return "Virdian Forest"
         case .pewterCity:
             return "Pewter City"
+        }
+    }
+    
+    var pokemonConfigurations: [PokemonIdNameConfiguration]? {
+        switch self {
+        case .palletTown:
+            return [PokemonIdNameConfiguration.bulbasaur,
+                    PokemonIdNameConfiguration.charmander,
+                    PokemonIdNameConfiguration.squirtle]
+        case .route1:
+            return [PokemonIdNameConfiguration.pidgey,
+                    PokemonIdNameConfiguration.rattata]
+        case .virdianCity:
+            return nil
+        case .route22:
+            return [PokemonIdNameConfiguration.spearow,
+                    PokemonIdNameConfiguration.mankey]
+        case .route2:
+            return [PokemonIdNameConfiguration.weedle,
+                    PokemonIdNameConfiguration.caterpie]
+        case .virdianForest:
+            return [PokemonIdNameConfiguration.metapod,
+                    PokemonIdNameConfiguration.kakuna,
+                    PokemonIdNameConfiguration.pikachu]
+        case .pewterCity:
+            return [PokemonIdNameConfiguration.geodude,
+                    PokemonIdNameConfiguration.sandshrew,
+                    PokemonIdNameConfiguration.onix]
         }
     }
 }

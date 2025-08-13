@@ -10,68 +10,45 @@ protocol PokemonNetworkCheckingAndStoring {
     var coreDataNetworkService: CoreDataNetworkService { get }
     var pokemonLocationConfiguration: PokemonLocationConfiguration { get }
     
-    func checkCoreDataPokemonObject(pokemonConfigurationList: [PokemonIdNameConfiguration]) async
-    func storePokemonInCoreData() async
-    func checkPokemonMovesInCoreData(pokemon: String) async
+    func checkCoreDataPokemonObject(pokemonConfigurationList: [PokemonIdNameConfiguration]) async throws -> Bool
+    func storePokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> [PokeAPIPokemonMoveDetails]
+    func checkCoreDataMoveObject(pokemonMove: PokeAPIPokemonMoveDetails) async throws -> Bool
     func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async
 }
 
 extension PokemonNetworkCheckingAndStoring {
-    func checkCoreDataPokemonObject(pokemonConfigurationList: [PokemonIdNameConfiguration]) async {
-        for pokemon in pokemonConfigurationList {
-            do {
-                let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemon.name)
-                _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
-            } catch PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataPokemon.self)", identifierValue: pokemon.name, identifierKey: #keyPath(CoreDataPokemon.name)) {
-                await storePokemonInCoreData(pokemon: pokemon)
-            } catch let error as PokemonLeafGreenError {
-                print(error.errorLogDescription)
-                print(error.clientDescription)
-            } catch {
-                print("Shit went wrong - \(error.localizedDescription)")
-            }
+    func checkCoreDataPokemonObject(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Bool {
+        do {
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemonConfiguration.name)
+            return try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
+        } catch {
+            throw error
         }
     }
     
-    func storePokemonInCoreData(pokemon: PokemonIdNameConfiguration) async {
-        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: pokemon.id)
-        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: pokemon.id)
+    func storePokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList> {
+        let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: pokemonConfiguration.id)
+        let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: pokemonConfiguration.id)
         
         do {
             let pokemonResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonRequest)
             let pokemonSpeciesResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonSpeciesRequest)
-            try await coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
-            await checkPokemonMovesInCoreData(pokemon: pokemon.name)
-        } catch let error as PokemonLeafGreenError {
-            print(error.errorLogDescription)
+            let coreDataPokemonModel = try await coreDataNetworkService.saveCoreDataPokemonModel(pokeAPIPokemon: pokemonResponse, pokeAPIPokemonSpecies: pokemonSpeciesResponse)
+            guard let coreDataMoveListModel = coreDataPokemonModel.moves as? Set<CoreDataPokemonMoveList> else {
+                throw PokemonLeafGreenError.nsSetConversionError
+            }
+            return coreDataMoveListModel
         } catch {
-            print("Shit went wrong - \(error.localizedDescription)")
+            throw error
         }
     }
-    
-    func checkPokemonMovesInCoreData(pokemon: String) async {
+        
+    func checkCoreDataMoveObject(pokemonMove: CoreDataPokemonMoveList) async throws -> Bool {
         do {
-            let coreDataPokemonFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemon)
-            let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataPokemonFetchRequest)
-            
-            if let moves = coreDataPokemonModel.moves as? Set<CoreDataPokemonMoveList> {
-                for move in moves {
-                    let coreDataPokemonMoveFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierValue: move.name)
-                    do {
-                        _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataPokemonMoveFetchRequest)
-                    } catch PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataMove.self)", identifierValue: coreDataPokemonMoveFetchRequest.identifierValue, identifierKey: coreDataPokemonMoveFetchRequest.identifierKey) {
-                        await storePokemonMoveInCoreData(pokemonMove: move)
-                    } catch let error as PokemonLeafGreenError {
-                        print(error.errorLogDescription)
-                    } catch {
-                        print("Shit went wrong - \(error.localizedDescription)")
-                    }
-                }
-            }
-        } catch let error as PokemonLeafGreenError {
-            print(error.errorLogDescription)
+            let coreDataFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierValue: pokemonMove.name)
+            return try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
         } catch {
-            print("Shit went wrong - \(error.localizedDescription)")
+            throw error
         }
     }
     
