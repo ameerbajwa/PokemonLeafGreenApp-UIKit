@@ -14,7 +14,7 @@ public class CoreDataMove: NSManagedObject, CoreDataManageable {
     func adapt(pokeAPIMoveModel: PokeAPIMoveDetails) {
         self.id = Int16(pokeAPIMoveModel.id)
         self.name = pokeAPIMoveModel.name
-        self.accuracy = Int16(pokeAPIMoveModel.accuracy)
+        self.accuracy = Int16(pokeAPIMoveModel.accuracy ?? 0)
         self.pp = Int16(pokeAPIMoveModel.pp)
         self.power = Int16(pokeAPIMoveModel.power ?? 0)
         self.moveType = pokeAPIMoveModel.moveType.name

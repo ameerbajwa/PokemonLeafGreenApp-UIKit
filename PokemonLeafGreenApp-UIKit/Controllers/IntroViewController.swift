@@ -49,7 +49,20 @@ class IntroViewController: UIViewController {
         introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
         
         Task {
-            await introViewModel.checkCoreDataPokemonObject()
+            if let pokemonConfigurations = introViewModel.pokemonLocationConfiguration.pokemonConfigurations {
+                for pokemonConfiguration in pokemonConfigurations {
+                    print(pokemonConfiguration.name)
+                    let pokemonMoves = try await introViewModel.storePokemonInCoreData(pokemonConfiguration: pokemonConfiguration)
+                    if pokemonMoves.count > 0 {
+                        for pokemonMove in pokemonMoves {
+                            print(pokemonMove.name)
+                            try await introViewModel.checkCoreDataMoveObject(pokemonMove: pokemonMove)
+                        }
+                    }
+                }
+            }
+            
+            print("DisplayNextMessage called now")
             introViewModel.displayNextMessage()
         }
     }

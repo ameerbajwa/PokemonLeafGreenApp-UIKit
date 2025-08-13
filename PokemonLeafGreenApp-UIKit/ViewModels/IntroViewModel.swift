@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-class IntroViewModel: NSObject {
-    var configuration: PokemonLocationConfiguration
+class IntroViewModel: NSObject, PokemonNetworkCheckingAndStoring {
+    var pokemonLocationConfiguration: PokemonLocationConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var introView: IntroView
@@ -24,7 +24,7 @@ class IntroViewModel: NSObject {
          PokemonIdNameConfiguration.squirtle]
     
     init(configuration: PokemonLocationConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
-        self.configuration = configuration
+        self.pokemonLocationConfiguration = configuration
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
         self.introView = introView
@@ -151,10 +151,4 @@ extension IntroViewModel {
             print("Shit went wrong - \(error.localizedDescription)")
         }
     }
-}
-
-// MARK: - Networking calls to grab starter pokemon information
-
-extension IntroViewModel {
-    
 }

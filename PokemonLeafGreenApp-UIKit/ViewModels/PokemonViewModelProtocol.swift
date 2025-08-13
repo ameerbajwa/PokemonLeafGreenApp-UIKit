@@ -9,23 +9,9 @@ protocol PokemonNetworkCheckingAndStoring {
     var pokeAPINetworkService: PokeAPINetworkService { get }
     var coreDataNetworkService: CoreDataNetworkService { get }
     var pokemonLocationConfiguration: PokemonLocationConfiguration { get }
-    
-    func checkCoreDataPokemonObject(pokemonConfigurationList: [PokemonIdNameConfiguration]) async throws -> Bool
-    func storePokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> [PokeAPIPokemonMoveDetails]
-    func checkCoreDataMoveObject(pokemonMove: PokeAPIPokemonMoveDetails) async throws -> Bool
-    func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async
 }
 
 extension PokemonNetworkCheckingAndStoring {
-    func checkCoreDataPokemonObject(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Bool {
-        do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemonConfiguration.name)
-            return try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
-        } catch {
-            throw error
-        }
-    }
-    
     func storePokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList> {
         let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: pokemonConfiguration.id)
         let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: pokemonConfiguration.id)
@@ -43,25 +29,26 @@ extension PokemonNetworkCheckingAndStoring {
         }
     }
         
-    func checkCoreDataMoveObject(pokemonMove: CoreDataPokemonMoveList) async throws -> Bool {
+    func checkCoreDataMoveObject(pokemonMove: CoreDataPokemonMoveList) async throws {
         do {
             let coreDataFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierValue: pokemonMove.name)
-            return try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
+            let doesCoreDataMoveModelExist = try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
+            if !doesCoreDataMoveModelExist {
+                try await storePokemonMoveInCoreData(pokemonMove: pokemonMove)
+            }
         } catch {
             throw error
         }
     }
     
-    func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async {
+    func storePokemonMoveInCoreData(pokemonMove: CoreDataPokemonMoveList) async throws {
         let pokemonMoveRequest = PokeAPIRequest<PokeAPIMoveDetails>(endpoint: .move, id: Int(pokemonMove.id))
         
         do {
             let pokemonMoveResponse = try await pokeAPINetworkService.callPokeAPIServer(with: pokemonMoveRequest)
             try await coreDataNetworkService.saveCoreDataMoveModel(pokeAPIMove: pokemonMoveResponse)
-        } catch let error as PokemonLeafGreenError {
-            print(error.errorLogDescription)
         } catch {
-            print("Shit went wrong - \(error.localizedDescription)")
+            throw error
         }
     }
 }
