@@ -18,6 +18,7 @@ class IntroView: UIView {
     var bulbasaurImageView: UIImageView!
     var charmanderImageView: UIImageView!
     var squirtleImageView: UIImageView!
+    var selectedPokemonImageview: UIImageView!
     
     func setupIntroTextView() {
         introTextView = IntroTextView()
@@ -124,7 +125,7 @@ class IntroView: UIView {
         }
     }
     
-    func removeStarterPokmeonButons() {
+    func removeStarterPokemonButons() {
         DispatchQueue.main.async {
             self.bulbasaurImageView.removeFromSuperview()
             self.charmanderImageView.removeFromSuperview()
@@ -148,6 +149,35 @@ class IntroView: UIView {
             squirtleImageView.image = squirtImage
         }
     }
+    
+    func setupSelectedPokemonImage(pokemon: PokemonIdNameConfiguration) {
+        if pokemon.name == PokemonIdNameConfiguration.bulbasaur.name {
+            self.selectedPokemonImageview = bulbasaurImageView
+        } else if pokemon.name == PokemonIdNameConfiguration.charmander.name {
+            self.selectedPokemonImageview = charmanderImageView
+        } else {
+            self.selectedPokemonImageview = squirtleImageView
+        }
+        
+        self.selectedPokemonImageview.layer.cornerRadius = 10
+        self.selectedPokemonImageview.layer.borderWidth = 3
+        self.selectedPokemonImageview.layer.borderColor = UIColor.black.cgColor
+        
+        self.addSubview(self.selectedPokemonImageview)
+        self.selectedPokemonImageview.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            self.selectedPokemonImageview.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.selectedPokemonImageview.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.selectedPokemonImageview.heightAnchor.constraint(equalToConstant: 150.0),
+            self.selectedPokemonImageview.widthAnchor.constraint(equalToConstant: 150.0)
+        ])
+    }
+    
+    func removeSelectedPokemonImage() {
+        self.selectedPokemonImageview.removeFromSuperview()
+        self.selectedPokemonImageview = nil
+    }
 }
 
 // MARK: - Starter Pokemon Selected Delegate methods
@@ -167,6 +197,5 @@ extension IntroView {
     @objc
     func squirtleImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseSquirtle, selectedPokemon: PokemonIdNameConfiguration.squirtle)
-
     }
 }

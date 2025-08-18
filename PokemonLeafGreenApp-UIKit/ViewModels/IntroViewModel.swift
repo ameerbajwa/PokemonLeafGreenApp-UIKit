@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class IntroViewModel: NSObject, PokemonNetworkCheckingAndStoring {
+class IntroViewModel: NSObject {
     var pokemonLocationConfiguration: PokemonLocationConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
@@ -67,13 +67,15 @@ extension IntroViewModel {
                         print("Starter Pokemon not selected yet. Please select starter pokemon")
                         return
                     }
-                    self.introView.removeStarterPokmeonButons()
+                    self.introView.removeStarterPokemonButons()
+                    self.introView.setupSelectedPokemonImage(pokemon: selectedPokemon)
                     self.introView.introTextView.cancelButton.isEnabled = false
+//                    self.pokemonLocationConfiguration
                     await savePlayerStarterPokemon(selectedPokemon: selectedPokemon)
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: selectedPokemon.name))
                     newJourneyMessageCounter += 1
-                } else if newJourneyMessageCounter == 10 {
-                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(playerName: playerName))
+                } else if newJourneyMessageCounter == 11 {
+                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage11(playerName: playerName))
                     newJourneyMessageCounter += 1
                 } else {
                     if newJourneyMessageCounter == 1 {
@@ -86,6 +88,9 @@ extension IntroViewModel {
                         self.introView.setupStarterPokemonButtons()
                         self.introView.setUpImagesForStarterPokemonButtons()
                         self.introView.introTextView.cancelButton.isEnabled = true
+                    }
+                    if newJourneyMessageCounter == 8 {
+                        self.introView.removeSelectedPokemonImage()
                     }
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
                     newJourneyMessageCounter += 1

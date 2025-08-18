@@ -18,30 +18,28 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
         self.id = PokemonLocationIdNamePokemonConfiguration.palletTown.id
         self.name = PokemonLocationIdNamePokemonConfiguration.palletTown.name
         self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.palletTown.pokemonConfigurations
-        self.wildPokemon = [WildPokemon(id: PokemonIdNameConfiguration.bulbasaur.id,
-                                        name: PokemonIdNameConfiguration.bulbasaur.name,
-                                        lowestLevel: 5,
-                                        highestLevel: 5,
-                                        rate: 33),
-                            WildPokemon(id: PokemonIdNameConfiguration.charmander.id,
-                                        name: PokemonIdNameConfiguration.charmander.name,
-                                        lowestLevel: 5,
-                                        highestLevel: 5,
-                                        rate: 33),
-                            WildPokemon(id: PokemonIdNameConfiguration.squirtle.id,
-                                        name: PokemonIdNameConfiguration.squirtle.name,
-                                        lowestLevel: 5,
-                                        highestLevel: 5,
-                                        rate: 33)]
-        
+        self.wildPokemon = nil
     }
     
-    mutating func provideRivalAshPokemonConfiguration(starterPokemon: PokemonIdNameConfiguration) {
+    mutating func provideRivalAshPokemonConfiguration(playerStarterPokemon: PokemonIdNameConfiguration) {
+        let rivalAshStarterPokemon = returnRivalStarterPokemon(playerStarterPokemon: playerStarterPokemon)
         var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Rival Ash", reward: 100)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
-                                                      id: starterPokemon.id,
-                                                      name: starterPokemon.name,
+                                                      id: rivalAshStarterPokemon.id,
+                                                      name: rivalAshStarterPokemon.name,
                                                       level: 5))
         self.trainers = [rivalAsh]
+    }
+}
+
+extension PalletTownConfiguration {
+    private func returnRivalStarterPokemon(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
+        if playerStarterPokemon == .bulbasaur {
+            return .charmander
+        } else if playerStarterPokemon == .charmander {
+            return .squirtle
+        } else {
+            return .bulbasaur
+        }
     }
 }

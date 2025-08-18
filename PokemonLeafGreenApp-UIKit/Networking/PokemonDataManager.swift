@@ -1,8 +1,8 @@
 //
-//  PokemonViewModelProtocol.swift
+//  PokemonManager.swift
 //  PokemonLeafGreenApp-UIKit
 //
-//  Created by Ameer Bajwa on 8/10/25.
+//  Created by Ameer Bajwa on 8/15/25.
 //
 
 protocol PokemonNetworkCheckingAndStoring {
@@ -12,6 +12,20 @@ protocol PokemonNetworkCheckingAndStoring {
 }
 
 extension PokemonNetworkCheckingAndStoring {
+    func checkPokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList>? {
+        do {
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemonConfiguration.name)
+            let doesCoreDataPokemonModelExist = try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
+            if !doesCoreDataPokemonModelExist {
+                return try await storePokemonInCoreData(pokemonConfiguration: pokemonConfiguration)
+            } else {
+                return nil
+            }
+        } catch {
+            throw error
+        }
+    }
+    
     func storePokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList> {
         let pokemonRequest = PokeAPIRequest<PokeAPIPokemonDetails>(endpoint: .pokemon, id: pokemonConfiguration.id)
         let pokemonSpeciesRequest = PokeAPIRequest<PokeAPIPokemonSpeciesDetails>(endpoint: .species, id: pokemonConfiguration.id)
@@ -49,6 +63,33 @@ extension PokemonNetworkCheckingAndStoring {
             try await coreDataNetworkService.saveCoreDataMoveModel(pokeAPIMove: pokemonMoveResponse)
         } catch {
             throw error
+        }
+    }
+}
+
+struct PokemonDataManager: PokemonNetworkCheckingAndStoring {
+    var pokeAPINetworkService: PokeAPINetworkService
+    var coreDataNetworkService: CoreDataNetworkService
+    var pokemonLocationConfiguration: PokemonLocationConfiguration
+    
+    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, pokemonLocationConfiguration: PokemonLocationConfiguration) {
+        self.pokeAPINetworkService = pokeAPINetworkService
+        self.coreDataNetworkService = coreDataNetworkService
+        self.pokemonLocationConfiguration = pokemonLocationConfiguration
+    }
+    
+    func checkAndStorePokemonInfo() async throws {
+        if let pokemonConfigurations = pokemonLocationConfiguration.pokemonConfigurations {
+            for pokemonConfiguration in pokemonConfigurations {
+                print(pokemonConfiguration.name)
+                let pokemonMoves = try await checkPokemonInCoreData(pokemonConfiguration: pokemonConfiguration)
+                if let moves = pokemonMoves {
+                    for move in moves {
+                        print(move.name)
+                        try await checkCoreDataMoveObject(pokemonMove: move)
+                    }
+                }
+            }
         }
     }
 }
