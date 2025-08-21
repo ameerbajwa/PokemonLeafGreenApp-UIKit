@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class IntroViewModel: NSObject {
-    var pokemonLocationConfiguration: PokemonLocationConfiguration
+    var pokemonLocationConfiguration: PalletTownConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var introView: IntroView
@@ -23,7 +23,7 @@ class IntroViewModel: NSObject {
          PokemonIdNameConfiguration.charmander,
          PokemonIdNameConfiguration.squirtle]
     
-    init(configuration: PokemonLocationConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
+    init(configuration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
         self.pokemonLocationConfiguration = configuration
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
@@ -70,18 +70,27 @@ extension IntroViewModel {
                     self.introView.removeStarterPokemonButons()
                     self.introView.setupSelectedPokemonImage(pokemon: selectedPokemon)
                     self.introView.introTextView.cancelButton.isEnabled = false
-//                    self.pokemonLocationConfiguration
                     await savePlayerStarterPokemon(selectedPokemon: selectedPokemon)
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: selectedPokemon.name))
                     newJourneyMessageCounter += 1
+                } else if newJourneyMessageCounter == 10 {
+                    guard let selectedPokemon = playerSelectedPokemon else {
+                        print("playerSelectedPokemon is nil - error")
+                        return
+                    }
+                    let ashPokemon = self.pokemonLocationConfiguration.provideRivalAshPokemonConfiguration(playerStarterPokemon: selectedPokemon)
+                    self.introView.setupSelectedPokemonImage(pokemon: ashPokemon)
+                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(selectedPokemon: ashPokemon.name))
+                    newJourneyMessageCounter += 1
                 } else if newJourneyMessageCounter == 11 {
+                    self.introView.removeSelectedPokemonImage()
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage11(playerName: playerName))
                     newJourneyMessageCounter += 1
                 } else {
                     if newJourneyMessageCounter == 1 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                            self.introView.playerNameTextField.isHidden = false
-                            self.introView.playerNameTextField.becomeFirstResponder()
+                        self.introView.playerNameTextField.isHidden = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.25) {
+                            self.introView.playerNameTextField.isEnabled = true
                         }
                     }
                     if newJourneyMessageCounter == 6 {

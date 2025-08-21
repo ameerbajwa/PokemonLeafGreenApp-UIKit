@@ -90,7 +90,7 @@ extension IntroTextView {
         let introMessage = message
         self.messageLabel.text = ""
         
-        let interval = TimeInterval(3.0) / Double(introMessage.count)
+        let interval = TimeInterval(2.0) / Double(introMessage.count)
         
         for char in introMessage {
             self.messageLabel.text?.append(char)

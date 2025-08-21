@@ -16,11 +16,10 @@ extension PokemonNetworkCheckingAndStoring {
         do {
             let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: pokemonConfiguration.name)
             let doesCoreDataPokemonModelExist = try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
-            if !doesCoreDataPokemonModelExist {
-                return try await storePokemonInCoreData(pokemonConfiguration: pokemonConfiguration)
-            } else {
+            guard !doesCoreDataPokemonModelExist else {
                 return nil
             }
+            return try await storePokemonInCoreData(pokemonConfiguration: pokemonConfiguration)
         } catch {
             throw error
         }

@@ -21,7 +21,7 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
         self.wildPokemon = nil
     }
     
-    mutating func provideRivalAshPokemonConfiguration(playerStarterPokemon: PokemonIdNameConfiguration) {
+    mutating func provideRivalAshPokemonConfiguration(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
         let rivalAshStarterPokemon = returnRivalStarterPokemon(playerStarterPokemon: playerStarterPokemon)
         var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Rival Ash", reward: 100)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
@@ -29,6 +29,7 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
                                                       name: rivalAshStarterPokemon.name,
                                                       level: 5))
         self.trainers = [rivalAsh]
+        return rivalAshStarterPokemon
     }
 }
 
