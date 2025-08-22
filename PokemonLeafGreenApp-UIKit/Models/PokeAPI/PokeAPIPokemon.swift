@@ -178,7 +178,7 @@ class PokeAPIPokemonSpeciesDetails: PokeAPIBaseStructure {
 }
 
 class PokeAPIMoveDetails: PokeAPIBaseStructure {
-    let accuracy: Int
+    let accuracy: Int?
     let power: Int?
     let pp: Int
     let moveType: PokeAPIPokemonNameURLStructure
@@ -194,8 +194,8 @@ class PokeAPIMoveDetails: PokeAPIBaseStructure {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PokeAPIMoveDetailsKeys.self)
-        self.accuracy = try container.decode(Int.self, forKey: .accuracy)
-        self.power = try container.decode(Int.self, forKey: .power)
+        self.accuracy = try container.decodeIfPresent(Int.self, forKey: .accuracy)
+        self.power = try container.decodeIfPresent(Int.self, forKey: .power)
         self.pp = try container.decode(Int.self, forKey: .pp)
         self.moveType = try container.decode(PokeAPIPokemonNameURLStructure.self, forKey: .moveType)
         self.moveDescription = try container.decode([PokeAPIPokemonMoveDescriptionDetails].self, forKey: .moveDescription)

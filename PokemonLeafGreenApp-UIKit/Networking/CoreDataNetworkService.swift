@@ -30,20 +30,47 @@ extension CoreDataNetworkService {
         }
     }
     
-    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws {
+    func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws -> CoreDataPokemon {
         let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
-        _ = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
+        let coreDataPokemonModel = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
         do {
             try context.save()
+            return coreDataPokemonModel
         } catch {
             throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataPokemon.self)")
         }
     }
     
-    func saveGamePlayerModel() throws {
+    func saveNewGamePlayerModel() async throws {
         let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
         coreDataGamePlayerModel.adaptNewGame()
+        
+        do {
+            try context.save()
+        } catch {
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataGamePlayer.self)")
+        }
+    }
+    
+    func saveGamePlayerModel(playerName: String) async throws {
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+        var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+        coreDataGamePlayerModel.adaptPlayerName(playerName: playerName)
+        
+        do {
+            try context.save()
+        } catch {
+            throw PokemonLeafGreenError.coreDataSaveError(model: "\(CoreDataGamePlayer.self)")
+        }
+    }
+    
+    func saveGamePlayerModel(starterPokemon: PokemonIdNameConfiguration) async throws {
+        let coreDataGamePlayerPokemon = CoreDataGamePlayerPokemon(context: context)
+        coreDataGamePlayerPokemon.adaptStarterPokemon(pokemonConfiguration: starterPokemon)
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+        var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+        coreDataGamePlayerModel.addToPokemon(coreDataGamePlayerPokemon)
         
         do {
             try context.save()
@@ -56,7 +83,7 @@ extension CoreDataNetworkService {
 // MARK: - Fetching CoreData Models
 
 extension CoreDataNetworkService {
-    func fetchCoreDataModel<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> CoreDataRequest.Model {
+    func generateCoreDataFetchRequest<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> NSFetchRequest<CoreDataRequest.Model> {
         guard let fetchRequest = CoreDataRequest.Model.fetchRequest() as? NSFetchRequest<CoreDataRequest.Model> else {
             throw PokemonLeafGreenError.coreDataFetchRequestError(model: "\(CoreDataRequest.Model.self)")
         }
@@ -66,14 +93,31 @@ extension CoreDataNetworkService {
             fetchRequest.predicate = fetchRequestPredicate
         }
         
-        fetchRequest.fetchLimit = 1
-                
+        return fetchRequest
+    }
+    
+    func fetchCoreDataModel<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> CoreDataRequest.Model {
         do {
+            let fetchRequest = try generateCoreDataFetchRequest(with: request)
+            fetchRequest.fetchLimit = 1
             let coreDataModels = try context.fetch(fetchRequest)
             guard let coreDataModel = coreDataModels.first else {
                 throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifierValue: request.identifierValue, identifierKey: request.identifierKey)
             }
             return coreDataModel
+        } catch let error as PokemonLeafGreenError {
+            throw error
+        } catch {
+            throw PokemonLeafGreenError.coreDataFetchError(model: "\(CoreDataRequest.Model.self)", underlayingCoreDataError: error.localizedDescription)
+        }
+    }
+    
+    func fetchCoreDataModelCount<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> Bool {
+        do {
+            let fetchRequest = try generateCoreDataFetchRequest(with: request)
+            fetchRequest.resultType = .countResultType
+            let coreDataModelCount = try context.count(for: fetchRequest)
+            return coreDataModelCount == 1
         } catch let error as PokemonLeafGreenError {
             throw error
         } catch {

@@ -11,15 +11,20 @@ import UIKit
 class IntroViewController: UIViewController {
     weak var coordinator: ChildCoordinator?
     
+    var dataManager: PokemonDataManager
     var introViewModel: IntroViewModel
     var introView: IntroView
     
+    private var loadingView: LoadingView!
     private var safeArea: UILayoutGuide!
     
-    init(introViewModel: IntroViewModel, introView: IntroView) {
+    init(dataManager: PokemonDataManager, introViewModel: IntroViewModel, introView: IntroView) {
+        self.dataManager = dataManager
         self.introViewModel = introViewModel
         self.introView = introView
+        
         super.init(nibName: nil, bundle: nil)
+        loadingView = LoadingView()
     }
     
     required init?(coder: NSCoder) {
@@ -31,6 +36,20 @@ class IntroViewController: UIViewController {
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
         
+        self.loadingView.displayLoadingView(with: "Loading Intro", on: self.view)
+        
+        Task {
+            try await dataManager.checkAndStorePokemonInfo()
+            await setupViewController()
+            
+            self.loadingView.dismissLoadingView()
+            introViewModel.displayNextMessage()
+        }
+    }
+}
+
+extension IntroViewController {
+    func setupViewController() async {
         introView.viewModel = introViewModel
         
         self.view.addSubview(self.introView)
@@ -47,10 +66,5 @@ class IntroViewController: UIViewController {
         introViewModel.introView.setupIntroTextView()
         introViewModel.introView.setupPlayerNameTextField()
         introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
-        
-        Task {
-            await introViewModel.checkCoreDataPokemonObject()
-            introViewModel.displayNextMessage()
-        }
     }
 }

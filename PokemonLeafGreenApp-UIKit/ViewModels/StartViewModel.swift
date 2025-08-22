@@ -89,15 +89,17 @@ extension StartViewModel {
 
 extension StartViewModel {
     func startNewGame() {
-        do {
-            try coreDataNetworkService.saveGamePlayerModel()
-        } catch let error as PokemonLeafGreenError {
-            print(error.errorLogDescription)
-            print(error.clientDescription)
-        } catch {
-            print("#ERROR# - Unknown reason")
+        Task {
+            do {
+                try await coreDataNetworkService.saveNewGamePlayerModel()
+            } catch let error as PokemonLeafGreenError {
+                print(error.errorLogDescription)
+                print(error.clientDescription)
+            } catch {
+                print("#ERROR# - Unknown reason - \(error.localizedDescription)")
+            }
+            
+            await startController?.coordinateToIntroScreen()
         }
-        
-        startController?.coordinateToIntroScreen()
     }
 }

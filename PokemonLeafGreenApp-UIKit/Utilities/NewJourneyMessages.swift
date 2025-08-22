@@ -23,7 +23,10 @@ struct NewJourneyMessages {
     }
     static let newQuestMessage8 = "Oh no, my annoying nephew, Ash Ketchum, is here. He's here to start his pokemon journey too."
     static let newQuestMessage9 = "Hey Uncle Baj, I'm here to pick up your strongest pokemon."
-    static func newQuestMessage10(playerName: String) -> String {
+    static func newQuestMessage10(selectedPokemon: String) -> String {
+        return "Ash selected \(selectedPokemon)"
+    }
+    static func newQuestMessage11(playerName: String) -> String {
         return "Who are you?...\(playerName)? What a stupid name. I challenge you to a pokemon battle. Let's see how tough you are."
     }
     
@@ -40,5 +43,5 @@ struct NewJourneyMessages {
                                   "",
                                   newQuestMessage8,
                                   newQuestMessage9,
-                                  ""]
+                                  "", ""]
 }

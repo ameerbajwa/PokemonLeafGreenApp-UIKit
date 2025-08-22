@@ -8,12 +8,14 @@
 struct Route2Configuration: PokemonLocationConfiguration {
     var id: Int
     var name: String
+    var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [PokemonTrainerConfiguration]?
     var wildPokemon: [WildPokemonConfiguration]?
     
     init() {
-        self.id = PokemonLocationIdNameConfiguration.route2.id
-        self.name = PokemonLocationIdNameConfiguration.route2.name
+        self.id = PokemonLocationIdNamePokemonConfiguration.route2.id
+        self.name = PokemonLocationIdNamePokemonConfiguration.route2.name
+        self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.route2.pokemonConfigurations
         self.trainers = nil
         self.wildPokemon = [WildPokemon(id: PokemonIdNameConfiguration.pidgey.id,
                                         name: PokemonIdNameConfiguration.pidgey.name,

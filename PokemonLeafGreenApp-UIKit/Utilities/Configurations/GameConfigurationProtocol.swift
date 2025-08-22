@@ -8,6 +8,7 @@
 public protocol PokemonLocationConfiguration {
     var id: Int { get set }
     var name: String { get set }
+    var pokemonConfigurations: [PokemonIdNameConfiguration]? { get set }
     var trainers: [PokemonTrainerConfiguration]? { get set }
     var wildPokemon: [WildPokemonConfiguration]? { get set }
 }

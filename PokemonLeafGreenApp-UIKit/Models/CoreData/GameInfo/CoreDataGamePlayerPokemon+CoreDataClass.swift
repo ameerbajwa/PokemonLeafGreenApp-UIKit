@@ -11,8 +11,9 @@ import CoreData
 
 @objc(CoreDataGamePlayerPokemon)
 public class CoreDataGamePlayerPokemon: NSManagedObject {
-    func adaptStarterPokemon(pokemon: String) {
-        self.name = pokemon
+    func adaptStarterPokemon(pokemonConfiguration: PokemonIdNameConfiguration) {
+        self.id = Int16(pokemonConfiguration.id)
+        self.name = pokemonConfiguration.name
         self.level = 5
         self.order = 1
         self.currentExperience = 141
