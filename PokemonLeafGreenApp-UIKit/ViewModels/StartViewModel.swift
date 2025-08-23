@@ -77,7 +77,7 @@ extension StartViewModel {
 extension StartViewModel {
     func loadGame() {
         do {
-            let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+            let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
             let _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         } catch {
             print("Player could not be found, must start new game")
@@ -92,14 +92,13 @@ extension StartViewModel {
         Task {
             do {
                 try await coreDataNetworkService.saveNewGamePlayerModel()
+                await startController?.coordinateToIntroScreen()
             } catch let error as PokemonLeafGreenError {
                 print(error.errorLogDescription)
                 print(error.clientDescription)
             } catch {
                 print("#ERROR# - Unknown reason - \(error.localizedDescription)")
             }
-            
-            await startController?.coordinateToIntroScreen()
         }
     }
 }

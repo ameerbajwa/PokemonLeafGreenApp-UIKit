@@ -54,7 +54,7 @@ extension CoreDataNetworkService {
     }
     
     func saveGamePlayerModel(playerName: String) async throws {
-        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
         var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         coreDataGamePlayerModel.adaptPlayerName(playerName: playerName)
         
@@ -68,7 +68,7 @@ extension CoreDataNetworkService {
     func saveGamePlayerModel(starterPokemon: PokemonIdNameConfiguration) async throws {
         let coreDataGamePlayerPokemon = CoreDataGamePlayerPokemon(context: context)
         coreDataGamePlayerPokemon.adaptStarterPokemon(pokemonConfiguration: starterPokemon)
-        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierValue: "1")
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
         var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         coreDataGamePlayerModel.addToPokemon(coreDataGamePlayerPokemon)
         
@@ -88,11 +88,16 @@ extension CoreDataNetworkService {
             throw PokemonLeafGreenError.coreDataFetchRequestError(model: "\(CoreDataRequest.Model.self)")
         }
         
-        if let safeIdentifierKey = request.identifierKey, let safeIdentifierValue = request.identifierValue {
-            let fetchRequestPredicate = NSPredicate(format: "%K == %@", safeIdentifierKey, safeIdentifierValue)
-            fetchRequest.predicate = fetchRequestPredicate
+        var fetchRequestPredicate: NSPredicate?
+        
+        if let safeIdentifierStringValue = request.identifierStringValue {
+            fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, safeIdentifierStringValue)
+        } else if let safeIdentifierIntValue = request.identifierIntValue {
+            fetchRequestPredicate = NSPredicate(format: "%K == %d", request.identifierKey, safeIdentifierIntValue)
         }
         
+        fetchRequest.predicate = fetchRequestPredicate
+
         return fetchRequest
     }
     
@@ -102,7 +107,7 @@ extension CoreDataNetworkService {
             fetchRequest.fetchLimit = 1
             let coreDataModels = try context.fetch(fetchRequest)
             guard let coreDataModel = coreDataModels.first else {
-                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)",identifierValue: request.identifierValue, identifierKey: request.identifierKey)
+                throw PokemonLeafGreenError.noRecordInCoreData(model: "\(CoreDataRequest.Model.self)", identifierValue: request.identifierStringValue ?? request.identifierIntValue, identifierKey: request.identifierKey)
             }
             return coreDataModel
         } catch let error as PokemonLeafGreenError {

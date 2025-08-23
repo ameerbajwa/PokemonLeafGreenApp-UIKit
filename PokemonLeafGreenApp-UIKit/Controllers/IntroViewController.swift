@@ -25,6 +25,7 @@ class IntroViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         loadingView = LoadingView()
+        self.introViewModel.controller = self
     }
     
     required init?(coder: NSCoder) {
@@ -62,9 +63,14 @@ extension IntroViewController {
             introView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
-        introViewModel.controllerViewFrameSize = self.safeArea.layoutFrame.size
         introViewModel.introView.setupIntroTextView()
         introViewModel.introView.setupPlayerNameTextField()
         introViewModel.introView.introTextView.setupIntroLabelAndNextButton()
+    }
+}
+
+extension IntroViewController {
+    func coordinateToBattleScreen() {
+        coordinator?.finish()
     }
 }

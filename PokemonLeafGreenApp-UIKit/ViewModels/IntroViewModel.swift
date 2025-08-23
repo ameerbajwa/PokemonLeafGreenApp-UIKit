@@ -13,7 +13,7 @@ class IntroViewModel: NSObject {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var introView: IntroView
-    var controllerViewFrameSize: CGSize?
+    weak var controller: IntroViewController?
     
     var introMessageCounter = 0
     var newJourneyMessageCounter = 0
@@ -104,6 +104,8 @@ extension IntroViewModel {
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
                     newJourneyMessageCounter += 1
                 }
+            } else {
+                controller?.coordinateToBattleScreen()
             }
         }
     }

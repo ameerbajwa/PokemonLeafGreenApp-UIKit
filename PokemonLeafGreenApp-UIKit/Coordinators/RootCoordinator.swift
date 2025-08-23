@@ -39,3 +39,14 @@ extension RootCoordinator {
         introCoordinator.start()
     }
 }
+
+// MARK: - Coordinate to Battle
+
+extension RootCoordinator {
+    func startBattleCoordinator() {
+        let battleCoordinator = BattleCoordinator(navigationController: navigationController, coreDataNetworkService: coreDataNetworkService)
+        self.addChildCoordinator(childCoordinator: battleCoordinator)
+        battleCoordinator.rootCoordinator = self
+        battleCoordinator.start()
+    }
+}

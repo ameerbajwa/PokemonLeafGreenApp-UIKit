@@ -15,7 +15,7 @@ public enum PokemonLeafGreenError: Error {
     case coreDataSaveError(model: String)
     case coreDataFetchError(model: String, underlayingCoreDataError: String)
     case coreDataFetchRequestError(model: String)
-    case noRecordInCoreData(model: String, identifierValue: String?, identifierKey: String?)
+    case noRecordInCoreData(model: String, identifierValue: Any?, identifierKey: String?)
     case nsSetConversionError
     
     var errorLogDescription: String {

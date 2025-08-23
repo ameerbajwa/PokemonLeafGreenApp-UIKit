@@ -35,6 +35,8 @@ class IntroCoordinator: ChildCoordinator {
     }
     
     func finish() {
-        
+        self.navigationController.viewControllers.removeAll()
+        rootCoordinator?.removeChildCoordinator(childCoordinator: self)
+        rootCoordinator?.startBattleCoordinator()
     }
 }
