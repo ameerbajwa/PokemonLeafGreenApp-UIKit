@@ -43,8 +43,8 @@ extension RootCoordinator {
 // MARK: - Coordinate to Battle
 
 extension RootCoordinator {
-    func startBattleCoordinator() {
-        let battleCoordinator = BattleCoordinator(navigationController: navigationController, coreDataNetworkService: coreDataNetworkService)
+    func startBattleCoordinator(configuration: PokemonBattleConfiguration) {
+        let battleCoordinator = BattleCoordinator(navigationController: navigationController, configuration: configuration, coreDataNetworkService: coreDataNetworkService)
         self.addChildCoordinator(childCoordinator: battleCoordinator)
         battleCoordinator.rootCoordinator = self
         battleCoordinator.start()

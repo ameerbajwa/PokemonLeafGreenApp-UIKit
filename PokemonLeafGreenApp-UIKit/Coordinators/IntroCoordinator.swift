@@ -34,9 +34,11 @@ class IntroCoordinator: ChildCoordinator {
         navigationController.pushViewController(controller, animated: false)
     }
     
-    func finish() {
+    func finish(configuration: PokemonCoordinatorConfiguration?) {
         self.navigationController.viewControllers.removeAll()
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
-        rootCoordinator?.startBattleCoordinator()
+        if let safeBattleConfiguration = configuration?.battleConfiguration {
+            rootCoordinator?.startBattleCoordinator(configuration: safeBattleConfiguration)
+        }
     }
 }

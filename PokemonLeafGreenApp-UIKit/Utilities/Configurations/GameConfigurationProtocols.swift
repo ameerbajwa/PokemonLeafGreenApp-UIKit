@@ -1,9 +1,32 @@
 //
-//  ConfigurationProtocol.swift
+//  GameConfigurationProtocols.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 8/5/25.
 //
+
+public enum PokemonCoordinatorConfiguration {
+    case location(PokemonLocationConfiguration)
+    case battle(PokemonBattleConfiguration)
+    
+    var locationConfiguration: PokemonLocationConfiguration? {
+        switch self {
+        case .location(let configuration):
+            return configuration
+        default:
+            return nil
+        }
+    }
+    
+    var battleConfiguration: PokemonBattleConfiguration? {
+        switch self {
+        case .battle(let configuration):
+            return configuration
+        default:
+            return nil
+        }
+    }
+}
 
 public protocol PokemonLocationConfiguration {
     var id: Int { get set }
@@ -11,6 +34,16 @@ public protocol PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]? { get set }
     var trainers: [PokemonTrainerConfiguration]? { get set }
     var wildPokemon: [WildPokemonConfiguration]? { get set }
+}
+
+public struct PokemonBattleConfiguration {
+    var trainer: PokemonTrainerConfiguration?
+    var wildPokemon: [WildPokemonConfiguration]?
+    
+    init(trainer: PokemonTrainerConfiguration? = nil, wildPokemon: [WildPokemonConfiguration]? = nil) {
+        self.trainer = trainer
+        self.wildPokemon = wildPokemon
+    }
 }
 
 public protocol WildPokemonConfiguration {
@@ -43,6 +76,7 @@ public protocol PokemonTrainerConfiguration {
     var name: String { get set }
     var reward: Int { get set }
     var isGymLeader: Bool { get set }
+    var defeated: Bool { get set }
     var pokemon: [PokemonTrainerPokemonConfiguration] { get set }
 }
 
@@ -52,6 +86,7 @@ struct PokemonTrainer: PokemonTrainerConfiguration {
     var name: String
     var reward: Int
     var isGymLeader: Bool
+    var defeated: Bool
     var pokemon: [PokemonTrainerPokemonConfiguration] = []
     
     init(order: Int, id: Int, name: String, reward: Int, isGymLeader: Bool = false) {
@@ -60,6 +95,7 @@ struct PokemonTrainer: PokemonTrainerConfiguration {
         self.name = name
         self.reward = reward
         self.isGymLeader = isGymLeader
+        self.defeated = false
     }
 }
 

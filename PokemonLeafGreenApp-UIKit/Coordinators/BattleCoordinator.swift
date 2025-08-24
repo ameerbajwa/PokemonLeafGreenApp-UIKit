@@ -11,28 +11,35 @@ import UIKit
 class BattleCoordinator: ChildCoordinator {
     weak var rootCoordinator: RootCoordinator?
     var navigationController: UINavigationController
+    var configuration: PokemonBattleConfiguration
     
-//    var controller: BattleViewController
-//    var viewModel: BattleViewModel
-//    var view: BattleView
+    var controller: BattleViewController
+    var viewModel: BattleViewModel
+    var battleView: PokemonBattleView
+    var battleActionView: PokemonBattleActionView
     
-    init(navigationController: UINavigationController, coreDataNetworkService: CoreDataNetworkService) {
+//    var pokemonBattleMoveListView: PokemonBattleMoveListView
+//    var pokemonBattlePokemonListView: PokemonBattlePokemonListView
+//    var pokemonBattleMoveView: PokemonBattleMoveView
+//    var pokemonBattlePokemonSelectionView: PokemonBattlePokemonSelectionView
+//    var pokemonBattleTextView: PokemonBattleTextView
+    
+    init(navigationController: UINavigationController, configuration: PokemonBattleConfiguration, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
+        self.configuration = configuration
         
-//        self.view = IntroView()
-//        self.configuration = PalletTownConfiguration()
-//        self.dataManager = PokemonDataManager(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonLocationConfiguration: configuration)
-//        self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
-//        
-//        self.controller = IntroViewController(dataManager: dataManager, introViewModel: viewModel, introView: view)
+        self.battleView = PokemonBattleView()
+        self.battleActionView = PokemonBattleActionView()
+        self.viewModel = BattleViewModel()
+        self.controller = BattleViewController(viewModel: viewModel)
     }
     
     func start() {
-//        self.controller.coordinator = self
-//        navigationController.pushViewController(controller, animated: false)
+        self.controller.coordinator = self
+        navigationController.pushViewController(controller, animated: false)
     }
     
-    func finish() {
+    func finish(configuration: PokemonCoordinatorConfiguration?) {
         self.navigationController.viewControllers.removeAll()
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
 //        rootCoordinator?.startLocationCoordinator()

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class IntroViewController: UIViewController {
-    weak var coordinator: ChildCoordinator?
+    weak var coordinator: IntroCoordinator?
     
     var dataManager: PokemonDataManager
     var introViewModel: IntroViewModel
@@ -70,7 +70,7 @@ extension IntroViewController {
 }
 
 extension IntroViewController {
-    func coordinateToBattleScreen() {
-        coordinator?.finish()
+    func coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration) {
+        coordinator?.finish(configuration: configuration)
     }
 }

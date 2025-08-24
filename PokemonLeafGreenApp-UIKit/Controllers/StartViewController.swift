@@ -53,6 +53,6 @@ class StartViewController: UIViewController {
 
 extension StartViewController {
     func coordinateToIntroScreen() {
-        coordinator?.finish()
+        coordinator?.finish(configuration: nil)
     }
 }

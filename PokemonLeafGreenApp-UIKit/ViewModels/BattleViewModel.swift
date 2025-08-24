@@ -10,5 +10,27 @@ import UIKit
 import Combine
 
 class BattleViewModel {
+    var configuration: PokemonBattleConfiguration
+    var coreDataNetworkService: CoreDataNetworkService
+    weak var controller: BattleViewController?
     
+    var playerInfo: CoreDataGamePlayer?
+    
+    init(configuration: PokemonBattleConfiguration, coreDataNetworkService: CoreDataNetworkService) {
+        self.configuration = configuration
+        self.coreDataNetworkService = coreDataNetworkService
+        
+        fetchPlayerInfo()
+    }
+    
+    func fetchPlayerInfo() {
+        do {
+            let coreDataFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
+            playerInfo = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
+        } catch let error as PokemonLeafGreenError {
+            print(error.errorLogDescription)
+        } catch {
+            print(error)
+        }
+    }
 }

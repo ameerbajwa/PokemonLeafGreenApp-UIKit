@@ -23,7 +23,7 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
     
     mutating func provideRivalAshPokemonConfiguration(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
         let rivalAshStarterPokemon = returnRivalStarterPokemon(playerStarterPokemon: playerStarterPokemon)
-        var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Rival Ash", reward: 100)
+        var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Ash", reward: 100)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
                                                       id: rivalAshStarterPokemon.id,
                                                       name: rivalAshStarterPokemon.name,

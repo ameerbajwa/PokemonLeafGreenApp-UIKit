@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension CoreDataGameLocation {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataGameLocation> {
         return NSFetchRequest<CoreDataGameLocation>(entityName: "CoreDataGameLocation")

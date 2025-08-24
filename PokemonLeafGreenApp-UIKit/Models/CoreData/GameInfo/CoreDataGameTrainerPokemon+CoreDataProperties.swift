@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension CoreDataGameTrainerPokemon {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataGameTrainerPokemon> {
         return NSFetchRequest<CoreDataGameTrainerPokemon>(entityName: "CoreDataGameTrainerPokemon")
