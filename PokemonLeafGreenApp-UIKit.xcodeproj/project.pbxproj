@@ -34,6 +34,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Views/Battle/PokemonBattleActionView.swift,
 			);
 			target = DE0D56102DF3E53F0033CF5A /* PokemonLeafGreenApp-UIKit */;
 		};

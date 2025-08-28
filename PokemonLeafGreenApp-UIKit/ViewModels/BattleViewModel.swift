@@ -16,6 +16,8 @@ class BattleViewModel {
     
     var playerInfo: CoreDataGamePlayer?
     
+    @Published var battleText: String = ""
+    
     init(configuration: PokemonBattleConfiguration, coreDataNetworkService: CoreDataNetworkService) {
         self.configuration = configuration
         self.coreDataNetworkService = coreDataNetworkService
@@ -32,5 +34,21 @@ class BattleViewModel {
         } catch {
             print(error)
         }
+    }
+}
+
+// MARK: - Battle UI Delegate Methods
+
+extension BattleViewModel {
+    func dismissText() {
+        
+    }
+    
+    func displayMoveList() {
+        
+    }
+    
+    func displayPokemonList() {
+        
     }
 }
