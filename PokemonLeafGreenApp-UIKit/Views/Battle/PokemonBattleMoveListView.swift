@@ -59,6 +59,7 @@ extension PokemonBattleMoveListView: UITableViewDataSource {
             return UITableViewCell()
         }
         
+        
         return cell
     }
 }

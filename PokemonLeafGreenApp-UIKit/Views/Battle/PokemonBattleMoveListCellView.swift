@@ -12,8 +12,8 @@ import Combine
 class PokemonBattleMoveListCellView: UITableViewCell {
     static let identifier = "PokemonBattleMoveTableViewCell"
     
-    var moveNameLabel: UILabel!
-    var moveTypeLabel: UILabel!
+    var nameLabel: UILabel!
+    var typeLabel: UILabel!
     var ppLabel: UILabel!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -27,40 +27,46 @@ class PokemonBattleMoveListCellView: UITableViewCell {
     }
     
     func setupLabels() {
-        moveNameLabel = UILabel()
-        moveNameLabel.font = .boldSystemFont(ofSize: 16.0)
-        moveNameLabel.textAlignment = .left
-        moveNameLabel.textColor = .black
+        nameLabel = UILabel()
+        nameLabel.font = .boldSystemFont(ofSize: 16.0)
+        nameLabel.textAlignment = .left
+        nameLabel.textColor = .black
         
-        moveTypeLabel = UILabel()
-        moveTypeLabel.font = .systemFont(ofSize: 12.0)
-        moveTypeLabel.textColor = .systemGray
-        moveTypeLabel.textAlignment = .left
+        typeLabel = UILabel()
+        typeLabel.font = .systemFont(ofSize: 12.0)
+        typeLabel.textColor = .systemGray
+        typeLabel.textAlignment = .left
         
         ppLabel = UILabel()
         ppLabel.font = .systemFont(ofSize: 14.0)
         ppLabel.textColor = .gray
         ppLabel.textAlignment = .center
         
-        contentView.addSubview(moveNameLabel)
-        contentView.addSubview(moveTypeLabel)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(typeLabel)
         contentView.addSubview(ppLabel)
-        moveNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        moveTypeLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        typeLabel.translatesAutoresizingMaskIntoConstraints = false
         ppLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            moveNameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            moveNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15.0),
-            moveNameLabel.widthAnchor.constraint(equalToConstant: 100.0),
+            nameLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15.0),
+            nameLabel.widthAnchor.constraint(equalToConstant: 100.0),
             
-            moveTypeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            moveTypeLabel.leadingAnchor.constraint(equalTo: moveNameLabel.trailingAnchor, constant: 15.0),
-            moveTypeLabel.widthAnchor.constraint(equalToConstant: 50.0),
+            typeLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            typeLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 15.0),
+            typeLabel.widthAnchor.constraint(equalToConstant: 50.0),
             
             ppLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             ppLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15.0),
             ppLabel.widthAnchor.constraint(equalToConstant: 40.0)
         ])
+    }
+    
+    func configure(with pokemonMoveInfo: PokemonBattleMoveInfo) {
+        nameLabel.text = pokemonMoveInfo.moveInfo.name
+        typeLabel.text = pokemonMoveInfo.moveInfo.moveType
+        ppLabel.text = "\(pokemonMoveInfo.currentPP)/\(pokemonMoveInfo.moveInfo.pp)"
     }
 }
