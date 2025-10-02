@@ -17,6 +17,8 @@ public enum PokemonLeafGreenError: Error {
     case coreDataFetchRequestError(model: String)
     case noRecordInCoreData(model: String, identifierValue: Any?, identifierKey: String?)
     case nsSetConversionError
+    case noPokemonStoredForPlayer
+    case noMovesStoredForPokemon
     
     var errorLogDescription: String {
         switch self {
@@ -42,6 +44,10 @@ public enum PokemonLeafGreenError: Error {
             return "No record found in Core Data model \(model) for key-value pair - \(key ?? "id") - \(identifier ?? "1")"
         case .nsSetConversionError:
             return "NSSet can not be converted Set<CoreDataPokemonMoveList>"
+        case .noPokemonStoredForPlayer:
+            return "No Pokemon stored for game player"
+        case .noMovesStoredForPokemon:
+            return "No moves stored for pokemon model"
         }
     }
     
@@ -49,6 +55,10 @@ public enum PokemonLeafGreenError: Error {
         switch self {
         case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_, _), .coreDataFetchRequestError(_), .nsSetConversionError:
             return "Server is down. Please refresh the app or download again."
+        case .noPokemonStoredForPlayer:
+            return "Player has no pokemon. Please restart the game."
+        case .noMovesStoredForPokemon:
+            return "Data has been corrupted. Please restart the game."
         case .noRecordInCoreData(_, _, _):
             return ""
         }

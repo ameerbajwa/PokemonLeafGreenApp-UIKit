@@ -10,5 +10,9 @@ import UIKit
 import Combine
 
 class PokemonBattleView: UIView {
+    var gamePlayerPokemon: UIImageView!
+    var opposingPokemon: UIImageView!
     
+    var gamePlayerPokemonBattleDetailsView: PokemonBattleDetailsView!
+    var opposingPokemonBattleDetailsView: PokemonBattleDetailsView!
 }

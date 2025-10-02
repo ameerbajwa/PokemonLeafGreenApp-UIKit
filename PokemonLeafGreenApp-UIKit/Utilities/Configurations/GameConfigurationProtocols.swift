@@ -119,3 +119,4 @@ struct PokemonTrainerPokemon: PokemonTrainerPokemonConfiguration {
         self.level = level
     }
 }
+

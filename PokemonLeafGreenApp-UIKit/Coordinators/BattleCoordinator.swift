@@ -13,10 +13,10 @@ class BattleCoordinator: ChildCoordinator {
     var navigationController: UINavigationController
     var configuration: PokemonBattleConfiguration
     
-    var controller: BattleViewController
-    var viewModel: BattleViewModel
-    var battleView: PokemonBattleView
-    var battleActionView: PokemonBattleActionView
+//    var controller: BattleViewController
+//    var viewModel: BattleViewModel
+//    var battleView: PokemonBattleView
+//    var battleActionView: PokemonBattleActionView
     
 //    var pokemonBattleMoveListView: PokemonBattleMoveListView
 //    var pokemonBattlePokemonListView: PokemonBattlePokemonListView
@@ -28,15 +28,15 @@ class BattleCoordinator: ChildCoordinator {
         self.navigationController = navigationController
         self.configuration = configuration
         
-        self.battleView = PokemonBattleView()
-        self.battleActionView = PokemonBattleActionView()
-        self.viewModel = BattleViewModel()
-        self.controller = BattleViewController(viewModel: viewModel)
+//        self.battleView = PokemonBattleView()
+//        self.battleActionView = PokemonBattleActionView()
+//        self.viewModel = BattleViewModel()
+//        self.controller = BattleViewController(viewModel: viewModel)
     }
     
     func start() {
-        self.controller.coordinator = self
-        navigationController.pushViewController(controller, animated: false)
+//        self.controller.coordinator = self
+//        navigationController.pushViewController(controller, animated: false)
     }
     
     func finish(configuration: PokemonCoordinatorConfiguration?) {

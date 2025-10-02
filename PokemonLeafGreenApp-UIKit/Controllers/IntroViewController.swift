@@ -11,15 +11,15 @@ import UIKit
 class IntroViewController: UIViewController {
     weak var coordinator: IntroCoordinator?
     
-    var dataManager: PokemonDataManager
+    var storageService: PokemonStorageService
     var introViewModel: IntroViewModel
     var introView: IntroView
     
     private var loadingView: LoadingView!
     private var safeArea: UILayoutGuide!
     
-    init(dataManager: PokemonDataManager, introViewModel: IntroViewModel, introView: IntroView) {
-        self.dataManager = dataManager
+    init(storageService: PokemonStorageService, introViewModel: IntroViewModel, introView: IntroView) {
+        self.storageService = storageService
         self.introViewModel = introViewModel
         self.introView = introView
         
@@ -40,7 +40,7 @@ class IntroViewController: UIViewController {
         self.loadingView.displayLoadingView(with: "Loading Intro", on: self.view)
         
         Task {
-            try await dataManager.checkAndStorePokemonInfo()
+            try await storageService.checkAndStorePokemonInfo()
             await setupViewController()
             
             self.loadingView.dismissLoadingView()

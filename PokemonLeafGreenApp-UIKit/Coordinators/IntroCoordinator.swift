@@ -16,17 +16,17 @@ class IntroCoordinator: ChildCoordinator {
     var viewModel: IntroViewModel
     var view: IntroView
     var configuration: PalletTownConfiguration
-    var dataManager: PokemonDataManager
+    var storageService: PokemonStorageService
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         
         self.view = IntroView()
         self.configuration = PalletTownConfiguration()
-        self.dataManager = PokemonDataManager(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonLocationConfiguration: configuration)
+        self.storageService = PokemonStorageService(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonLocationConfiguration: configuration)
         self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
         
-        self.controller = IntroViewController(dataManager: dataManager, introViewModel: viewModel, introView: view)
+        self.controller = IntroViewController(storageService: storageService, introViewModel: viewModel, introView: view)
     }
     
     func start() {

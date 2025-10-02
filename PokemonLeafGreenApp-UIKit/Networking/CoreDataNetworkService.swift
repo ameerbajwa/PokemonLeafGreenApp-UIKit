@@ -10,9 +10,11 @@ import CoreData
 
 public struct CoreDataNetworkService {
     let context: NSManagedObjectContext
+    let storageAdapter: PokeAPICoreDataAdapter
     
     init(container: NSPersistentContainer) {
         self.context = container.viewContext
+        storageAdapter = PokeAPICoreDataAdapter(coreDataContext: container.viewContext)
     }
 }
 
@@ -20,8 +22,7 @@ public struct CoreDataNetworkService {
 
 extension CoreDataNetworkService {
     func saveCoreDataMoveModel(pokeAPIMove: PokeAPIMoveDetails) async throws {
-        let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
-        _ = adapter.adaptMoveToCoreData(pokeAPIMove: pokeAPIMove)
+        _ = storageAdapter.adaptMoveToCoreData(pokeAPIMove: pokeAPIMove)
         
         do {
             try context.save()
@@ -31,8 +32,7 @@ extension CoreDataNetworkService {
     }
     
     func saveCoreDataPokemonModel(pokeAPIPokemon: PokeAPIPokemonDetails, pokeAPIPokemonSpecies: PokeAPIPokemonSpeciesDetails) async throws -> CoreDataPokemon {
-        let adapter = PokeAPICoreDataAdapter(coreDataContext: context)
-        let coreDataPokemonModel = adapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
+        let coreDataPokemonModel = storageAdapter.adaptPokemonToCoreData(pokeAPIPokemon: pokeAPIPokemon, pokeAPIPokemonSpecies: pokeAPIPokemonSpecies)
         
         do {
             try context.save()
