@@ -5,12 +5,11 @@
 //  Created by Ameer Bajwa on 9/15/25.
 //
 
-protocol PokemonBattleInfoServicing: PokemonNetworking {
-    var adapter: PokemonBattleReadyAdapter { get set }
-    var manager: PokemonBattleManager { get set }
+protocol PokemonFullInfoLoading: PokemonNetworking {
+    var pokemonFullInfoAdapter: PokemonFullInfoAdapter { get set }
 }
 
-extension PokemonBattleInfoServicing {
+extension PokemonFullInfoLoading {
     func fetchPlayerPokemon() throws -> [CoreDataGamePlayerPokemon] {
         do {
             let coreDataFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
@@ -52,27 +51,64 @@ extension PokemonBattleInfoServicing {
             throw error
         }
     }
+}
+
+public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
+    var pokeAPINetworkService: PokeAPINetworkService
+    var coreDataNetworkService: CoreDataNetworkService
+    var pokemonLocationConfiguration: PokemonLocationConfiguration
+    var pokemonFullInfoAdapter: PokemonFullInfoAdapter
     
-    func fetchPlayerPokemonFullBattleInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullBattleInfo {
+    init(pokeAPINetworkService: PokeAPINetworkService,
+         coreDataNetworkService: CoreDataNetworkService,
+         pokemonLocationConfiguration: PokemonLocationConfiguration,
+         pokemonFullInfoAdapter: PokemonFullInfoAdapter
+    ) {
+        self.pokeAPINetworkService = pokeAPINetworkService
+        self.coreDataNetworkService = coreDataNetworkService
+        self.pokemonLocationConfiguration = pokemonLocationConfiguration
+        self.pokemonFullInfoAdapter = pokemonFullInfoAdapter
+    }
+    
+    func fetchPlayerPokemonFullBattleInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo {
         do {
             let (pokemonModel, pokemonMoveModels) = try fetchPokemonModels(pokemonName: playerPokemon.name, pokemonLevel: Int(playerPokemon.level))
-            return adapter.adaptPlayerPokemonToPokemonFullBattleInfo(coreDataGamePlayerPokemonModel: playerPokemon, coreDataPokemonModel: pokemonModel, coreDataMoveModels: pokemonMoveModels)
+            let effortValuesEarnedDict = pokemonFullInfoAdapter.adaptPlayerPokemonEffortValueStats(playerPokemonModel: playerPokemon)
+            return pokemonFullInfoAdapter.adaptPokemonModelsToFullInfo(
+                pokemonLevel: Int(playerPokemon.level),
+                pokemonOrder: Int(playerPokemon.order),
+                pokemonEffortEarnedValues: effortValuesEarnedDict,
+                coreDataPokemonModel: pokemonModel,
+                coreDataMoveModels: pokemonMoveModels)
         } catch {
             throw error
         }
     }
     
-    func fetchWildPokemonFullBattleInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullBattleInfo {
+    func fetchWildPokemonFullBattleInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo {
         do {
             let wildPokemonLevel = Int.random(in: wildPokemon.lowestLevel...wildPokemon.highestLevel)
             let (wildPokemonModel, wildPokemonMoveModels) = try fetchPokemonModels(pokemonName: wildPokemon.name, pokemonLevel: wildPokemonLevel)
-            
+            return pokemonFullInfoAdapter.adaptPokemonModelsToFullInfo(
+                pokemonLevel: wildPokemonLevel,
+                coreDataPokemonModel: wildPokemonModel,
+                coreDataMoveModels: wildPokemonMoveModels)
         } catch {
             throw error
         }
     }
-}
-
-struct PokemonBattleService {
     
+    func fetchTrainerPokemonFullBattleInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo {
+        do {
+            let (trainerPokemonModel, trainerPokemonMoveModels) = try fetchPokemonModels(pokemonName: trainerPokemon.name, pokemonLevel: trainerPokemon.level)
+            return pokemonFullInfoAdapter.adaptPokemonModelsToFullInfo(
+                pokemonLevel: trainerPokemon.level,
+                coreDataPokemonModel: trainerPokemonModel,
+                coreDataMoveModels: trainerPokemonMoveModels)
+        } catch {
+            throw error
+        }
+    }
+    
+
 }

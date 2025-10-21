@@ -62,7 +62,7 @@ extension PokemonNetworkCheckingAndStoring {
     }
 }
 
-struct PokemonStorageService: PokemonNetworkCheckingAndStoring {
+public class PokemonStorageService: PokemonNetworkCheckingAndStoring {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var pokemonLocationConfiguration: PokemonLocationConfiguration

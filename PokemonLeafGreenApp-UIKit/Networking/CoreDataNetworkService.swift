@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-public struct CoreDataNetworkService {
+public class CoreDataNetworkService {
     let context: NSManagedObjectContext
     let storageAdapter: PokeAPICoreDataAdapter
     

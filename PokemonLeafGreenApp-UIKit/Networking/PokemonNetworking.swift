@@ -6,7 +6,7 @@
 //
 
 protocol PokemonNetworking {
-    var pokeAPINetworkService: PokeAPINetworkService { get }
-    var coreDataNetworkService: CoreDataNetworkService { get }
-    var pokemonLocationConfiguration: PokemonLocationConfiguration { get }
+    var pokeAPINetworkService: PokeAPINetworkService { get set }
+    var coreDataNetworkService: CoreDataNetworkService { get set }
+    var pokemonLocationConfiguration: PokemonLocationConfiguration { get set }
 }

@@ -14,6 +14,12 @@ extension CoreDataGamePlayerPokemon {
         return NSFetchRequest<CoreDataGamePlayerPokemon>(entityName: "CoreDataGamePlayerPokemon")
     }
 
+    @NSManaged public var effortValueEarnedForAttack: Int16
+    @NSManaged public var effortValueEarnedForDefense: Int16
+    @NSManaged public var effortValueEarnedForHP: Int16
+    @NSManaged public var effortValueEarnedForSpecialAttack: Int16
+    @NSManaged public var effortValueEarnedForSpecialDefense: Int16
+    @NSManaged public var effortValueEarnedForSpeed: Int16
     @NSManaged public var currentExperience: Int16
     @NSManaged public var id: Int16
     @NSManaged public var level: Int16

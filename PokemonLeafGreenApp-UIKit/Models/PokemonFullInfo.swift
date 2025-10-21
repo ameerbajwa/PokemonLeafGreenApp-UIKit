@@ -1,5 +1,5 @@
 //
-//  PokemonFullBattleInfo.swift
+//  PokemonFullInfo.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 9/10/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol PokemonFullBattleInfoProtocol {
+protocol PokemonFullInfoProtocol {
     var order: Int? { get set }
     var id: Int { get set }
     var name: String { get set }
@@ -24,7 +24,7 @@ protocol PokemonFullBattleInfoProtocol {
     var pokemonStatsInfo: [String:[String:Int]] { get set }
 }
 
-struct PokemonFullBattleInfo: PokemonFullBattleInfoProtocol {
+struct PokemonFullInfo: PokemonFullInfoProtocol {
     var order: Int?
     var id: Int
     var name: String

@@ -8,7 +8,16 @@
 import Foundation
 
 public class PokemonBattleManager {
-    var playerPokemonFullBattleInfo: [PokemonFullBattleInfo]?
-    var trainerPokemonFullBattleInfo: [PokemonFullBattleInfo]?
-    var wildPokemonFullBattleInfo: PokemonFullBattleInfo?
+    var pokemonFullInfoLoadingService: PokemonFullInfoLoading
+    var pokemonLocationConfiguration: PokemonLocationConfiguration
+    var playerPokemonFullBattleInfo: [PokemonFullInfo]?
+    var trainerPokemonFullBattleInfo: [PokemonFullInfo]?
+    var wildPokemonFullBattleInfo: PokemonFullInfo?
+    
+    init(pokemonFullInfoLoadingService: PokemonFullInfoLoading,
+         pokemonLocationConfiguration: PokemonLocationConfiguration
+    ) {
+        self.pokemonFullInfoLoadingService = pokemonFullInfoLoadingService
+        self.pokemonLocationConfiguration = pokemonLocationConfiguration
+    }
 }
