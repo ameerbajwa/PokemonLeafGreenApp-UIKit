@@ -29,7 +29,7 @@ class StartCoordinator: ChildCoordinator {
         self.navigationController.pushViewController(controller, animated: false)
     }
     
-    func finish() {
+    func finish(configuration: PokemonCoordinatorConfiguration? = nil) {
         self.navigationController.viewControllers.removeAll()
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
         rootCoordinator?.startIntroCoordinator()

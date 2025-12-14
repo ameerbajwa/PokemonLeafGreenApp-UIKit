@@ -9,20 +9,23 @@ import Foundation
 import CoreData
 
 protocol CoreDataRequesting {
-    var identifierKey: String? { get set }
-    var identifierValue: String? { get set }
+    var identifierKey: String { get set }
+    var identifierStringValue: String? { get set }
+    var identifierIntValue: Int? { get set }
     
     associatedtype Model: CoreDataManageable, NSManagedObject
 }
 
 public struct CoreDataRequest<CoreDataModel: CoreDataManageable & NSManagedObject>: CoreDataRequesting {
-    var identifierKey: String?
-    var identifierValue: String?
+    var identifierKey: String
+    var identifierStringValue: String?
+    var identifierIntValue: Int?
     
     typealias Model = CoreDataModel
     
-    init(identifierKey: String? = nil, identifierValue: String? = nil) {
+    init(identifierKey: String, identifierStringValue: String? = nil, identifierIntValue: Int? = nil) {
         self.identifierKey = identifierKey
-        self.identifierValue = identifierValue
+        self.identifierStringValue = identifierStringValue
+        self.identifierIntValue = identifierIntValue
     }
 }

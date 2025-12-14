@@ -37,5 +37,5 @@ extension ParentCoordinator {
 }
 
 protocol ChildCoordinator: BaseCoordinator, AnyObject {    
-    func finish()
+    func finish(configuration: PokemonCoordinatorConfiguration?)
 }

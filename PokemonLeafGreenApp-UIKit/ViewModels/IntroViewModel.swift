@@ -13,15 +13,12 @@ class IntroViewModel: NSObject {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var introView: IntroView
-    var controllerViewFrameSize: CGSize?
+    weak var controller: IntroViewController?
     
     var introMessageCounter = 0
     var newJourneyMessageCounter = 0
     var playerName = ""
     var playerSelectedPokemon: PokemonIdNameConfiguration?
-    var starterPokemonNameList: [PokemonIdNameConfiguration] = [PokemonIdNameConfiguration.bulbasaur,
-         PokemonIdNameConfiguration.charmander,
-         PokemonIdNameConfiguration.squirtle]
     
     init(configuration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
         self.pokemonLocationConfiguration = configuration
@@ -104,6 +101,9 @@ extension IntroViewModel {
                     await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
                     newJourneyMessageCounter += 1
                 }
+            } else {
+                coordinateToBattle()
+                
             }
         }
     }
@@ -164,5 +164,14 @@ extension IntroViewModel {
         } catch {
             print("Shit went wrong - \(error.localizedDescription)")
         }
+    }
+}
+
+// MARK: - Coordinate to Battle Rival Ash
+
+extension IntroViewModel {
+    func coordinateToBattle() {
+        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
+        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
     }
 }

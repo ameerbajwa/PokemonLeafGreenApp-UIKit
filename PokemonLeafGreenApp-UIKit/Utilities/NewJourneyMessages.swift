@@ -43,5 +43,6 @@ struct NewJourneyMessages {
                                   "",
                                   newQuestMessage8,
                                   newQuestMessage9,
-                                  "", ""]
+                                  "",
+                                  ""]
 }

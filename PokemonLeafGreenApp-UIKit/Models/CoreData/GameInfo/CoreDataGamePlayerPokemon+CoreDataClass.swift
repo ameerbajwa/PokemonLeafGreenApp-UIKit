@@ -17,5 +17,11 @@ public class CoreDataGamePlayerPokemon: NSManagedObject {
         self.level = 5
         self.order = 1
         self.currentExperience = 141
+        self.effortValueEarnedForHP = 0
+        self.effortValueEarnedForAttack = 0
+        self.effortValueEarnedForDefense = 0
+        self.effortValueEarnedForSpecialAttack = 0
+        self.effortValueEarnedForSpecialDefense = 0
+        self.effortValueEarnedForSpeed = 0
     }
 }
