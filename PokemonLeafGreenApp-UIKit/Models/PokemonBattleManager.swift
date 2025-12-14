@@ -10,7 +10,6 @@ import Foundation
 public class PokemonBattleManager {
     var pokemonFullInfoLoadingService: PokemonFullInfoLoading
     var pokemonLocationConfiguration: PokemonLocationConfiguration
-    var playerPokemonFullBattleInfo: [PokemonFullInfo]?
     var trainerPokemonFullBattleInfo: [PokemonFullInfo]?
     var wildPokemonFullBattleInfo: PokemonFullInfo?
     
@@ -19,5 +18,31 @@ public class PokemonBattleManager {
     ) {
         self.pokemonFullInfoLoadingService = pokemonFullInfoLoadingService
         self.pokemonLocationConfiguration = pokemonLocationConfiguration
+    }
+    
+    func clearAllPokemonBattleInfo() {
+        trainerPokemonFullBattleInfo = nil
+        wildPokemonFullBattleInfo = nil
+    }
+    
+    func loadWildPokemonFullBattleInfo() throws {
+        let randomPokemonSelectionNumber = Int.random(in: 1...100)
+        guard let safeWildPokemon = pokemonLocationConfiguration.wildPokemon else {
+            return
+        }
+
+        var prevRate = 0
+        for pokemon in safeWildPokemon {
+            let rate = pokemon.rate
+            if ((prevRate+1)...(prevRate+rate)).contains(randomPokemonSelectionNumber) {
+                do {
+                    wildPokemonFullBattleInfo = try pokemonFullInfoLoadingService.fetchWildPokemonFullBattleInfo(wildPokemon: pokemon)
+                } catch {
+                    throw error
+                }
+                break
+            }
+            prevRate += rate
+        }
     }
 }

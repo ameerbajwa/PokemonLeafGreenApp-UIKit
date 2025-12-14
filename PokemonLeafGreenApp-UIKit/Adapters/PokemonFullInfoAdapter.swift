@@ -49,7 +49,7 @@ public struct PokemonFullInfoAdapter {
                 newStatInfo[PokemonStatNames.baseValue.rawValue] = Int(stat.baseValue)
                 newStatInfo[PokemonStatNames.effortValue.rawValue] = Int(stat.effortValue)
                 newStatInfo[PokemonStatNames.individualValue.rawValue] = Int(stat.individualValue)
-                newStatInfo[PokemonStatNames.currentValue.rawValue] = calculateStatValueForPokemon(stat: stat, level: pokemonLevel, effortEarned: pokemonEffortEarnedValues?[stat.name])
+                newStatInfo[PokemonStatNames.currentValue.rawValue] = calculateStatValueForPokemon(stat: stat, level: pokemonLevel, effortEarned: min(pokemonEffortEarnedValues?[stat.name] ?? 0, 252))
                 pokemonStats[stat.name] = newStatInfo
                 newStatInfo.removeAll()
             }
@@ -72,13 +72,16 @@ public struct PokemonFullInfoAdapter {
     func calculateStatValueForPokemon(
         stat: CoreDataPokemonStat,
         level: Int,
-        effortEarned: Int? = nil
+        effortEarned: Int
     ) -> Int {
-        if stat.name == "hp" {
-            return (((2 * Int(stat.baseValue) + Int(stat.individualValue) + (effortEarned / 4)) * level) / 100) + level + 10
+        let doubleStatValue = 2 * Int(stat.baseValue)
+        let quarterEffortEarned = effortEarned / 4
+        let combinedStatCalculation = doubleStatValue + Int(stat.individualValue) + quarterEffortEarned
+        let combinedStatCalculationAccordingToLevel = ((combinedStatCalculation * level) / 100)
+        if stat.name == PokemonStatNames.hp.rawValue {
+            return combinedStatCalculationAccordingToLevel + level + 10
         } else {
-            return (((2 * Int(stat.baseValue) + Int(stat.individualValue) + (effortEarned / 4)) * level) / 100) + 5
+            return combinedStatCalculationAccordingToLevel + 5
         }
     }
-    
 }

@@ -7,6 +7,10 @@
 
 protocol PokemonFullInfoLoading: PokemonNetworking {
     var pokemonFullInfoAdapter: PokemonFullInfoAdapter { get set }
+    
+    func fetchPlayerPokemonFullBattleInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo
+    func fetchWildPokemonFullBattleInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo
+    func fetchTrainerPokemonFullBattleInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo
 }
 
 extension PokemonFullInfoLoading {
@@ -109,6 +113,4 @@ public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
             throw error
         }
     }
-    
-
 }

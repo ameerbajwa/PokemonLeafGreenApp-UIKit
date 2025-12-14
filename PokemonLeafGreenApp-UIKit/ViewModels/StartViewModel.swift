@@ -79,6 +79,7 @@ extension StartViewModel {
         do {
             let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
             let _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+            // coordinate to location based on saved PokemonLocationConfiguration
         } catch {
             print("Player could not be found, must start new game")
         }
