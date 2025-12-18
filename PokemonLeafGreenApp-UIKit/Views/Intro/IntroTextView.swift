@@ -10,14 +10,12 @@ import UIKit
 
 @MainActor
 class IntroTextView: UIView {
-    weak var viewModel: IntroViewModel?
-    
     var messageLabel: UILabel!
     var nextButton: UIButton!
     var cancelButton: UIButton!
     
-    private var animationTimer: Timer?
-        
+    weak var introButtonDelegate: IntroButtonManaging?
+            
     func setupIntroLabelAndNextButton() {
         messageLabel = UILabel()
         messageLabel.font = .systemFont(ofSize: 16)
@@ -32,7 +30,7 @@ class IntroTextView: UIView {
         nextButton.layer.borderColor = UIColor.black.cgColor
         nextButton.layer.cornerRadius = 5.0
         nextButton.layer.borderWidth = 5.0
-        nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(introButtonDelegate?.nextButtonTapped), for: .touchUpInside)
         
         cancelButton = UIButton()
         cancelButton.setTitle("Cancel", for: .normal)
@@ -41,7 +39,7 @@ class IntroTextView: UIView {
         cancelButton.layer.borderColor = UIColor.black.cgColor
         cancelButton.layer.cornerRadius = 5.0
         cancelButton.layer.borderWidth = 5.0
-        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(introButtonDelegate?.cancelButtonTapped), for: .touchUpInside)
         cancelButton.isEnabled = false
         
         let buttonStackView = UIStackView()
@@ -67,36 +65,5 @@ class IntroTextView: UIView {
             buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30.0),
             buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10.0)
         ])
-    }
-}
-
-@MainActor
-extension IntroTextView {
-    @objc
-    func nextButtonTapped() {
-        viewModel?.displayNextMessage()
-    }
-    
-    @objc
-    func cancelButtonTapped() {
-        viewModel?.dismissPokemonSelection()
-    }
-}
-
-@MainActor
-extension IntroTextView {
-    func animateMessage(message: String) async {
-        self.nextButton.isEnabled = false
-        let introMessage = message
-        self.messageLabel.text = ""
-        
-        let interval = TimeInterval(2.0) / Double(introMessage.count)
-        
-        for char in introMessage {
-            self.messageLabel.text?.append(char)
-            try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
-        }
-        
-        self.nextButton.isEnabled = true
     }
 }

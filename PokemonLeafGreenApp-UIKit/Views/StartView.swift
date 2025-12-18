@@ -16,24 +16,20 @@ class StartView: UIView {
     var newGameButton: UIButton!
     var loadGameButton: UIButton!
     var buttonStackView: UIStackView!
-    var titleAnimationTimer: Timer?
     
-    weak var viewModel: StartViewModeling?
+    var parentViewFrame: CGRect!
+    weak var delegate: StartViewButtonDelegate?
     
     func setupViews() {
-        guard let controllerViewFrame = viewModel?.startController?.view.frame else {
-            print("Could not obtain controller view frame")
-            return
-        }
         titleLabel = UILabel()
-        titleLabel.text = "Pokemon LeafGreen Game App"
-        titleLabel.frame = CGRect(x: 20, y: -60, width: controllerViewFrame.width - 40, height: 80)
+        titleLabel.text = "Pokemon FireRed/LeafGreen Game App"
+        titleLabel.frame = CGRect(x: 20, y: -60, width: parentViewFrame.width - 40, height: 80)
         titleLabel.font = .boldSystemFont(ofSize: 28)
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
         
         pokemonDefenderImageView = UIImageView()
-        pokemonDefenderImageView.frame = CGRect(x: controllerViewFrame.width + 190, y: titleLabel.frame.size.height + 60, width: 170, height: 170)
+        pokemonDefenderImageView.frame = CGRect(x: parentViewFrame.width + 190, y: titleLabel.frame.size.height + 60, width: 170, height: 170)
         pokemonAttackerImageView = UIImageView()
         pokemonAttackerImageView.frame = CGRect(x: -190, y: titleLabel.frame.size.height + 230, width: 170, height: 170)
         
@@ -43,7 +39,7 @@ class StartView: UIView {
         newGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         newGameButton.layer.borderWidth = 5.0
         newGameButton.layer.borderColor = UIColor.black.cgColor
-        newGameButton.addTarget(self, action: #selector(newGameButtonPressed), for: .touchUpInside)
+        newGameButton.addTarget(self, action: #selector(delegate?.newGameButtonPressed), for: .touchUpInside)
         
         loadGameButton = UIButton()
         loadGameButton.setTitle("Load Game", for: .normal)
@@ -51,7 +47,7 @@ class StartView: UIView {
         loadGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         loadGameButton.layer.borderWidth = 5.0
         loadGameButton.layer.borderColor = UIColor.black.cgColor
-        loadGameButton.addTarget(self, action: #selector(loadGameButtonPressed), for: .touchUpInside)
+        loadGameButton.addTarget(self, action: #selector(delegate?.loadGameButtonPressed), for: .touchUpInside)
         
         buttonStackView = UIStackView(arrangedSubviews: [newGameButton, loadGameButton])
         buttonStackView.axis = .vertical
@@ -72,14 +68,6 @@ class StartView: UIView {
             buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20.0),
             buttonStackView.widthAnchor.constraint(equalToConstant: 175.0)
         ])
-    }
-    
-    func setUpImages() {
-        Task {
-            let images = await viewModel?.generatePokemonImages()
-            pokemonAttackerImageView.image = images?.0
-            pokemonDefenderImageView.image = images?.1
-        }
     }
 }
 
@@ -112,31 +100,14 @@ extension StartView {
     }
     
     func animateDefenderImage() {
-        guard let controllerViewFrame = viewModel?.startController?.view.frame else {
-            print("Could not obtain controller view frame when trying to animate the defender image")
-            return
-        }
         let imageAnimation = CABasicAnimation(keyPath: "position.x")
-        imageAnimation.fromValue = controllerViewFrame.width + 190
-        imageAnimation.toValue = controllerViewFrame.width - 190 + pokemonDefenderImageView.frame.size.width / 2
+        imageAnimation.fromValue = parentViewFrame.width + 190
+        imageAnimation.toValue = parentViewFrame.width - 190 + pokemonDefenderImageView.frame.size.width / 2
         imageAnimation.duration = 1.0
         imageAnimation.timingFunction = CAMediaTimingFunction(name: .linear)
         
-        pokemonDefenderImageView.layer.position.x = controllerViewFrame.width - 190 + pokemonDefenderImageView.frame.size.width / 2
+        pokemonDefenderImageView.layer.position.x = parentViewFrame.width - 190 + pokemonDefenderImageView.frame.size.width / 2
         
         pokemonDefenderImageView.layer.add(imageAnimation, forKey: "slideIn")
-    }
-}
-
-@MainActor
-extension StartView {
-    @objc
-    func newGameButtonPressed() {
-        viewModel?.startNewGame()
-    }
-    
-    @objc
-    func loadGameButtonPressed() {
-        viewModel?.loadGame()
     }
 }

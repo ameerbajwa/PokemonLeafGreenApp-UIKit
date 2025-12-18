@@ -20,7 +20,7 @@ class StartCoordinator: ChildCoordinator {
         self.navigationController = navigationController
         
         self.view = StartView()
-        self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, startView: view)
+        self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
         self.controller = StartViewController(startViewModel: viewModel, startView: view)
     }
     

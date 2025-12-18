@@ -8,6 +8,12 @@
 import Foundation
 import UIKit
 
+@objc
+protocol StartViewButtonDelegate {
+    func newGameButtonPressed()
+    func loadGameButtonPressed()
+}
+
 class StartViewController: UIViewController {
     weak var coordinator: ChildCoordinator?
     
@@ -31,8 +37,8 @@ class StartViewController: UIViewController {
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
 
-        viewModel.startController = self
-        startView.viewModel = viewModel
+        startView.parentViewFrame = self.view.frame
+        startView.delegate = self
         
         self.view.addSubview(startView)
         startView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,15 +50,56 @@ class StartViewController: UIViewController {
             startView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
-        viewModel.startView.setupViews()
-        viewModel.startView.setUpImages()
+        startView.setupViews()
+        setUpImages()
         
-        viewModel.animateScreen()
+        animateScreen()
     }
 }
 
+// MARK: - Grab Start Screen Pokemon Images
 extension StartViewController {
-    func coordinateToIntroScreen() {
+    func setUpImages() {
+        Task {
+            let imageData = await viewModel.generatePokemonImages()
+            guard let attackerImageData = imageData.0,
+                  let defenderImageData = imageData.1 else {
+                return
+            }
+            startView.pokemonAttackerImageView.image = UIImage(data: attackerImageData)
+            startView.pokemonDefenderImageView.image = UIImage(data: defenderImageData)
+        }
+    }
+}
+
+// MARK: - Animation chain for StartViewController
+extension StartViewController {
+    func animateScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.startView.animateTitle()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.50) {
+            self.startView.animateAttackerImage()
+            self.startView.animateDefenderImage()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
+            self.startView.buttonStackView.isHidden = false
+        }
+    }
+}
+
+// MARK: - Button Actions
+extension StartViewController: StartViewButtonDelegate {
+    @objc
+    func newGameButtonPressed() {
+        viewModel.startNewGame()
         coordinator?.finish(configuration: nil)
+    }
+    
+    @objc
+    func loadGameButtonPressed() {
+        viewModel.loadGame()
     }
 }
