@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-@MainActor
 class IntroTextView: UIView {
     var messageLabel: UILabel!
     var nextButton: UIButton!
@@ -30,7 +29,7 @@ class IntroTextView: UIView {
         nextButton.layer.borderColor = UIColor.black.cgColor
         nextButton.layer.cornerRadius = 5.0
         nextButton.layer.borderWidth = 5.0
-        nextButton.addTarget(self, action: #selector(introButtonDelegate?.nextButtonTapped), for: .touchUpInside)
+        nextButton.addTarget(introButtonDelegate, action: #selector(introButtonDelegate?.nextButtonTapped), for: .touchUpInside)
         
         cancelButton = UIButton()
         cancelButton.setTitle("Cancel", for: .normal)
@@ -39,7 +38,7 @@ class IntroTextView: UIView {
         cancelButton.layer.borderColor = UIColor.black.cgColor
         cancelButton.layer.cornerRadius = 5.0
         cancelButton.layer.borderWidth = 5.0
-        cancelButton.addTarget(self, action: #selector(introButtonDelegate?.cancelButtonTapped), for: .touchUpInside)
+        cancelButton.addTarget(introButtonDelegate, action: #selector(introButtonDelegate?.cancelButtonTapped), for: .touchUpInside)
         cancelButton.isEnabled = false
         
         let buttonStackView = UIStackView()

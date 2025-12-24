@@ -25,7 +25,8 @@ class StartCoordinator: ChildCoordinator {
     }
     
     func start() {
-        controller.coordinator = self
+        self.controller.coordinator = self
+        self.view.delegate = self.controller
         self.navigationController.pushViewController(controller, animated: false)
     }
     

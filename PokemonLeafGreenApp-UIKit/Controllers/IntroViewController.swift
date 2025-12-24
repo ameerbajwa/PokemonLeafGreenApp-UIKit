@@ -48,10 +48,6 @@ class IntroViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         loadingView = LoadingView()
-        self.introTextView.introButtonDelegate = self
-        self.introView.delegate = self
-        self.introView.introTextViewTopAnchor = self.introTextView.topAnchor
-        self.introViewModel.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -101,6 +97,7 @@ extension IntroViewController {
             introTextView.heightAnchor.constraint(equalToConstant: 250.0)
         ])
         
+        introView.introTextViewTopAnchor = introTextView.topAnchor
         introView.setupPlayerNameTextField()
         introTextView.setupIntroLabelAndNextButton()
     }
@@ -153,20 +150,31 @@ extension IntroViewController: IntroViewManaging {
 // MARK: - IntroViewModel display next screen layout with message
 extension IntroViewController: IntroManaging {
     func setIntroMessage(message: String) {
-        introTextView.messageLabel.text = message
+        DispatchQueue.main.async {
+            self.introTextView.messageLabel.text = message
+        }
+        
     }
     
     func setNewJourneyMessage(message: String) {
-        introTextView.messageLabel.text = message
+        DispatchQueue.main.async {
+            self.introTextView.messageLabel.text = message
+        }
     }
     
     func setPlayerNameView() {
-        introView.playerNameTextField.isHidden = false
-        introView.playerNameTextField.isEnabled = true
+        DispatchQueue.main.async {
+            self.introView.playerNameTextField.isHidden = false
+            self.introView.playerNameTextField.isEnabled = true
+        }
+        
     }
     
     func removePlayerNameView() {
-        introView.removePlayerNameTextFieldFromView()
+        DispatchQueue.main.async {
+            self.introView.removePlayerNameTextFieldFromView()
+        }
+        
     }
     
     func setStarterPokemonOptionsView() {
@@ -184,17 +192,25 @@ extension IntroViewController: IntroManaging {
     }
     
     func displaySelectedPokemonImage(selectedPokemon: PokemonIdNameConfiguration) {
-        introView.removeStarterPokemonButons()
-        introView.setupSelectedPokemonImage(pokemon: selectedPokemon)
-        introTextView.cancelButton.isEnabled = false
+        DispatchQueue.main.async {
+            self.introView.removeStarterPokemonButons()
+            self.introView.setupSelectedPokemonImage(pokemon: selectedPokemon)
+            self.introTextView.cancelButton.isEnabled = false
+        }
+        
     }
     
     func displayRivalPokemonImage(rivalPokemon: PokemonIdNameConfiguration) {
-        introView.setupSelectedPokemonImage(pokemon: rivalPokemon)
+        DispatchQueue.main.async {
+            self.introView.setupSelectedPokemonImage(pokemon: rivalPokemon)
+        }
+        
     }
     
     func removePokemonImage() {
-        introView.removeSelectedPokemonImage()
+        DispatchQueue.main.async {
+            self.introView.removeSelectedPokemonImage()
+        }
     }
 }
 

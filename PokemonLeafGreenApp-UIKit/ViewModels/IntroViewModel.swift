@@ -12,8 +12,6 @@ class IntroViewModel: NSObject {
     var pokemonLocationConfiguration: PalletTownConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
-//    var introView: IntroView
-//    weak var controller: IntroViewController?
     weak var delegate: IntroManaging?
     
     var introMessageCounter = 0
@@ -25,7 +23,6 @@ class IntroViewModel: NSObject {
         self.pokemonLocationConfiguration = configuration
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-//        self.introView = introView
         super.init()
     }
     
@@ -51,7 +48,6 @@ class IntroViewModel: NSObject {
 }
 
 extension IntroViewModel {
-    @MainActor
     func displayNextMessage() {
         Task {
             if introMessageCounter < IntroMessages.introLines.count {
@@ -102,12 +98,11 @@ extension IntroViewModel {
                 }
                 newJourneyMessageCounter += 1
             } else {
-                coordinateToBattle()
+//                coordinateToBattle()
             }
         }
     }
     
-    @MainActor
     func dismissPokemonSelection() {
         self.playerSelectedPokemon = nil
         delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage6)
@@ -122,7 +117,6 @@ extension IntroViewModel {
 }
 
 // MARK: - Saving Player information
-
 extension IntroViewModel {
     func savePlayerName() async {
         do {
@@ -147,10 +141,9 @@ extension IntroViewModel {
 }
 
 // MARK: - Coordinate to Battle Rival Ash
-
-extension IntroViewModel {
-    func coordinateToBattle() {
-        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
-        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
-    }
-}
+//extension IntroViewModel {
+//    func coordinateToBattle() {
+//        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
+//        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
+//    }
+//}

@@ -36,9 +36,6 @@ class StartViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.safeArea = self.view.layoutMarginsGuide
-
-        startView.parentViewFrame = self.view.frame
-        startView.delegate = self
         
         self.view.addSubview(startView)
         startView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,6 +47,7 @@ class StartViewController: UIViewController {
             startView.bottomAnchor.constraint(equalTo: self.safeArea.bottomAnchor)
         ])
         
+        startView.parentViewFrame = self.view.frame
         startView.setupViews()
         setUpImages()
         

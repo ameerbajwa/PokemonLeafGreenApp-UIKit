@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-@MainActor
 class IntroView: UIView {
     var playerNameTextField: UITextField!
     var bulbasaurImageView: UIImageView!
@@ -140,8 +139,6 @@ class IntroView: UIView {
 }
 
 // MARK: - Starter Pokemon Selected Delegate methods
-
-@MainActor
 extension IntroView {
     @objc
     func bulbasaurImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {

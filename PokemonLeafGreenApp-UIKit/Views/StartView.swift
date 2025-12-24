@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-@MainActor
 class StartView: UIView {
     var titleLabel: UILabel!
     var pokemonAttackerImageView: UIImageView!
@@ -39,7 +38,7 @@ class StartView: UIView {
         newGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         newGameButton.layer.borderWidth = 5.0
         newGameButton.layer.borderColor = UIColor.black.cgColor
-        newGameButton.addTarget(self, action: #selector(delegate?.newGameButtonPressed), for: .touchUpInside)
+        newGameButton.addTarget(delegate, action: #selector(delegate?.newGameButtonPressed), for: .touchUpInside)
         
         loadGameButton = UIButton()
         loadGameButton.setTitle("Load Game", for: .normal)
@@ -47,7 +46,7 @@ class StartView: UIView {
         loadGameButton.titleLabel?.font = .boldSystemFont(ofSize: 18.0)
         loadGameButton.layer.borderWidth = 5.0
         loadGameButton.layer.borderColor = UIColor.black.cgColor
-        loadGameButton.addTarget(self, action: #selector(delegate?.loadGameButtonPressed), for: .touchUpInside)
+        loadGameButton.addTarget(delegate, action: #selector(delegate?.loadGameButtonPressed), for: .touchUpInside)
         
         buttonStackView = UIStackView(arrangedSubviews: [newGameButton, loadGameButton])
         buttonStackView.axis = .vertical
@@ -72,8 +71,6 @@ class StartView: UIView {
 }
 
 // MARK: - Animation methods
-
-@MainActor
 extension StartView {
     func animateTitle() {
         let titleAnimation = CABasicAnimation(keyPath: "position.y")

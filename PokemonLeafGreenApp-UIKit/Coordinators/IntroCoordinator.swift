@@ -32,6 +32,10 @@ class IntroCoordinator: ChildCoordinator {
     
     func start() {
         self.controller.coordinator = self
+        self.textView.introButtonDelegate = self.controller
+        self.mainView.delegate = self.controller
+        
+        self.viewModel.delegate = self.controller
         navigationController.pushViewController(controller, animated: false)
     }
     
