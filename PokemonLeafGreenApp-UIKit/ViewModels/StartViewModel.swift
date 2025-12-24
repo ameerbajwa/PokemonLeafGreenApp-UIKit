@@ -9,8 +9,7 @@ import Foundation
 import UIKit
 
 protocol StartViewModeling: AnyObject {
-    var startController: StartViewController? { get set }
-    func generatePokemonImages() async -> (UIImage?, UIImage?)
+    func generatePokemonImages() async -> (Data?, Data?)
     
     func startNewGame()
     func loadGame()
@@ -19,38 +18,17 @@ protocol StartViewModeling: AnyObject {
 class StartViewModel: StartViewModeling {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
-    var startView: StartView
-    weak var startController: StartViewController?
-    
-    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, startView: StartView) {
+        
+    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-        self.startView = startView
-    }
-}
-
-// MARK: - Animation chain for StartViewController
-extension StartViewModel {
-    func animateScreen() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.startView.animateTitle()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.50) {
-            self.startView.animateAttackerImage()
-            self.startView.animateDefenderImage()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.75) {
-            self.startView.buttonStackView.isHidden = false
-        }
     }
 }
 
 // MARK: - PokeAPI network call
 
 extension StartViewModel {
-    func generatePokemonImages() async -> (UIImage?, UIImage?) {
+    func generatePokemonImages() async -> (Data?, Data?) {
         var pokemonIds = [3,6]
         let attackingPokemonIndex = Int.random(in: 0...1)
         let attackingPokemonId = pokemonIds.remove(at: attackingPokemonIndex)
@@ -62,10 +40,7 @@ extension StartViewModel {
             let attackingPokemonImageData = try await pokeAPINetworkService.retrievePokeAPIImageData(with: attackingPokemonImageRequest)
             let defendingPokemonImageData = try await pokeAPINetworkService.retrievePokeAPIImageData(with: defendingPokemonImageRequest)
             
-            let attackingPokemonImage = UIImage(data: attackingPokemonImageData)
-            let defendingPokemonImage = UIImage(data: defendingPokemonImageData)
-            
-            return (attackingPokemonImage, defendingPokemonImage)
+            return (attackingPokemonImageData, defendingPokemonImageData)
         } catch {
             return (nil, nil)
         }
@@ -93,7 +68,6 @@ extension StartViewModel {
         Task {
             do {
                 try await coreDataNetworkService.saveNewGamePlayerModel()
-                await startController?.coordinateToIntroScreen()
             } catch let error as PokemonLeafGreenError {
                 print(error.errorLogDescription)
                 print(error.clientDescription)

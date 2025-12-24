@@ -8,37 +8,15 @@
 import Foundation
 import UIKit
 
-@MainActor
 class IntroView: UIView {
-    weak var viewModel: IntroViewModel?
-    
-    var introTextView: IntroTextView!
     var playerNameTextField: UITextField!
-    
     var bulbasaurImageView: UIImageView!
     var charmanderImageView: UIImageView!
     var squirtleImageView: UIImageView!
     var selectedPokemonImageView: UIImageView!
+    var introTextViewTopAnchor: NSLayoutYAxisAnchor!
     
-    func setupIntroTextView() {
-        introTextView = IntroTextView()
-        introTextView.layer.borderWidth = 3.0
-        introTextView.layer.borderColor = UIColor.black.cgColor
-        introTextView.layer.cornerRadius = 5.0
-        
-        introTextView.setupIntroLabelAndNextButton()
-        introTextView.viewModel = viewModel
-        
-        self.addSubview(introTextView)
-        introTextView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            introTextView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5.0),
-            introTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5.0),
-            introTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5.0),
-            introTextView.heightAnchor.constraint(equalToConstant: 250.0)
-        ])
-    }
+    weak var delegate: IntroViewManaging?
     
     func setupPlayerNameTextField() {
         self.playerNameTextField = PaddedTextField()
@@ -52,7 +30,7 @@ class IntroView: UIView {
         self.playerNameTextField.keyboardType = .default
         self.playerNameTextField.returnKeyType = .done
         self.playerNameTextField.enablesReturnKeyAutomatically = true
-        self.playerNameTextField.delegate = self.viewModel
+        self.playerNameTextField.delegate = delegate
         self.playerNameTextField.isHidden = true
         self.playerNameTextField.isEnabled = false
         
@@ -63,7 +41,8 @@ class IntroView: UIView {
             self.playerNameTextField.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             self.playerNameTextField.heightAnchor.constraint(equalToConstant: 50.0),
             self.playerNameTextField.widthAnchor.constraint(equalToConstant: 250.0),
-            self.playerNameTextField.bottomAnchor.constraint(equalTo: self.introTextView.topAnchor, constant: -200.0)
+            self.playerNameTextField.bottomAnchor.constraint(equalTo: introTextViewTopAnchor, constant: -200.0)
+            
         ])
     }
     
@@ -126,18 +105,10 @@ class IntroView: UIView {
         self.squirtleImageView.removeFromSuperview()
     }
     
-    func setUpImagesForStarterPokemonButtons() {
-        Task {
-            async let bulbasaurImage = viewModel?.generatePokemonImage(id: 1)
-            async let charmanderImage = viewModel?.generatePokemonImage(id: 4)
-            async let squirtleImage = viewModel?.generatePokemonImage(id: 7)
-            
-            let (bulbaImage, charImage, squirtImage) = await (bulbasaurImage, charmanderImage, squirtleImage)
-            
-            bulbasaurImageView.image = bulbaImage
-            charmanderImageView.image = charImage
-            squirtleImageView.image = squirtImage
-        }
+    func setUpImagesForStarterPokemonButtons(bulbasaurImageData: Data, charmanderImageData: Data, squirtleImageData: Data) {
+        bulbasaurImageView.image = UIImage(data: bulbasaurImageData)
+        charmanderImageView.image = UIImage(data: charmanderImageData)
+        squirtleImageView.image = UIImage(data: squirtleImageData)
     }
     
     func setupSelectedPokemonImage(pokemon: PokemonIdNameConfiguration) {
@@ -158,7 +129,7 @@ class IntroView: UIView {
         
         NSLayoutConstraint.activate([
             self.selectedPokemonImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.selectedPokemonImageView.bottomAnchor.constraint(equalTo: self.introTextView.topAnchor, constant: -100.0)
+            self.selectedPokemonImageView.bottomAnchor.constraint(equalTo: introTextViewTopAnchor, constant: -100.0)
         ])
     }
     
@@ -168,21 +139,19 @@ class IntroView: UIView {
 }
 
 // MARK: - Starter Pokemon Selected Delegate methods
-
-@MainActor
 extension IntroView {
     @objc
     func bulbasaurImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseBulbasaur, selectedPokemon: PokemonIdNameConfiguration.bulbasaur)
+        delegate?.setSelectedStarterPokemon(pokemon: .bulbasaur)
     }
     
     @objc
     func charmanderImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseCharmander, selectedPokemon: PokemonIdNameConfiguration.charmander)
+        delegate?.setSelectedStarterPokemon(pokemon: .charmander)
     }
     
     @objc
     func squirtleImageViewTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        viewModel?.displayPokemonSelectedMessage(message: NewJourneyMessages.chooseSquirtle, selectedPokemon: PokemonIdNameConfiguration.squirtle)
+        delegate?.setSelectedStarterPokemon(pokemon: .squirtle)
     }
 }

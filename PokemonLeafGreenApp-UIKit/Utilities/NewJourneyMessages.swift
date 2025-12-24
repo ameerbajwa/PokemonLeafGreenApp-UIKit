@@ -15,9 +15,9 @@ struct NewJourneyMessages {
     static let newQuestMessage4 = "There are plenty of pokemon to catch in the wild as well as other trainers to fight to help your own pokemon to gain experience, so don't hesitate to pick a fight with any trainer or gym leader."
     static let newQuestMessage5 = "But I'm sure you know how to do all of that already. So the last thing for you to do is choose your starting pokemon before you head off into the wild."
     static let newQuestMessage6 = "Which pokemon would like to choose?"
-    static let chooseBulbasaur = "Ah, the grass-type pokemon, would like to choose bulbasaur?"
-    static let chooseCharmander = "Ah, the fire-type pokemon, would like to choose charmader?"
-    static let chooseSquirtle = "Ah, the water-type pokemon, would like to choose squirtle?"
+    static let chooseBulbasaur = "Ah, the grass-type pokemon, would you like to choose bulbasaur?"
+    static let chooseCharmander = "Ah, the fire-type pokemon, would you like to choose charmader?"
+    static let chooseSquirtle = "Ah, the water-type pokemon, would you like to choose squirtle?"
     static func newQuestMessage7(selectedPokemon: String) -> String {
         return "Congratulations! You have chosen \(selectedPokemon) to be your first pokemon."
     }

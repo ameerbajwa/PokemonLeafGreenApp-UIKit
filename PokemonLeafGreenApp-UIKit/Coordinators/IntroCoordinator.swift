@@ -14,23 +14,28 @@ class IntroCoordinator: ChildCoordinator {
     
     var controller: IntroViewController
     var viewModel: IntroViewModel
-    var view: IntroView
+    var mainView: IntroView
+    var textView: IntroTextView
     var configuration: PalletTownConfiguration
     var storageService: PokemonStorageService
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         
-        self.view = IntroView()
+        self.mainView = IntroView()
+        self.textView = IntroTextView()
         self.configuration = PalletTownConfiguration()
         self.storageService = PokemonStorageService(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonLocationConfiguration: configuration)
-        self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, introView: view)
-        
-        self.controller = IntroViewController(storageService: storageService, introViewModel: viewModel, introView: view)
+        self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        self.controller = IntroViewController(storageService: storageService, introViewModel: viewModel, introView: mainView, introTextView: textView)
     }
     
     func start() {
         self.controller.coordinator = self
+        self.textView.introButtonDelegate = self.controller
+        self.mainView.delegate = self.controller
+        
+        self.viewModel.delegate = self.controller
         navigationController.pushViewController(controller, animated: false)
     }
     

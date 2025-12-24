@@ -20,12 +20,13 @@ class StartCoordinator: ChildCoordinator {
         self.navigationController = navigationController
         
         self.view = StartView()
-        self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, startView: view)
+        self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
         self.controller = StartViewController(startViewModel: viewModel, startView: view)
     }
     
     func start() {
-        controller.coordinator = self
+        self.controller.coordinator = self
+        self.view.delegate = self.controller
         self.navigationController.pushViewController(controller, animated: false)
     }
     

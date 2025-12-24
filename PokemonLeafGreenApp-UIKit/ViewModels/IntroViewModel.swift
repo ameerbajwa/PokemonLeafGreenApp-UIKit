@@ -12,143 +12,116 @@ class IntroViewModel: NSObject {
     var pokemonLocationConfiguration: PalletTownConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
-    var introView: IntroView
-    weak var controller: IntroViewController?
+    weak var delegate: IntroManaging?
     
     var introMessageCounter = 0
     var newJourneyMessageCounter = 0
-    var playerName = ""
+    var playerName: String?
     var playerSelectedPokemon: PokemonIdNameConfiguration?
     
-    init(configuration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, introView: IntroView) {
+    init(configuration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.pokemonLocationConfiguration = configuration
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-        self.introView = introView
         super.init()
     }
     
-    func generatePokemonImage(id: Int) async -> UIImage? {
+    func generatePokemonImage(id: Int) async -> Data? {
         let pokemonImageRequest = PokeAPIImageRequest(endpoint: .frontImage, id: id)
         
         do {
-            let pokemonImageData = try await pokeAPINetworkService.retrievePokeAPIImageData(with: pokemonImageRequest)
-            
-            return UIImage(data: pokemonImageData)
+            return try await pokeAPINetworkService.retrievePokeAPIImageData(with: pokemonImageRequest)
         } catch {
             return nil
         }
     }
+    
+    func retreiveStarterPokemonImageData() async -> (Data?, Data?, Data?) {
+        async let bulbasaurImage = generatePokemonImage(id: 1)
+        async let charmanderImage = generatePokemonImage(id: 4)
+        async let squirtleImage = generatePokemonImage(id: 7)
+        
+        let (bulbaImage, charImage, squirtImage) = await (bulbasaurImage, charmanderImage, squirtleImage)
+        
+        return (bulbaImage, charImage, squirtImage)
+    }
 }
 
 extension IntroViewModel {
-    @MainActor
     func displayNextMessage() {
         Task {
             if introMessageCounter < IntroMessages.introLines.count {
-                await self.introView.introTextView.animateMessage(message: IntroMessages.introLines[introMessageCounter])
+                delegate?.setIntroMessage(message: IntroMessages.introLines[introMessageCounter])
                 introMessageCounter += 1
             } else if newJourneyMessageCounter < NewJourneyMessages.newJourneyLines.count {
                 if newJourneyMessageCounter == 2 {
-                    if playerName.isEmpty {
+                    guard let safePlayerName = playerName else { return }
+                    if safePlayerName.isEmpty {
                         print("playerName is not being recorded from the textfield")
                         return
                     } else {
-                        self.introView.removePlayerNameTextFieldFromView()
+                        delegate?.removePlayerNameView()
                         await savePlayerName()
-                        await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage2(playerName: playerName))
-                        newJourneyMessageCounter += 1
+                        delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage2(playerName: safePlayerName))
                     }
                 } else if newJourneyMessageCounter == 7 {
                     guard let selectedPokemon = playerSelectedPokemon else {
                         print("Starter Pokemon not selected yet. Please select starter pokemon")
                         return
                     }
-                    self.introView.removeStarterPokemonButons()
-                    self.introView.setupSelectedPokemonImage(pokemon: selectedPokemon)
-                    self.introView.introTextView.cancelButton.isEnabled = false
+                    delegate?.displaySelectedPokemonImage(selectedPokemon: selectedPokemon)
                     await savePlayerStarterPokemon(selectedPokemon: selectedPokemon)
-                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: selectedPokemon.name))
-                    newJourneyMessageCounter += 1
+                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage7(selectedPokemon: selectedPokemon.name))
                 } else if newJourneyMessageCounter == 10 {
                     guard let selectedPokemon = playerSelectedPokemon else {
                         print("playerSelectedPokemon is nil - error")
                         return
                     }
                     let ashPokemon = self.pokemonLocationConfiguration.provideRivalAshPokemonConfiguration(playerStarterPokemon: selectedPokemon)
-                    self.introView.setupSelectedPokemonImage(pokemon: ashPokemon)
-                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage10(selectedPokemon: ashPokemon.name))
-                    newJourneyMessageCounter += 1
+                    delegate?.displayRivalPokemonImage(rivalPokemon: ashPokemon)
+                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage10(selectedPokemon: ashPokemon.name))
                 } else if newJourneyMessageCounter == 11 {
-                    self.introView.removeSelectedPokemonImage()
-                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newQuestMessage11(playerName: playerName))
-                    newJourneyMessageCounter += 1
+                    delegate?.removePokemonImage()
+                    guard let safePlayerName = playerName else { return }
+                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage11(playerName: safePlayerName))
                 } else {
                     if newJourneyMessageCounter == 1 {
-                        self.introView.playerNameTextField.isHidden = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.25) {
-                            self.introView.playerNameTextField.isEnabled = true
-                        }
+                        delegate?.setPlayerNameView()
                     }
                     if newJourneyMessageCounter == 6 {
-                        self.introView.setupStarterPokemonButtons()
-                        self.introView.setUpImagesForStarterPokemonButtons()
-                        self.introView.introTextView.cancelButton.isEnabled = true
+                        delegate?.setStarterPokemonOptionsView()
                     }
                     if newJourneyMessageCounter == 8 {
-                        self.introView.removeSelectedPokemonImage()
+                        delegate?.removePokemonImage()
                     }
-                    await self.introView.introTextView.animateMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
-                    newJourneyMessageCounter += 1
+                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newJourneyLines[newJourneyMessageCounter])
                 }
+                newJourneyMessageCounter += 1
             } else {
-                coordinateToBattle()
-                
+//                coordinateToBattle()
             }
         }
     }
     
-    @MainActor
     func dismissPokemonSelection() {
         self.playerSelectedPokemon = nil
-        self.introView.introTextView.messageLabel.text = NewJourneyMessages.newQuestMessage6
+        delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage6)
     }
     
-    func displayPokemonSelectedMessage(message: String, selectedPokemon: PokemonIdNameConfiguration) {
-        self.playerSelectedPokemon = selectedPokemon
-        Task {
-            await self.introView.introTextView.animateMessage(message: message)
-        }
-    }
-}
-
-extension IntroViewModel: UITextFieldDelegate {
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return true
-    }
-    
-    func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        textField.text = ""
-        return true
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        playerName = textField.text ?? ""
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        playerName = textField.text ?? ""
-        textField.resignFirstResponder()
-        return true
-    }
+//    func displayPokemonSelectedMessage(message: String, selectedPokemon: PokemonIdNameConfiguration) {
+//        self.playerSelectedPokemon = selectedPokemon
+//        Task {
+//            await self.introView.introTextView.animateMessage(message: message)
+//        }
+//    }
 }
 
 // MARK: - Saving Player information
-
 extension IntroViewModel {
     func savePlayerName() async {
         do {
-            try await coreDataNetworkService.saveGamePlayerModel(playerName: playerName)
+            guard let safePlayerName = playerName else { return }
+            try await coreDataNetworkService.saveGamePlayerModel(playerName: safePlayerName)
         } catch let error as PokemonLeafGreenError {
             print(error.errorLogDescription)
         } catch {
@@ -168,10 +141,9 @@ extension IntroViewModel {
 }
 
 // MARK: - Coordinate to Battle Rival Ash
-
-extension IntroViewModel {
-    func coordinateToBattle() {
-        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
-        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
-    }
-}
+//extension IntroViewModel {
+//    func coordinateToBattle() {
+//        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
+//        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
+//    }
+//}
