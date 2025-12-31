@@ -19,6 +19,7 @@ public enum PokemonLeafGreenError: Error {
     case nsSetConversionError
     case noPokemonStoredForPlayer
     case noMovesStoredForPokemon
+    case noRequestIdentifierKey
     
     var errorLogDescription: String {
         switch self {
@@ -48,13 +49,15 @@ public enum PokemonLeafGreenError: Error {
             return "No Pokemon stored for game player"
         case .noMovesStoredForPokemon:
             return "No moves stored for pokemon model"
+        case .noRequestIdentifierKey:
+            return "Can't fetch any core data model without identifier key"
         }
     }
     
     var clientDescription: String {
         switch self {
-        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_, _), .coreDataFetchRequestError(_), .nsSetConversionError:
-            return "Server is down. Please refresh the app or download again."
+        case .stringToUrlConversionError(_), .urlReponseToHTTPUrlResponseError, .decodingError(_), .pokeAPIServerError(_, _), .coreDataSaveError(_), .coreDataFetchError(_, _), .coreDataFetchRequestError(_), .nsSetConversionError, .noRequestIdentifierKey:
+            return "App is down. Please refresh the app or download again."
         case .noPokemonStoredForPlayer:
             return "Player has no pokemon. Please restart the game."
         case .noMovesStoredForPokemon:

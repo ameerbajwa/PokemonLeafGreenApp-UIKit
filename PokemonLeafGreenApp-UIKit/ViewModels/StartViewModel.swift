@@ -52,7 +52,7 @@ extension StartViewModel {
 extension StartViewModel {
     func loadGame() {
         do {
-            let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
+            let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
             let _ = try coreDataNetworkService.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
             // coordinate to location based on saved PokemonLocationConfiguration
         } catch {

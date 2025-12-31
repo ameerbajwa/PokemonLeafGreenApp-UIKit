@@ -7,27 +7,48 @@
 
 public class PlayerPokemonLineupManager {
     var pokemonFullInfoLoadingService: PokemonFullInfoLoading
-    var pokemonLineupFullInfo: [PokemonFullInfo]?
+    var pokemonLineupFullInfo: [PokemonFullInfo]
     
     init(pokemonFullInfoLoadingService: PokemonFullInfoLoading) {
         self.pokemonFullInfoLoadingService = pokemonFullInfoLoadingService
+        pokemonLineupFullInfo = []
+        pokemonLineupFullInfo.reserveCapacity(6)
     }
     
-    func addPokemonToPlayerLineup(pokemonFullDetails: PokemonFullInfo) {
-//        if let pokemonFullBattleAttributes = pokemonFullBattleAttributes, pokemonFullBattleAttributes.count < 6 {
-//            
-//        }
-        
-        //    func fetchAndSetAllPlayerPokemonBattleInfo() throws {
-        //        let playerPokemonModels = try self.fetchPlayerPokemon()
-        //
-        //        let playerPokemonNames = pokemonBattleManager.playerPokemonFullBattleInfo.map { $0.name }
-        //        for playerPokemon in playerPokemonModels {
-        //            if !playerPokemonNames.contains(playerPokemon.name) {
-        //                let newPokemonBattleInfo = try fetchPlayerPokemonFullBattleInfo(playerPokemon: playerPokemon)
-        //                pokemonBattleManager.addPokemonToPlayerPokemonLineup(newPlayerPokemonFullBattleInfo: newPokemonBattleInfo)
-        //            }
-        //        }
-        //    }
+    func fillStartingLineup() throws {
+        do {
+            let playerPokemonLineup = try pokemonFullInfoLoadingService.fetchPlayerPokemon(with: .fetchPlayerPokemonLineup)
+            for pokemon in playerPokemonLineup {
+                try addPokemonToLineup(coreDataGamePlayerPokemon: pokemon)
+            }
+        } catch {
+            throw error
+        }
+    }
+    
+    func addPokemonToLineup(coreDataGamePlayerPokemon: CoreDataGamePlayerPokemon) throws {
+        do {
+            let pokemonFullInfo = try pokemonFullInfoLoadingService.fetchPlayerPokemonFullInfo(playerPokemon: coreDataGamePlayerPokemon)
+            pokemonLineupFullInfo.append(pokemonFullInfo)
+        } catch {
+            throw error
+        }
+    }
+    
+    func addPokemonToLineup(coreDataGamePlayerPokemon: CoreDataGamePlayerPokemon, to index: Int) throws {
+        do {
+            let pokemonFullInfo = try pokemonFullInfoLoadingService.fetchPlayerPokemonFullInfo(playerPokemon: coreDataGamePlayerPokemon)
+            pokemonLineupFullInfo.insert(pokemonFullInfo, at: index)
+        } catch {
+            throw error
+        }
+    }
+    
+    func removePokemonFromLineup(at index: Int) {
+        _ = pokemonLineupFullInfo.remove(at: index)
+    }
+    
+    func swapPokemonInLineup(from indexA: Int, to indexB: Int) {
+        pokemonLineupFullInfo.swapAt(indexA, indexB)
     }
 }

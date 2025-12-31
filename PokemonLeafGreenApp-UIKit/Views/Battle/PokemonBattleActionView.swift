@@ -10,8 +10,6 @@ import UIKit
 import Combine
 
 class PokemonBattleActionView: UIView {
-    weak var viewModel: BattleViewModel?
-    
     var fightButton: UIButton!
     var switchButton: UIButton!
     var buttonStackView: UIStackView!
@@ -55,11 +53,9 @@ class PokemonBattleActionView: UIView {
     
     @objc
     func fightButtonTapped() {
-        viewModel?.displayMoveList()
     }
     
     @objc
     func switchButtonTapped() {
-        viewModel?.displayPokemonList()
     }
 }

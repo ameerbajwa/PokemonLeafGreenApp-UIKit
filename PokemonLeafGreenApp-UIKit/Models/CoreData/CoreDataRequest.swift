@@ -9,21 +9,31 @@ import Foundation
 import CoreData
 
 protocol CoreDataRequesting {
-    var identifierKey: String { get set }
+    var requestType: CoreDataRequestType { get set }
+    var identifierKey: String? { get set }
     var identifierStringValue: String? { get set }
     var identifierIntValue: Int? { get set }
     
     associatedtype Model: CoreDataManageable, NSManagedObject
 }
 
+public enum CoreDataRequestType {
+    case fetchAllPlayerPokemon
+    case fetchPlayerPokemonLineup
+    case fetchPlayerPokemonPokedex
+    case fetchModel
+}
+
 public struct CoreDataRequest<CoreDataModel: CoreDataManageable & NSManagedObject>: CoreDataRequesting {
-    var identifierKey: String
+    var requestType: CoreDataRequestType
+    var identifierKey: String?
     var identifierStringValue: String?
     var identifierIntValue: Int?
     
     typealias Model = CoreDataModel
     
-    init(identifierKey: String, identifierStringValue: String? = nil, identifierIntValue: Int? = nil) {
+    init(requestType: CoreDataRequestType, identifierKey: String? = nil, identifierStringValue: String? = nil, identifierIntValue: Int? = nil) {
+        self.requestType = requestType
         self.identifierKey = identifierKey
         self.identifierStringValue = identifierStringValue
         self.identifierIntValue = identifierIntValue
