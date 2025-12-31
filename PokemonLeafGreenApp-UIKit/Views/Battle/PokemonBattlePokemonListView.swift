@@ -9,9 +9,7 @@ import Foundation
 import UIKit
 import Combine
 
-class PokemonBattlePokemonListView: UIView {
-    weak var viewModel: BattleViewModel?
-    
+class PokemonBattlePokemonListView: UIView {    
     var pokemonListView: UIView!
     var pokemonListTableView: UITableView!
     

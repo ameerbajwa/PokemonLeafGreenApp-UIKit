@@ -10,8 +10,6 @@ import UIKit
 import Combine
 
 class PokemonBattleTextView: UIView {
-    weak var viewModel: BattleViewModel?
-    
     var pokemonBattleText: UILabel!
     var nextButton: UIButton!
     
@@ -51,17 +49,16 @@ class PokemonBattleTextView: UIView {
         ])
     }
     
-    func bindUIComponentsToViewModel() {
-        viewModel?.$battleText
-            .receive(on: RunLoop.main)
-            .sink { [weak self] newBattleText in
-                self?.pokemonBattleText.text = newBattleText
-            }
-            .store(in: &cancellables)
-    }
+//    func bindUIComponentsToViewModel() {
+//        viewModel?.$battleText
+//            .receive(on: RunLoop.main)
+//            .sink { [weak self] newBattleText in
+//                self?.pokemonBattleText.text = newBattleText
+//            }
+//            .store(in: &cancellables)
+//    }
     
     @objc
     func nextButtonTapped() {
-        viewModel?.dismissText()
     }
 }

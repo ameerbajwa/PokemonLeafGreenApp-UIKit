@@ -10,7 +10,7 @@ protocol PokemonNetworkCheckingAndStoring: PokemonNetworking {}
 extension PokemonNetworkCheckingAndStoring {
     func checkPokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList>? {
         do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: pokemonConfiguration.name)
+            let coreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: pokemonConfiguration.name)
             let doesCoreDataPokemonModelExist = try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
             guard !doesCoreDataPokemonModelExist else {
                 return nil
@@ -40,7 +40,7 @@ extension PokemonNetworkCheckingAndStoring {
         
     func checkCoreDataMoveObject(pokemonMove: CoreDataPokemonMoveList) async throws {
         do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierStringValue: pokemonMove.name)
+            let coreDataFetchRequest = CoreDataRequest<CoreDataMove>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataMove.name), identifierStringValue: pokemonMove.name)
             let doesCoreDataMoveModelExist = try coreDataNetworkService.fetchCoreDataModelCount(with: coreDataFetchRequest)
             if !doesCoreDataMoveModelExist {
                 try await storePokemonMoveInCoreData(pokemonMove: pokemonMove)

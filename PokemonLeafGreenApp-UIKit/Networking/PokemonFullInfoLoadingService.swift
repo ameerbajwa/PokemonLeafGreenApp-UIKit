@@ -8,22 +8,25 @@
 protocol PokemonFullInfoLoading: PokemonNetworking {
     var pokemonFullInfoAdapter: PokemonFullInfoAdapter { get set }
     
-    func fetchPlayerPokemonFullBattleInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo
-    func fetchWildPokemonFullBattleInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo
-    func fetchTrainerPokemonFullBattleInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo
+    func fetchPlayerPokemonFullInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo
+    func fetchWildPokemonFullInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo
+    func fetchTrainerPokemonFullInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo
 }
 
 extension PokemonFullInfoLoading {
-    func fetchPlayerPokemon() throws -> [CoreDataGamePlayerPokemon] {
+    func fetchPlayerPokemon(with type: CoreDataRequestType) throws -> [CoreDataGamePlayerPokemon] {
         do {
-            let coreDataFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
-            let playerInfo = try coreDataNetworkService.fetchCoreDataModel(with: coreDataFetchRequest)
-            if let playerPokemonSet = playerInfo.pokemon as? Set<CoreDataGamePlayerPokemon> {
-                return playerPokemonSet.sorted(by: { firstPokemon, secondPokemon in
-                    firstPokemon.order < secondPokemon.order
-                })
-            } else {
-                throw PokemonLeafGreenError.noPokemonStoredForPlayer
+            let coreDataFetchRequest = CoreDataRequest<CoreDataGamePlayerPokemon>(requestType: type)
+            let playerPokemon = try coreDataNetworkService.fetchCoreDataModels(with: coreDataFetchRequest)
+            switch type {
+            case .fetchPlayerPokemonLineup:
+                return playerPokemon.sorted { firstPokemon, secondPokemon in
+                    firstPokemon.order < secondPokemon.order }
+            case .fetchPlayerPokemonPokedex, .fetchAllPlayerPokemon:
+                return playerPokemon.sorted { firstPokemon, secondPokemon in
+                    firstPokemon.id < secondPokemon.id }
+            case .fetchModel:
+                return []
             }
         } catch {
             throw error
@@ -32,7 +35,7 @@ extension PokemonFullInfoLoading {
     
     func fetchPokemonModels(pokemonName: String, pokemonLevel: Int) throws -> (CoreDataPokemon, [CoreDataMove]) {
         do {
-            let coreDataPokemonFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: pokemonName)
+            let coreDataPokemonFetchRequest = CoreDataRequest<CoreDataPokemon>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: pokemonName)
             let coreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataPokemonFetchRequest)
             if let playerSelectedPokemonMoveSet = coreDataPokemonModel.moves as? Set<CoreDataPokemonMoveList> {
                 let playerSelectedPokemonMoveList = playerSelectedPokemonMoveSet
@@ -43,7 +46,7 @@ extension PokemonFullInfoLoading {
                     }
                 var pokemonMoves: [CoreDataMove] = []
                 for move in playerSelectedPokemonMoveList {
-                    let coreDataMoveFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierStringValue: move.name)
+                    let coreDataMoveFetchRequest = CoreDataRequest<CoreDataMove>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataMove.name), identifierStringValue: move.name)
                     let coreDataMoveModel = try coreDataNetworkService.fetchCoreDataModel(with: coreDataMoveFetchRequest)
                     pokemonMoves.append(coreDataMoveModel)
                 }
@@ -74,7 +77,7 @@ public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
         self.pokemonFullInfoAdapter = pokemonFullInfoAdapter
     }
     
-    func fetchPlayerPokemonFullBattleInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo {
+    func fetchPlayerPokemonFullInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo {
         do {
             let (pokemonModel, pokemonMoveModels) = try fetchPokemonModels(pokemonName: playerPokemon.name, pokemonLevel: Int(playerPokemon.level))
             let effortValuesEarnedDict = pokemonFullInfoAdapter.adaptPlayerPokemonEffortValueStats(playerPokemonModel: playerPokemon)
@@ -89,7 +92,7 @@ public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
         }
     }
     
-    func fetchWildPokemonFullBattleInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo {
+    func fetchWildPokemonFullInfo(wildPokemon: WildPokemonConfiguration) throws -> PokemonFullInfo {
         do {
             let wildPokemonLevel = Int.random(in: wildPokemon.lowestLevel...wildPokemon.highestLevel)
             let (wildPokemonModel, wildPokemonMoveModels) = try fetchPokemonModels(pokemonName: wildPokemon.name, pokemonLevel: wildPokemonLevel)
@@ -102,7 +105,7 @@ public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
         }
     }
     
-    func fetchTrainerPokemonFullBattleInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo {
+    func fetchTrainerPokemonFullInfo(trainerPokemon: PokemonTrainerPokemonConfiguration) throws -> PokemonFullInfo {
         do {
             let (trainerPokemonModel, trainerPokemonMoveModels) = try fetchPokemonModels(pokemonName: trainerPokemon.name, pokemonLevel: trainerPokemon.level)
             return pokemonFullInfoAdapter.adaptPokemonModelsToFullInfo(

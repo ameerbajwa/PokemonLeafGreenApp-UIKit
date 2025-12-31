@@ -47,7 +47,7 @@ class CoreDataNetworkServiceTests: XCTestCase {
         }
         
         do {
-            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: "clefairy")
+            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: "clefairy")
             let mockCoreDataPokemonModel = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
                         
             XCTAssertEqual(mockCoreDataPokemonModel.id, 35)
@@ -93,7 +93,7 @@ class CoreDataNetworkServiceTests: XCTestCase {
         }
         
         do {
-            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataMove>(identifierKey: #keyPath(CoreDataMove.name), identifierValue: "pound")
+            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataMove>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataMove.name), identifierStringValue: "pound")
             let mockCoreDataMoveModel = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
             
             XCTAssertEqual(mockCoreDataMoveModel.id, 1)
@@ -117,7 +117,7 @@ class CoreDataNetworkServiceTests: XCTestCase {
     
     func testFetchingCoreDataModelNotSaved() {
         do {
-            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(identifierKey: #keyPath(CoreDataPokemon.name), identifierValue: "charmander")
+            let mockCoreDataFetchRequest = CoreDataRequest<CoreDataPokemon>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataPokemon.name), identifierStringValue: "charmander")
              _ = try coreDataNetworkService.fetchCoreDataModel(with: mockCoreDataFetchRequest)
         } catch let error as PokemonLeafGreenError {
             XCTAssertEqual(error.errorLogDescription, "No record found in Core Data model CoreDataPokemon for key-value pair - name - charmander")

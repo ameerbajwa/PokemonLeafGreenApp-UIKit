@@ -54,8 +54,8 @@ extension CoreDataNetworkService {
     }
     
     func saveGamePlayerModel(playerName: String) async throws {
-        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
-        var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
+        let coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         coreDataGamePlayerModel.adaptPlayerName(playerName: playerName)
         
         do {
@@ -68,8 +68,8 @@ extension CoreDataNetworkService {
     func saveGamePlayerModel(starterPokemon: PokemonIdNameConfiguration) async throws {
         let coreDataGamePlayerPokemon = CoreDataGamePlayerPokemon(context: context)
         coreDataGamePlayerPokemon.adaptStarterPokemon(pokemonConfiguration: starterPokemon)
-        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
-        var coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
+        let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
+        let coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         coreDataGamePlayerModel.addToPokemon(coreDataGamePlayerPokemon)
         
         do {
@@ -90,10 +90,22 @@ extension CoreDataNetworkService {
         
         var fetchRequestPredicate: NSPredicate?
         
-        if let safeIdentifierStringValue = request.identifierStringValue {
-            fetchRequestPredicate = NSPredicate(format: "%K == %@", request.identifierKey, safeIdentifierStringValue)
-        } else if let safeIdentifierIntValue = request.identifierIntValue {
-            fetchRequestPredicate = NSPredicate(format: "%K == %d", request.identifierKey, safeIdentifierIntValue)
+        switch request.requestType {
+        case .fetchModel:
+            guard let safeIdentifierKey = request.identifierKey else {
+                throw PokemonLeafGreenError.noRequestIdentifierKey
+            }
+            if let safeIdentifierStringValue = request.identifierStringValue {
+                fetchRequestPredicate = NSPredicate(format: "%K == %@", safeIdentifierKey, safeIdentifierStringValue)
+            } else if let safeIdentifierIntValue = request.identifierIntValue {
+                fetchRequestPredicate = NSPredicate(format: "%K == %d", safeIdentifierKey, safeIdentifierIntValue)
+            }
+        case .fetchAllPlayerPokemon:
+            fetchRequestPredicate = nil
+        case .fetchPlayerPokemonLineup:
+            fetchRequestPredicate = NSPredicate(format: "order >= %d && order <= %d", 1, 6)
+        case .fetchPlayerPokemonPokedex:
+            fetchRequestPredicate = NSPredicate(format: "order == 0")
         }
         
         fetchRequest.predicate = fetchRequestPredicate
@@ -123,6 +135,17 @@ extension CoreDataNetworkService {
             fetchRequest.resultType = .countResultType
             let coreDataModelCount = try context.count(for: fetchRequest)
             return coreDataModelCount == 1
+        } catch let error as PokemonLeafGreenError {
+            throw error
+        } catch {
+            throw PokemonLeafGreenError.coreDataFetchError(model: "\(CoreDataRequest.Model.self)", underlayingCoreDataError: error.localizedDescription)
+        }
+    }
+    
+    func fetchCoreDataModels<CoreDataRequest: CoreDataRequesting>(with request: CoreDataRequest) throws -> [CoreDataRequest.Model] {
+        do {
+            let fetchRequest = try generateCoreDataFetchRequest(with: request)
+            return try context.fetch(fetchRequest)
         } catch let error as PokemonLeafGreenError {
             throw error
         } catch {

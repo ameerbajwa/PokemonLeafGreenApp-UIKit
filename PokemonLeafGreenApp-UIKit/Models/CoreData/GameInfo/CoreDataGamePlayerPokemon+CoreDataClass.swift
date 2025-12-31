@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc(CoreDataGamePlayerPokemon)
-public class CoreDataGamePlayerPokemon: NSManagedObject {
+public class CoreDataGamePlayerPokemon: NSManagedObject, CoreDataManageable {
     func adaptStarterPokemon(pokemonConfiguration: PokemonIdNameConfiguration) {
         self.id = Int16(pokemonConfiguration.id)
         self.name = pokemonConfiguration.name
