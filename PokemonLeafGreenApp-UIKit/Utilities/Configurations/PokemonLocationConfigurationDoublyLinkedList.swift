@@ -19,6 +19,8 @@ public class PokemonLocationConfigurationDoublyLinkedList {
     var startLocation: PokemonLocationConfigurationNode?
     var lastLocation: PokemonLocationConfigurationNode?
     
+    init() {}
+    
     func appendLocation(configuration: PokemonLocationConfiguration) {
         let newPokemonLocationConfigurationNode = PokemonLocationConfigurationNode(configuration: configuration)
         
