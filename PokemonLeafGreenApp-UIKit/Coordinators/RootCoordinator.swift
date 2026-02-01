@@ -15,10 +15,14 @@ class RootCoordinator: ParentCoordinator {
     let pokeAPINetworkService: PokeAPINetworkService
     let coreDataNetworkService: CoreDataNetworkService
     
+    let pokemonLocationConfigurationLinkedList: PokemonLocationConfigurationDoublyLinkedList
+    
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.navigationController = navigationController
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
+        
+        pokemonLocationConfigurationLinkedList = PokemonLocationConfigurationService().createPokemonLocationConfigurationLinkedList()
     }
     
     func start() {
