@@ -23,6 +23,7 @@ class StartViewController: UIViewController {
     private var safeArea: UILayoutGuide!
     
     init(startViewModel: StartViewModel, startView: StartView) {
+        print("StartViewController created and stored in memory")
         self.viewModel = startViewModel
         self.startView = startView
         super.init(nibName: nil, bundle: nil)
@@ -30,6 +31,10 @@ class StartViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("StartViewController removed from memory")
     }
     
     override func viewDidLoad() {
@@ -99,5 +104,6 @@ extension StartViewController: StartViewButtonDelegate {
     @objc
     func loadGameButtonPressed() {
         viewModel.loadGame()
+        coordinator?.finish(configuration: .currentLocation)
     }
 }

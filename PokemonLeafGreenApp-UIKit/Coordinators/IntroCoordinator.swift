@@ -16,18 +16,19 @@ class IntroCoordinator: ChildCoordinator {
     var viewModel: IntroViewModel
     var mainView: IntroView
     var textView: IntroTextView
-    var configuration: PalletTownConfiguration
-    var storageService: PokemonStorageService
     
-    init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
+    init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, storageService: PokemonNetworkCheckingAndStoring, pokemonLocationConfiguration: PalletTownConfiguration) {
+        print("IntroCoordinator created and stored in memory")
         self.navigationController = navigationController
         
         self.mainView = IntroView()
         self.textView = IntroTextView()
-        self.configuration = PalletTownConfiguration()
-        self.storageService = PokemonStorageService(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonLocationConfiguration: configuration)
-        self.viewModel = IntroViewModel(configuration: configuration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
-        self.controller = IntroViewController(storageService: storageService, introViewModel: viewModel, introView: mainView, introTextView: textView)
+        self.viewModel = IntroViewModel(locationConfiguration: pokemonLocationConfiguration, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonStorageService: storageService)
+        self.controller = IntroViewController(introViewModel: viewModel, introView: mainView, introTextView: textView)
+    }
+    
+    deinit {
+        print("IntroCoordinator removed from memory")
     }
     
     func start() {

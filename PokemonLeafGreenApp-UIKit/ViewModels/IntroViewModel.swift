@@ -12,6 +12,7 @@ class IntroViewModel: NSObject {
     var pokemonLocationConfiguration: PalletTownConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
+    var pokemonStorageService: PokemonNetworkCheckingAndStoring
     weak var delegate: IntroManaging?
     
     var introMessageCounter = 0
@@ -19,11 +20,21 @@ class IntroViewModel: NSObject {
     var playerName: String?
     var playerSelectedPokemon: PokemonIdNameConfiguration?
     
-    init(configuration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
-        self.pokemonLocationConfiguration = configuration
+    init(locationConfiguration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, pokemonStorageService: PokemonNetworkCheckingAndStoring) {
+        print("IntroViewModel created and stored in memory")
+        self.pokemonLocationConfiguration = locationConfiguration
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-        super.init()
+        self.pokemonStorageService = pokemonStorageService
+        self.pokemonStorageService.pokemonLocationConfiguration = locationConfiguration
+    }
+    
+    deinit {
+        print("IntroViewModel removed from memory")
+    }
+    
+    func checkAndStorePokemonInfoFromPokemonLocationConfiguration() async throws {
+        try await pokemonStorageService.checkAndStorePokemonInfo()
     }
     
     func generatePokemonImage(id: Int) async -> Data? {
@@ -144,6 +155,6 @@ extension IntroViewModel {
 //extension IntroViewModel {
 //    func coordinateToBattle() {
 //        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
-//        controller?.coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration.battle(battleConfiguration))
+//        controller?.coordinateToBattleScreen(configuration: battleConfiguration)
 //    }
 //}

@@ -32,7 +32,6 @@ protocol IntroViewManaging: AnyObject, UITextFieldDelegate {
 class IntroViewController: UIViewController {
     weak var coordinator: IntroCoordinator?
     
-    var storageService: PokemonStorageService
     var introViewModel: IntroViewModel
     var introView: IntroView
     var introTextView: IntroTextView
@@ -40,8 +39,8 @@ class IntroViewController: UIViewController {
     private var loadingView: LoadingView!
     private var safeArea: UILayoutGuide!
     
-    init(storageService: PokemonStorageService, introViewModel: IntroViewModel, introView: IntroView, introTextView: IntroTextView) {
-        self.storageService = storageService
+    init(introViewModel: IntroViewModel, introView: IntroView, introTextView: IntroTextView) {
+        print("IntroViewController created and stored in memory")
         self.introViewModel = introViewModel
         self.introView = introView
         self.introTextView = introTextView
@@ -54,6 +53,10 @@ class IntroViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        print("IntroViewController removed from memory")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -62,7 +65,7 @@ class IntroViewController: UIViewController {
         self.loadingView.displayLoadingView(with: "Loading Intro", on: self.view)
         
         Task {
-            try await storageService.checkAndStorePokemonInfo()
+            try await introViewModel.checkAndStorePokemonInfoFromPokemonLocationConfiguration()
             await setupViewController()
             
             self.loadingView.dismissLoadingView()
@@ -104,8 +107,8 @@ extension IntroViewController {
 }
 
 extension IntroViewController {
-    func coordinateToBattleScreen(configuration: PokemonCoordinatorConfiguration) {
-        coordinator?.finish(configuration: configuration)
+    func coordinateToBattleScreen(configuration: PokemonBattleConfiguration) {
+        coordinator?.finish(configuration: PokemonCoordinatorConfiguration.battle(configuration))
     }
 }
 
