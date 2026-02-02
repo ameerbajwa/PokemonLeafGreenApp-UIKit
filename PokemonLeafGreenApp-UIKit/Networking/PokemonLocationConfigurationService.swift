@@ -6,6 +6,8 @@
 //
 
 public class PokemonLocationConfigurationService {
+    init() {}
+    
     func createPokemonLocationConfigurationLinkedList() -> PokemonLocationConfigurationDoublyLinkedList {
         let locationConfigurationLinkedList = PokemonLocationConfigurationDoublyLinkedList()
         locationConfigurationLinkedList.appendLocation(configuration: PalletTownConfiguration())

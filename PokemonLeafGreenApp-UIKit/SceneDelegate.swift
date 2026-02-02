@@ -22,10 +22,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let pokeAPINetworkService = PokeAPINetworkService(session: URLSession.shared, decoder: JSONDecoder())
         let coreDataNetworkService = CoreDataNetworkService(container: AppDelegate().persistentContainer)
+        let pokemonStorageService = PokemonStorageService(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        let pokemonFullInfoAdapter = PokemonFullInfoAdapter()
+        let pokemonFullInfoLoadingService = PokemonFullInfoLoadingService(coreDataNetworkService: coreDataNetworkService, pokemonFullInfoAdapter: pokemonFullInfoAdapter)
+        let pokemonLocationConfigurationService = PokemonLocationConfigurationService()
         
         let mainNavigationController = UINavigationController.init()
         mainNavigationController.navigationItem.hidesBackButton = true
-        rootCoordinator = RootCoordinator(navigationController: mainNavigationController, pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
+        rootCoordinator = RootCoordinator(navigationController: mainNavigationController,
+                                          pokeAPINetworkService: pokeAPINetworkService,
+                                          coreDataNetworkService: coreDataNetworkService,
+                                          pokemonStorageService: pokemonStorageService,
+                                          pokemonFullInfoLoadingService: pokemonFullInfoLoadingService,
+                                          pokemonLocationConfigurationService: pokemonLocationConfigurationService)
         rootCoordinator?.start()
         
         window?.rootViewController = mainNavigationController

@@ -20,8 +20,13 @@ class StartViewModel: StartViewModeling {
     var coreDataNetworkService: CoreDataNetworkService
         
     init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
+        print("StartViewModel created and stored in memory")
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
+    }
+    
+    deinit {
+        print("StartViewmodel removed from memory")
     }
 }
 

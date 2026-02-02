@@ -5,7 +5,13 @@
 //  Created by Ameer Bajwa on 8/15/25.
 //
 
-protocol PokemonNetworkCheckingAndStoring: PokemonNetworking {}
+protocol PokemonNetworkCheckingAndStoring {
+    var pokeAPINetworkService: PokeAPINetworkService { get set }
+    var coreDataNetworkService: CoreDataNetworkService { get set }
+    var pokemonLocationConfiguration: PokemonLocationConfiguration? { get set }
+    
+    func checkAndStorePokemonInfo() async throws
+}
 
 extension PokemonNetworkCheckingAndStoring {
     func checkPokemonInCoreData(pokemonConfiguration: PokemonIdNameConfiguration) async throws -> Set<CoreDataPokemonMoveList>? {
@@ -65,16 +71,15 @@ extension PokemonNetworkCheckingAndStoring {
 public class PokemonStorageService: PokemonNetworkCheckingAndStoring {
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
-    var pokemonLocationConfiguration: PokemonLocationConfiguration
+    var pokemonLocationConfiguration: PokemonLocationConfiguration?
     
-    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, pokemonLocationConfiguration: PokemonLocationConfiguration) {
+    init(pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
         self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-        self.pokemonLocationConfiguration = pokemonLocationConfiguration
     }
     
     func checkAndStorePokemonInfo() async throws {
-        if let pokemonConfigurations = pokemonLocationConfiguration.pokemonConfigurations {
+        if let pokemonConfigurations = pokemonLocationConfiguration?.pokemonConfigurations {
             for pokemonConfiguration in pokemonConfigurations {
                 print(pokemonConfiguration.name)
                 let pokemonMoves = try await checkPokemonInCoreData(pokemonConfiguration: pokemonConfiguration)

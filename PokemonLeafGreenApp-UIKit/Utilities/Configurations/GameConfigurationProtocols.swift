@@ -6,17 +6,9 @@
 //
 
 public enum PokemonCoordinatorConfiguration {
-    case location(PokemonLocationConfiguration)
+    case currentLocation
+    case nextLocation
     case battle(PokemonBattleConfiguration)
-    
-    var locationConfiguration: PokemonLocationConfiguration? {
-        switch self {
-        case .location(let configuration):
-            return configuration
-        default:
-            return nil
-        }
-    }
     
     var battleConfiguration: PokemonBattleConfiguration? {
         switch self {

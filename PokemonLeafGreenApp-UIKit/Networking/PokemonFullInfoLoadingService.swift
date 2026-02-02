@@ -5,7 +5,8 @@
 //  Created by Ameer Bajwa on 9/15/25.
 //
 
-protocol PokemonFullInfoLoading: PokemonNetworking {
+protocol PokemonFullInfoLoading {
+    var coreDataNetworkService: CoreDataNetworkService { get set }
     var pokemonFullInfoAdapter: PokemonFullInfoAdapter { get set }
     
     func fetchPlayerPokemonFullInfo(playerPokemon: CoreDataGamePlayerPokemon) throws -> PokemonFullInfo
@@ -61,19 +62,13 @@ extension PokemonFullInfoLoading {
 }
 
 public class PokemonFullInfoLoadingService: PokemonFullInfoLoading {
-    var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
-    var pokemonLocationConfiguration: PokemonLocationConfiguration
     var pokemonFullInfoAdapter: PokemonFullInfoAdapter
     
-    init(pokeAPINetworkService: PokeAPINetworkService,
-         coreDataNetworkService: CoreDataNetworkService,
-         pokemonLocationConfiguration: PokemonLocationConfiguration,
+    init(coreDataNetworkService: CoreDataNetworkService,
          pokemonFullInfoAdapter: PokemonFullInfoAdapter
     ) {
-        self.pokeAPINetworkService = pokeAPINetworkService
         self.coreDataNetworkService = coreDataNetworkService
-        self.pokemonLocationConfiguration = pokemonLocationConfiguration
         self.pokemonFullInfoAdapter = pokemonFullInfoAdapter
     }
     

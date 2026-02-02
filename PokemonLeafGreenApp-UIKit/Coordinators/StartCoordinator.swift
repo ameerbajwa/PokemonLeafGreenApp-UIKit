@@ -17,11 +17,16 @@ class StartCoordinator: ChildCoordinator {
     var view: StartView
     
     init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService) {
+        print("StartCoordinator created and stored in memory")
         self.navigationController = navigationController
         
         self.view = StartView()
         self.viewModel = StartViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService)
         self.controller = StartViewController(startViewModel: viewModel, startView: view)
+    }
+    
+    deinit {
+        print("StartCooridantor removed from memory")
     }
     
     func start() {
@@ -33,6 +38,12 @@ class StartCoordinator: ChildCoordinator {
     func finish(configuration: PokemonCoordinatorConfiguration? = nil) {
         self.navigationController.viewControllers.removeAll()
         rootCoordinator?.removeChildCoordinator(childCoordinator: self)
-        rootCoordinator?.startIntroCoordinator()
+        switch configuration {
+        case .currentLocation, .nextLocation:
+            rootCoordinator?.startLocationCoordinator()
+        default:
+            rootCoordinator?.startIntroCoordinator()
+        }
+        
     }
 }
