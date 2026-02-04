@@ -23,6 +23,18 @@ public class CoreDataGamePlayer: NSManagedObject, CoreDataManageable {
         }
     }
     
+    func adaptRivalPlayer() {
+        self.id = 2
+        self.name = "Ash"
+        self.money = 0
+        self.lastLocation = ""
+        
+        if let playerPokemonCount = pokemon?.count,
+            playerPokemonCount > 0, let pokemonSet = pokemon {
+            self.removeFromPokemon(pokemonSet)
+        }
+    }
+    
     func adaptPlayerName(playerName: String) {
         self.name = playerName
     }

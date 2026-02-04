@@ -45,6 +45,8 @@ extension CoreDataNetworkService {
     func saveNewGamePlayerModel() async throws {
         let coreDataGamePlayerModel = CoreDataGamePlayer(context: context)
         coreDataGamePlayerModel.adaptNewGame()
+        let coreDataRivalPlayerModel = CoreDataGamePlayer(context: context)
+        coreDataRivalPlayerModel.adaptRivalPlayer()
         
         do {
             try context.save()
@@ -66,6 +68,7 @@ extension CoreDataNetworkService {
     }
     
     func saveGamePlayerModel(starterPokemon: PokemonIdNameConfiguration) async throws {
+        // also add rival's pokemon to rival's model and save
         let coreDataGamePlayerPokemon = CoreDataGamePlayerPokemon(context: context)
         coreDataGamePlayerPokemon.adaptStarterPokemon(pokemonConfiguration: starterPokemon)
         let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
