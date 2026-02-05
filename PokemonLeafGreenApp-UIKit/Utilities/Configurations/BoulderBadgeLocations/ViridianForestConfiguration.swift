@@ -11,6 +11,7 @@ struct ViridianForestConfiguration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [PokemonTrainerConfiguration]?
     var wildPokemon: [WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.virdianForest.id
@@ -64,5 +65,10 @@ struct ViridianForestConfiguration: PokemonLocationConfiguration {
         bugCatcherSammy.pokemon.append(PokemonTrainerPokemon(order: 1, id: PokemonIdNameConfiguration.weedle.id, name: PokemonIdNameConfiguration.weedle.name, level: 9))
         
         self.trainers = [bugCatcherRick, bugCatcherDoug, bugCatcherAnthony, bugCatcherCharlie, bugCatcherSammy]
+        self.encounterRival = false
     }
+}
+
+extension ViridianForestConfiguration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {}
 }

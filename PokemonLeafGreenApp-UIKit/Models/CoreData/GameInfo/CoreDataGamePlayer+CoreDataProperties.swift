@@ -18,6 +18,7 @@ extension CoreDataGamePlayer {
     @NSManaged public var money: Int16
     @NSManaged public var name: String
     @NSManaged public var lastLocation: String
+    @NSManaged public var starterPokemon: String
     @NSManaged public var pokemon: NSSet?
 }
 

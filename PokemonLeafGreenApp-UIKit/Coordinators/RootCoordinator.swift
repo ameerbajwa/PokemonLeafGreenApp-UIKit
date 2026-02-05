@@ -49,11 +49,14 @@ class RootCoordinator: ParentCoordinator {
 extension RootCoordinator {
     func startIntroCoordinator() {
         currentPokemonLocationConfigurationNode = pokemonLocationConfigurationLinkedList.startLocation
+        guard let currentPokemonLocationConfiguration = currentPokemonLocationConfigurationNode?.configuration else {
+            return
+        }
         let introCoordinator = IntroCoordinator(navigationController: navigationController,
                                                 pokeAPINetworkService: pokeAPINetworkService,
                                                 coreDataNetworkService: coreDataNetworkService,
                                                 storageService: pokemonStorageService,
-                                                pokemonLocationConfiguration: PalletTownConfiguration())
+                                                pokemonLocationConfiguration: currentPokemonLocationConfiguration)
         self.addChildCoordinator(childCoordinator: introCoordinator)
         introCoordinator.rootCoordinator = self
         introCoordinator.start()
@@ -77,4 +80,5 @@ extension RootCoordinator {
     // Need to know whether to go to the existing location or next one
     // If existing, how do we update what the player has done? i.e. which trainer's he has faced
     // only remove location coordinator/controller from root coorindator childCoordinators when moving to the next location
+    // when switching locations, check encounterRival boolean then call addRivalTrainer method on location
 }

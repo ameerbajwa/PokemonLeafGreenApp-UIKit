@@ -17,7 +17,7 @@ class IntroCoordinator: ChildCoordinator {
     var mainView: IntroView
     var textView: IntroTextView
     
-    init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, storageService: PokemonNetworkCheckingAndStoring, pokemonLocationConfiguration: PalletTownConfiguration) {
+    init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, storageService: PokemonNetworkCheckingAndStoring, pokemonLocationConfiguration: PokemonLocationConfiguration) {
         print("IntroCoordinator created and stored in memory")
         self.navigationController = navigationController
         

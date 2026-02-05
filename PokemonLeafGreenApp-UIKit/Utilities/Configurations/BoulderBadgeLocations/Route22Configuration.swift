@@ -11,6 +11,7 @@ struct Route22Configuration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [PokemonTrainerConfiguration]?
     var wildPokemon: [WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.route22.id
@@ -32,17 +33,31 @@ struct Route22Configuration: PokemonLocationConfiguration {
                                         lowestLevel: 2,
                                         highestLevel: 5,
                                         rate: 45)]
+        self.encounterRival = true
     }
-    
-    mutating func provideRivalAshPokemonConfiguration(starterPokemon: PokemonIdNameConfiguration) {
+}
+
+extension Route22Configuration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {
+        var rivalPokemonConfiguration: PokemonIdNameConfiguration
+        switch playerStarterPokemon {
+        case .bulbasaur:
+            rivalPokemonConfiguration = .charmander
+        case .charmander:
+            rivalPokemonConfiguration = .squirtle
+        case .squirtle:
+            rivalPokemonConfiguration = .bulbasaur
+        default:
+            rivalPokemonConfiguration = .eevee
+        }
         var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Rival Ash", reward: 144)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
                                                       id: PokemonIdNameConfiguration.pidgey.id,
                                                       name: PokemonIdNameConfiguration.pidgey.name,
                                                       level: 9))
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 2,
-                                                      id: starterPokemon.id,
-                                                      name: starterPokemon.name,
+                                                      id: rivalPokemonConfiguration.id,
+                                                      name: rivalPokemonConfiguration.name,
                                                       level: 9))
         
         self.trainers = [rivalAsh]

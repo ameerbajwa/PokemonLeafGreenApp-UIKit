@@ -26,6 +26,9 @@ public protocol PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]? { get set }
     var trainers: [PokemonTrainerConfiguration]? { get set }
     var wildPokemon: [WildPokemonConfiguration]? { get set }
+    var encounterRival: Bool { get set }
+    
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration)
 }
 
 public struct PokemonBattleConfiguration {

@@ -71,6 +71,7 @@ extension CoreDataNetworkService {
         let coreDataGamePlayerFetchRequest = CoreDataRequest<CoreDataGamePlayer>(requestType: .fetchModel, identifierKey: #keyPath(CoreDataGamePlayer.id), identifierIntValue: 1)
         let coreDataGamePlayerModel = try self.fetchCoreDataModel(with: coreDataGamePlayerFetchRequest)
         coreDataGamePlayerModel.addToPokemon(coreDataGamePlayerPokemon)
+        coreDataGamePlayerModel.starterPokemon = starterPokemon.name
         
         do {
             try context.save()

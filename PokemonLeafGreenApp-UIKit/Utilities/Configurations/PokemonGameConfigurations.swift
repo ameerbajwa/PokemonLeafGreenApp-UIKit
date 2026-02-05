@@ -234,6 +234,18 @@ public enum PokemonIdNameConfiguration {
     case mewtwo
     case mew
     
+    init?(pokemonName: String) {
+        if pokemonName == PokemonIdNameConfiguration.bulbasaur.name {
+            self = .bulbasaur
+        } else if pokemonName == PokemonIdNameConfiguration.charmander.name {
+            self = .charmander
+        } else if pokemonName == PokemonIdNameConfiguration.squirtle.name {
+            self = .squirtle
+        } else {
+            self = .mew
+        }
+    }
+    
     var name: String {
         switch self {
         case .bulbasaur:

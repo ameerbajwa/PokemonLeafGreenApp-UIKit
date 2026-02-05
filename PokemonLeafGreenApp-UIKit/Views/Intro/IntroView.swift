@@ -112,12 +112,15 @@ class IntroView: UIView {
     }
     
     func setupSelectedPokemonImage(pokemon: PokemonIdNameConfiguration) {
-        if pokemon.name == PokemonIdNameConfiguration.bulbasaur.name {
+        switch pokemon {
+        case .bulbasaur:
             self.selectedPokemonImageView = bulbasaurImageView
-        } else if pokemon.name == PokemonIdNameConfiguration.charmander.name {
+        case .charmander:
             self.selectedPokemonImageView = charmanderImageView
-        } else {
+        case .squirtle:
             self.selectedPokemonImageView = squirtleImageView
+        default:
+            self.selectedPokemonImageView = nil
         }
         
         self.selectedPokemonImageView.layer.cornerRadius = 10

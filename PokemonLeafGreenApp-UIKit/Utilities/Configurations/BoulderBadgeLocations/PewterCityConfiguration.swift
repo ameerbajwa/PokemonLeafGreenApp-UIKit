@@ -11,6 +11,7 @@ struct PewterCityConfiguration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [any PokemonTrainerConfiguration]?
     var wildPokemon: [any WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.pewterCity.id
@@ -27,5 +28,10 @@ struct PewterCityConfiguration: PokemonLocationConfiguration {
         leaderBrock.pokemon.append(PokemonTrainerPokemon(order: 2, id: PokemonIdNameConfiguration.onix.id, name: PokemonIdNameConfiguration.onix.name, level: 14))
         
         self.trainers = [camperLiam, leaderBrock]
+        self.encounterRival = false
     }
+}
+
+extension PewterCityConfiguration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {}
 }
