@@ -11,6 +11,7 @@ struct Route2Configuration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [PokemonTrainerConfiguration]?
     var wildPokemon: [WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.route2.id
@@ -37,5 +38,10 @@ struct Route2Configuration: PokemonLocationConfiguration {
                                         lowestLevel: 4,
                                         highestLevel: 5,
                                         rate: 5)]
+        self.encounterRival = false
     }
+}
+
+extension Route2Configuration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {}
 }

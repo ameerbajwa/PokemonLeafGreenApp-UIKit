@@ -11,6 +11,7 @@ struct ViridianCityConfiguration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [any PokemonTrainerConfiguration]?
     var wildPokemon: [any WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.virdianCity.id
@@ -18,5 +19,10 @@ struct ViridianCityConfiguration: PokemonLocationConfiguration {
         self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.virdianCity.pokemonConfigurations
         self.wildPokemon = nil
         self.trainers = nil
+        self.encounterRival = false
     }
+}
+
+extension ViridianCityConfiguration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {}
 }

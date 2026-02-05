@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class IntroViewModel: NSObject {
-    var pokemonLocationConfiguration: PalletTownConfiguration
+    var pokemonLocationConfiguration: PokemonLocationConfiguration
     var pokeAPINetworkService: PokeAPINetworkService
     var coreDataNetworkService: CoreDataNetworkService
     var pokemonStorageService: PokemonNetworkCheckingAndStoring
@@ -20,7 +20,7 @@ class IntroViewModel: NSObject {
     var playerName: String?
     var playerSelectedPokemon: PokemonIdNameConfiguration?
     
-    init(locationConfiguration: PalletTownConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, pokemonStorageService: PokemonNetworkCheckingAndStoring) {
+    init(locationConfiguration: PokemonLocationConfiguration, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, pokemonStorageService: PokemonNetworkCheckingAndStoring) {
         print("IntroViewModel created and stored in memory")
         self.pokemonLocationConfiguration = locationConfiguration
         self.pokeAPINetworkService = pokeAPINetworkService
@@ -88,9 +88,10 @@ extension IntroViewModel {
                         print("playerSelectedPokemon is nil - error")
                         return
                     }
-                    let ashPokemon = self.pokemonLocationConfiguration.provideRivalAshPokemonConfiguration(playerStarterPokemon: selectedPokemon)
-                    delegate?.displayRivalPokemonImage(rivalPokemon: ashPokemon)
-                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage10(selectedPokemon: ashPokemon.name))
+                    self.pokemonLocationConfiguration.addRivalTrainer(playerStarterPokemon: selectedPokemon)
+                    let rivalPokemonConfiguration = selectRivalPokemon(playerStarterPokemon: selectedPokemon)
+                    delegate?.displayRivalPokemonImage(rivalPokemon: rivalPokemonConfiguration)
+                    delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage10(selectedPokemon: rivalPokemonConfiguration.name))
                 } else if newJourneyMessageCounter == 11 {
                     delegate?.removePokemonImage()
                     guard let safePlayerName = playerName else { return }
@@ -125,6 +126,22 @@ extension IntroViewModel {
 //            await self.introView.introTextView.animateMessage(message: message)
 //        }
 //    }
+}
+
+// MARK: - Selecting Rival Starter Pokemon
+extension IntroViewModel {
+    func selectRivalPokemon(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
+        switch playerStarterPokemon {
+        case .bulbasaur:
+            return .charmander
+        case .charmander:
+            return .squirtle
+        case .squirtle:
+            return .bulbasaur
+        default:
+            return .eevee
+        }
+    }
 }
 
 // MARK: - Saving Player information

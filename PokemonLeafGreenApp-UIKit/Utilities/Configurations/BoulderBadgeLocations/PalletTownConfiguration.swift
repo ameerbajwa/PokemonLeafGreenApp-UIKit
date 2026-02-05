@@ -13,34 +13,35 @@ struct PalletTownConfiguration: PokemonLocationConfiguration {
     var pokemonConfigurations: [PokemonIdNameConfiguration]?
     var trainers: [any PokemonTrainerConfiguration]?
     var wildPokemon: [any WildPokemonConfiguration]?
+    var encounterRival: Bool
     
     init() {
         self.id = PokemonLocationIdNamePokemonConfiguration.palletTown.id
         self.name = PokemonLocationIdNamePokemonConfiguration.palletTown.name
         self.pokemonConfigurations = PokemonLocationIdNamePokemonConfiguration.palletTown.pokemonConfigurations
         self.wildPokemon = nil
+        self.encounterRival = true
     }
-    
-    mutating func provideRivalAshPokemonConfiguration(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
-        let rivalAshStarterPokemon = returnRivalStarterPokemon(playerStarterPokemon: playerStarterPokemon)
+}
+
+extension PalletTownConfiguration {
+    mutating func addRivalTrainer(playerStarterPokemon: PokemonIdNameConfiguration) {
+        var rivalAshStarterPokemon: PokemonIdNameConfiguration
+        switch playerStarterPokemon {
+        case .bulbasaur:
+            rivalAshStarterPokemon = .charmander
+        case .charmander:
+            rivalAshStarterPokemon = .squirtle
+        case .squirtle:
+            rivalAshStarterPokemon = .bulbasaur
+        default:
+            rivalAshStarterPokemon = .eevee
+        }
         var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Ash", reward: 100)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
                                                       id: rivalAshStarterPokemon.id,
                                                       name: rivalAshStarterPokemon.name,
                                                       level: 5))
         self.trainers = [rivalAsh]
-        return rivalAshStarterPokemon
-    }
-}
-
-extension PalletTownConfiguration {
-    private func returnRivalStarterPokemon(playerStarterPokemon: PokemonIdNameConfiguration) -> PokemonIdNameConfiguration {
-        if playerStarterPokemon == .bulbasaur {
-            return .charmander
-        } else if playerStarterPokemon == .charmander {
-            return .squirtle
-        } else {
-            return .bulbasaur
-        }
     }
 }
