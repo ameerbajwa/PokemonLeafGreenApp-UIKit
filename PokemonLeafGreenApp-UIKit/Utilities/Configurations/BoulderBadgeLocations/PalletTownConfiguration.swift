@@ -37,7 +37,7 @@ extension PalletTownConfiguration {
         default:
             rivalAshStarterPokemon = .eevee
         }
-        var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Ash", reward: 100)
+        var rivalAsh = PokemonTrainer(order: 1, id: 1, name: "Ash", reward: 80)
         rivalAsh.pokemon.append(PokemonTrainerPokemon(order: 1,
                                                       id: rivalAshStarterPokemon.id,
                                                       name: rivalAshStarterPokemon.name,

@@ -23,6 +23,7 @@ protocol IntroManaging: AnyObject {
     func displaySelectedPokemonImage(selectedPokemon: PokemonIdNameConfiguration)
     func displayRivalPokemonImage(rivalPokemon: PokemonIdNameConfiguration)
     func removePokemonImage()
+    func coordinateToBattleScreen(opposingBattleConfiguration: PokemonBattleConfiguration)
 }
 
 protocol IntroViewManaging: AnyObject, UITextFieldDelegate {
@@ -103,12 +104,6 @@ extension IntroViewController {
         introView.introTextViewTopAnchor = introTextView.topAnchor
         introView.setupPlayerNameTextField()
         introTextView.setupIntroLabelAndNextButton()
-    }
-}
-
-extension IntroViewController {
-    func coordinateToBattleScreen(configuration: PokemonBattleConfiguration) {
-        coordinator?.finish(configuration: PokemonCoordinatorConfiguration.battle(configuration))
     }
 }
 
@@ -214,6 +209,10 @@ extension IntroViewController: IntroManaging {
         DispatchQueue.main.async {
             self.introView.removeSelectedPokemonImage()
         }
+    }
+    
+    func coordinateToBattleScreen(opposingBattleConfiguration: PokemonBattleConfiguration) {
+        coordinator?.finish(configuration: .battle(opposingBattleConfiguration))
     }
 }
 

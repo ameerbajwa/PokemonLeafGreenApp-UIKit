@@ -11,7 +11,10 @@ import UIKit
 class BattleCoordinator: ChildCoordinator {
     weak var rootCoordinator: RootCoordinator?
     var navigationController: UINavigationController
-    var configuration: PokemonBattleConfiguration
+    var pokeAPINetworkService: PokeAPINetworkService
+    var coreDataNetworkService: CoreDataNetworkService
+    var playerPokemonSquadManager: PlayerPokemonSquadManager
+    var opposingBattleConfiguration: PokemonBattleConfiguration
     
 //    var controller: BattleViewController
 //    var viewModel: BattleViewModel
@@ -24,9 +27,12 @@ class BattleCoordinator: ChildCoordinator {
 //    var pokemonBattlePokemonSelectionView: PokemonBattlePokemonSelectionView
 //    var pokemonBattleTextView: PokemonBattleTextView
     
-    init(navigationController: UINavigationController, configuration: PokemonBattleConfiguration, coreDataNetworkService: CoreDataNetworkService) {
+    init(navigationController: UINavigationController, pokeAPINetworkService: PokeAPINetworkService, coreDataNetworkService: CoreDataNetworkService, playerPokemonSquadManager: PlayerPokemonSquadManager, opposingBattleConfiguration: PokemonBattleConfiguration) {
         self.navigationController = navigationController
-        self.configuration = configuration
+        self.pokeAPINetworkService = pokeAPINetworkService
+        self.coreDataNetworkService = coreDataNetworkService
+        self.playerPokemonSquadManager = playerPokemonSquadManager
+        self.opposingBattleConfiguration = opposingBattleConfiguration
         
 //        self.battleView = PokemonBattleView()
 //        self.battleActionView = PokemonBattleActionView()

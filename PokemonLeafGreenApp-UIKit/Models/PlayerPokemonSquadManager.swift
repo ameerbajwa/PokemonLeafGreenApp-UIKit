@@ -1,11 +1,11 @@
 //
-//  PlayerPokemonLineupManager.swift
+//  PlayerPokemonSquadManager.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 10/9/25.
 //
 
-public class PlayerPokemonLineupManager {
+public class PlayerPokemonSquadManager {
     var pokemonFullInfoLoadingService: PokemonFullInfoLoading
     var pokemonLineupFullInfo: [PokemonFullInfo]
     
@@ -17,6 +17,7 @@ public class PlayerPokemonLineupManager {
     
     func fillStartingLineup() throws {
         do {
+            pokemonLineupFullInfo.removeAll()
             let playerPokemonLineup = try pokemonFullInfoLoadingService.fetchPlayerPokemon(with: .fetchPlayerPokemonLineup)
             for pokemon in playerPokemonLineup {
                 try addPokemonToLineup(coreDataGamePlayerPokemon: pokemon)
