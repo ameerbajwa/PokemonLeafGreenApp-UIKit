@@ -18,6 +18,8 @@ class RootCoordinator: ParentCoordinator {
     let pokemonFullInfoLoadingService: PokemonFullInfoLoading
     let pokemonLocationConfigurationService: PokemonLocationConfigurationService
     
+    let playerPokemonSquadManager: PlayerPokemonSquadManager
+    
     let pokemonLocationConfigurationLinkedList: PokemonLocationConfigurationDoublyLinkedList
     var currentPokemonLocationConfigurationNode: PokemonLocationConfigurationNode?
     
@@ -33,6 +35,8 @@ class RootCoordinator: ParentCoordinator {
         self.pokemonStorageService = pokemonStorageService
         self.pokemonFullInfoLoadingService = pokemonFullInfoLoadingService
         self.pokemonLocationConfigurationService = pokemonLocationConfigurationService
+        
+        self.playerPokemonSquadManager = PlayerPokemonSquadManager(pokemonFullInfoLoadingService: pokemonFullInfoLoadingService)
         
         pokemonLocationConfigurationLinkedList = pokemonLocationConfigurationService.createPokemonLocationConfigurationLinkedList()
     }
@@ -65,9 +69,19 @@ extension RootCoordinator {
 
 // MARK: - Coordinate to Battle
 extension RootCoordinator {
-    // when starting battle coordinator, keep existing location coordiantor/controller in stack
-    func startBattleCoordinator(configuration: PokemonBattleConfiguration) {
-        let battleCoordinator = BattleCoordinator(navigationController: navigationController, configuration: configuration, coreDataNetworkService: coreDataNetworkService)
+    func startBattleCoordinator(opposingBattleConfiguration: PokemonBattleConfiguration) {
+        if currentPokemonLocationConfigurationNode?.previousConfiguration == nil {
+            do {
+                try playerPokemonSquadManager.fillStartingLineup()
+            } catch {
+                print(error)
+            }
+        }
+        let battleCoordinator = BattleCoordinator(navigationController: navigationController,
+                                                  pokeAPINetworkService: pokeAPINetworkService,
+                                                  coreDataNetworkService: coreDataNetworkService,
+                                                  playerPokemonSquadManager: playerPokemonSquadManager,
+                                                  opposingBattleConfiguration: opposingBattleConfiguration)
         self.addChildCoordinator(childCoordinator: battleCoordinator)
         battleCoordinator.rootCoordinator = self
         battleCoordinator.start()

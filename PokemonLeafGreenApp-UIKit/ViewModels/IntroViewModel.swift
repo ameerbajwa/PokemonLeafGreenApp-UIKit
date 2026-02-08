@@ -110,7 +110,7 @@ extension IntroViewModel {
                 }
                 newJourneyMessageCounter += 1
             } else {
-//                coordinateToBattle()
+                coordinateToBattle()
             }
         }
     }
@@ -119,13 +119,6 @@ extension IntroViewModel {
         self.playerSelectedPokemon = nil
         delegate?.setNewJourneyMessage(message: NewJourneyMessages.newQuestMessage6)
     }
-    
-//    func displayPokemonSelectedMessage(message: String, selectedPokemon: PokemonIdNameConfiguration) {
-//        self.playerSelectedPokemon = selectedPokemon
-//        Task {
-//            await self.introView.introTextView.animateMessage(message: message)
-//        }
-//    }
 }
 
 // MARK: - Selecting Rival Starter Pokemon
@@ -169,9 +162,9 @@ extension IntroViewModel {
 }
 
 // MARK: - Coordinate to Battle Rival Ash
-//extension IntroViewModel {
-//    func coordinateToBattle() {
-//        let battleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
-//        controller?.coordinateToBattleScreen(configuration: battleConfiguration)
-//    }
-//}
+extension IntroViewModel {
+    func coordinateToBattle() {
+        let opposingBattleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
+        delegate?.coordinateToBattleScreen(opposingBattleConfiguration: opposingBattleConfiguration)
+    }
+}
