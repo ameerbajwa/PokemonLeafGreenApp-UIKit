@@ -20,6 +20,7 @@ public enum PokemonLeafGreenError: Error {
     case noPokemonStoredForPlayer
     case noMovesStoredForPokemon
     case noRequestIdentifierKey
+    case noWildPokemonConfigurationMatch
     
     var errorLogDescription: String {
         switch self {
@@ -51,6 +52,8 @@ public enum PokemonLeafGreenError: Error {
             return "No moves stored for pokemon model"
         case .noRequestIdentifierKey:
             return "Can't fetch any core data model without identifier key"
+        case .noWildPokemonConfigurationMatch:
+            return "No match for the wild pokemon at this location. Please check wild pokemon configuration files to ensure rate parameter is sent properly for this location."
         }
     }
     
@@ -60,7 +63,7 @@ public enum PokemonLeafGreenError: Error {
             return "App is down. Please refresh the app or download again."
         case .noPokemonStoredForPlayer:
             return "Player has no pokemon. Please restart the game."
-        case .noMovesStoredForPokemon:
+        case .noMovesStoredForPokemon, .noWildPokemonConfigurationMatch:
             return "Data has been corrupted. Please restart the game."
         case .noRecordInCoreData(_, _, _):
             return ""
