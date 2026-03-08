@@ -164,7 +164,8 @@ extension IntroViewModel {
 // MARK: - Coordinate to Battle Rival Ash
 extension IntroViewModel {
     func coordinateToBattle() {
-        let opposingBattleConfiguration = PokemonBattleConfiguration(trainer: pokemonLocationConfiguration.trainers?[0])
+        guard let opposingPokemonTrainerConfiguration = pokemonLocationConfiguration.trainers?[0] else { return }
+        let opposingBattleConfiguration = PokemonBattleConfiguration.trainer(opposingPokemonTrainerConfiguration)
         delegate?.coordinateToBattleScreen(opposingBattleConfiguration: opposingBattleConfiguration)
     }
 }

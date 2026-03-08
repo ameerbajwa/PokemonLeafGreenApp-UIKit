@@ -11,13 +11,13 @@ import UIKit
 class BattleViewController: UIViewController {
     weak var coordinator: BattleCoordinator?
     
-//    var viewModel: BattleViewModel
+    var viewModel: BattleViewModel
     
     private var loadingView: LoadingView!
     private var safeArea: UILayoutGuide!
     
-    init() {
-//        self.viewModel = viewModel
+    init(viewModel: BattleViewModel) {
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
         loadingView = LoadingView()

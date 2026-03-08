@@ -80,6 +80,7 @@ extension RootCoordinator {
         let battleCoordinator = BattleCoordinator(navigationController: navigationController,
                                                   pokeAPINetworkService: pokeAPINetworkService,
                                                   coreDataNetworkService: coreDataNetworkService,
+                                                  pokemonFullInfoLoadingService: pokemonFullInfoLoadingService,
                                                   playerPokemonSquadManager: playerPokemonSquadManager,
                                                   opposingBattleConfiguration: opposingBattleConfiguration)
         self.addChildCoordinator(childCoordinator: battleCoordinator)
