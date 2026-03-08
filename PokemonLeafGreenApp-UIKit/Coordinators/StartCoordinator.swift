@@ -44,6 +44,5 @@ class StartCoordinator: ChildCoordinator {
         default:
             rootCoordinator?.startIntroCoordinator()
         }
-        
     }
 }

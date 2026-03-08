@@ -9,15 +9,6 @@ public enum PokemonCoordinatorConfiguration {
     case currentLocation
     case nextLocation
     case battle(PokemonBattleConfiguration)
-    
-//    var battleConfiguration: PokemonBattleConfiguration? {
-//        switch self {
-//        case .battle(let configuration):
-//            return configuration
-//        default:
-//            return nil
-//        }
-//    }
 }
 
 public protocol PokemonLocationConfiguration {
@@ -35,16 +26,6 @@ public enum PokemonBattleConfiguration {
     case trainer(PokemonTrainerConfiguration)
     case wildPokemon([WildPokemonConfiguration])
 }
-
-//public struct PokemonBattleConfiguration {
-//    var trainer: PokemonTrainerConfiguration?
-//    var wildPokemon: [WildPokemonConfiguration]?
-//    
-//    init(trainer: PokemonTrainerConfiguration? = nil, wildPokemon: [WildPokemonConfiguration]? = nil) {
-//        self.trainer = trainer
-//        self.wildPokemon = wildPokemon
-//    }
-//}
 
 public protocol WildPokemonConfiguration {
     var id: Int { get set }
