@@ -98,7 +98,7 @@ extension IntroViewController {
             introTextView.bottomAnchor.constraint(equalTo: introView.bottomAnchor, constant: -5.0),
             introTextView.leadingAnchor.constraint(equalTo: introView.leadingAnchor, constant: 5.0),
             introTextView.trailingAnchor.constraint(equalTo: introView.trailingAnchor, constant: -5.0),
-            introTextView.heightAnchor.constraint(equalToConstant: 250.0)
+            introTextView.heightAnchor.constraint(equalToConstant: 300.0)
         ])
         
         introView.introTextViewTopAnchor = introTextView.topAnchor

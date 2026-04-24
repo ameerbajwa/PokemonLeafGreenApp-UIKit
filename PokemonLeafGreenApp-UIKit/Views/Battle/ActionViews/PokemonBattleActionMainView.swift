@@ -1,15 +1,14 @@
 //
-//  PokemonBattleActionView.swift
+//  PokemonBattleActionMainView.swift
 //  PokemonLeafGreenApp-UIKit
 //
-//  Created by Ameer Bajwa on 8/27/25.
+//  Created by Ameer Bajwa on 4/19/26.
 //
 
-import Foundation
 import UIKit
-import Combine
+import Foundation
 
-class PokemonBattleActionView: UIView {
+class PokemonBattleActionMainView: UIView {
     var fightButton: UIButton!
     var switchButton: UIButton!
     var buttonStackView: UIStackView!
@@ -37,7 +36,8 @@ class PokemonBattleActionView: UIView {
         buttonStackView.axis = .horizontal
         buttonStackView.distribution = .fillEqually
         buttonStackView.spacing = 25.0
-        buttonStackView.arrangedSubviews = [fightButton, switchButton]
+        buttonStackView.addArrangedSubview(fightButton)
+        buttonStackView.addArrangedSubview(switchButton)
         
         self.addSubview(buttonStackView)
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false

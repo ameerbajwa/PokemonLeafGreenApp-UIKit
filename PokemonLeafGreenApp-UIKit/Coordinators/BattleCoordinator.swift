@@ -19,6 +19,7 @@ class BattleCoordinator: ChildCoordinator {
     
     var controller: BattleViewController
     var viewModel: BattleViewModel
+    var mainView: MainPokemonBattleView
 //    var battleView: PokemonBattleView
 //    var battleActionView: PokemonBattleActionView
     
@@ -38,8 +39,11 @@ class BattleCoordinator: ChildCoordinator {
         
 //        self.battleView = PokemonBattleView()
 //        self.battleActionView = PokemonBattleActionView()
+        self.mainView = MainPokemonBattleView()
+        self.mainView.initializeAllBattleViews()
+        self.mainView.initalizeStartBattleDisplayAndActionViews()
         self.viewModel = BattleViewModel(pokeAPINetworkService: pokeAPINetworkService, coreDataNetworkService: coreDataNetworkService, pokemonFullInfoLoadingService: pokemonFullInfoLoadingService, playerPokemonSquadManager: playerPokemonSquadManager, opposingBattleConfiguration: opposingBattleConfiguration)
-        self.controller = BattleViewController(viewModel: viewModel)
+        self.controller = BattleViewController(viewModel: viewModel, mainView: mainView)
     }
     
     func start() {

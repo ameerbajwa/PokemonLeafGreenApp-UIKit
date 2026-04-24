@@ -1,5 +1,5 @@
 //
-//  PokemonBattleMoveListCellView.swift
+//  PokemonBattleActionMoveListCellView.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 8/28/25.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import Combine
 
-class PokemonBattleMoveListCellView: UITableViewCell {
+class PokemonBattleActionMoveListCellView: UITableViewCell {
     static let identifier = "PokemonBattleMoveTableViewCell"
     
     var nameLabel: UILabel!

@@ -1,5 +1,5 @@
 //
-//  PokemonBattleTextView.swift
+//  PokemonBattleActionTextView.swift
 //  PokemonLeafGreenApp-UIKit
 //
 //  Created by Ameer Bajwa on 8/24/25.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import Combine
 
-class PokemonBattleTextView: UIView {
+class PokemonBattleActionTextView: UIView {
     var pokemonBattleText: UILabel!
     var nextButton: UIButton!
     
